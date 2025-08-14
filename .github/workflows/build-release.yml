@@ -84,25 +84,49 @@ jobs:
         echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
         
         # Generate release notes
+        BUILD_TIME=$(date '+%Y-%m-%d %H:%M:%S UTC')
         cat > release_notes.md << EOF
-        # Shimeji-ee Pre-release Build
+        # Shimeji-ee Pre-release Build / Shimeji-ee 预发布版本
         
-        **Build Date:** $(date '+%Y-%m-%d %H:%M:%S UTC')
-        **Commit:** ${{ github.sha }}
+        **Build Date / 构建日期:** $BUILD_TIME  
+        **Commit / 提交:** ${{ github.sha }}
         
-        ## What's included:
-        - Shimeji-ee.jar - Main executable JAR file
+        ## What's included / 包含内容:
+        - Shimeji-ee.jar - Main executable JAR file / 主要可执行JAR文件
+        - Shimeji-ee-prerelease.zip - Complete package with all dependencies / 包含所有依赖的完整包
+        - lib/ folder with required libraries / 包含必需库文件的lib文件夹
+        - conf/ folder with configuration files / 包含配置文件的conf文件夹
+        - img/ folder with images / 包含图片的img文件夹
         
-        ## Installation:
-        1. Download the Shimeji-ee.jar file
-        2. Make sure you have Java 8 or later installed
-        3. Run the JAR file with: \`java -jar Shimeji-ee.jar\`
+        ## Installation / 安装说明:
+        ### Option 1: Use the complete package / 方式1：使用完整包
+        1. Download Shimeji-ee-prerelease.zip / 下载 Shimeji-ee-prerelease.zip
+        2. Extract to a folder / 解压到文件夹
+        3. Make sure you have Java 8 or later installed / 确保已安装 Java 8 或更高版本
+        4. Run with the command / 使用以下命令运行:
+           
+           **Windows:**
+           \`\`\`
+           java -cp "target\\Shimeji-ee.jar;lib\\*" com.group_finity.mascot.Main
+           \`\`\`
+           
+           **Linux/Mac:**
+           \`\`\`
+           java -cp "target/Shimeji-ee.jar:lib/*" com.group_finity.mascot.Main
+           \`\`\`
         
-        ## Notes:
-        This is an automated pre-release build. For stable releases, please check the main releases page.
+        ### Option 2: JAR file only (advanced users) / 方式2：仅JAR文件（高级用户）
+        1. Download Shimeji-ee.jar / 下载 Shimeji-ee.jar
+        2. You need to provide your own lib/, conf/, and img/ folders / 需要自己提供 lib/、conf/ 和 img/ 文件夹
+        3. Use the same command as above / 使用上述相同命令
+        
+        ## Notes / 注意事项:
+        This is an automated pre-release build generated at $BUILD_TIME. For stable releases, please check the main releases page.
+        
+        这是在 $BUILD_TIME 自动生成的预发布版本。如需稳定版本，请查看主要发布页面。
         
         ---
-        *This release was automatically generated from commit ${{ github.sha }}*
+        *This release was automatically generated from commit ${{ github.sha }} / 此版本由提交 ${{ github.sha }} 自动生成*
         EOF
         
     - name: Delete existing pre-release
@@ -120,11 +144,15 @@ jobs:
       if: steps.build.outputs.build_success == 'true'
       run: |
         echo "Creating new pre-release: ${{ steps.release_info.outputs.release_tag }}"
+        
+        # Create a zip file containing JAR and lib files
+        zip -r Shimeji-ee-prerelease.zip target/Shimeji-ee.jar lib/ conf/ img/ *.txt *.md LICENSE MANIFEST.MF
+        
         gh release create "${{ steps.release_info.outputs.release_tag }}" \
           --title "${{ steps.release_info.outputs.release_name }}" \
           --notes-file release_notes.md \
           --prerelease \
-          target/Shimeji-ee.jar
+          Shimeji-ee-prerelease.zip target/Shimeji-ee.jar
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
