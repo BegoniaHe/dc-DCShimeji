@@ -13,6 +13,7 @@
 		<javac destdir="target/classes" target="1.8" source="1.8" debug="yes" optimize="yes" includeantruntime="false">
 			<src path="src"/>
 			<src path="src_win"/>
+			<src path="src_mac"/>
 			<src path="src_generic"/>
 			<src path="src_virtual"/>
 			<classpath>
