@@ -336,6 +336,169 @@ The Shimeji-ee source code is available under the **New BSD License**.
 
 ## 📝 Changelog
 
+### Version 1.0.21.3
+
+- Added ComplexJump and ComplexMove with `Characteristics` attribute support (Breed, Scan)
+- Added TargetX and TargetY variables for Scanning actions
+- Removed target variable from Scanning actions due to technical issues
+- Dismissed shimeji no longer broadcast affordances
+- Information screen improvements: theme colors, proper centering, image centering
+- Fixed information screen X button behavior
+- Fixed conditions being ignored on Move ActionReferences
+- General code cleanup for Breed and Move actions
+- Updated Chinese translation
+
+### Version 1.0.21.2
+
+- Added BornCount parameter for spawning multiple shimeji at once
+- Fixed low velocity scaling issues at 0.5 scale
+
+### Version 1.0.21.1 (Hotfix)
+
+- Theme Editor now displays with proper DPI scaling
+- Font size editor and reset button work with effective scaled font size
+- Fixed Toggleable flag functionality
+
+### Version 1.0.21
+
+- Added opacity slider in settings for semi-transparent shimeji
+- Added Theme tab in settings for visual customization
+- Added background image support for Window Mode
+- Added behavior toggle functionality via right-click menu
+- Added new configuration file: `info.xml`
+- Added custom name and icon support in shimeji chooser
+- Added splash screen functionality with credits and links
+- Exposed additional variables for conditions (Jump, Fall, ScanMove, ScanJump)
+- Added ScanInteract action type for long-range interactions
+- Added TargetLook attribute for ScanMove and ScanJump
+- Added Toggleable flag for behaviors
+- Added affordance broadcasting capability for most actions
+- Deprecated Broadcast actions (still functional)
+- Added automatic turning animation support
+- Deprecated MoveWithTurn action
+
+### Version 1.0.20
+
+- Window Mode for running Shimeji in a window (ideal for streaming)
+- Added ScanJump and BroadcastJump actions
+- Boss mode: double middle-click tray icon to quickly hide shimeji
+- XML constant support for advanced configurations
+- Hotspot support without behavior set for click-hold animations
+- New Settings screen with filtering and scaling options
+- Reworked tray icon menu with Shimeji Chooser and Settings buttons
+- Improved interactive window detection with Windows 11 support
+- Better error messages for poses without image anchors
+- Fixed rare freezing issue with simultaneous sound playback
+- Fixed delayed grab/hotspot behavior for paused shimeji
+- Updated translations: Arabic, Catalan, French, Spanish, Polish
+
+### Version 1.0.19
+
+- Hotspots: XML-defined interactive areas
+- Pause and resume functionality for shimeji animations
+- Fixed compatibility with Japanese locale computers
+- Improved drag behavior and landing animations
+- New translations: Arabic, Traditional Chinese
+- Updated multiple language translations
+- General code cleanup
+
+### Version 1.0.18
+
+- BreedJump and BreedMove actions for cloning while moving
+- Exposed velocity during Fall for dynamic animations
+- Transient flag for breeding actions (temporary vs permanent clones)
+- Added Transients to Allowed Behaviours menu
+- Fixed Dragged OffsetX/Y swing animation issues
+- Fixed interactive windows on Windows 7
+- Restored non-fatal error message for missing icon.png
+- Updated French translation
+
+### Version 1.0.17
+
+- Shimeji chooser can appear on each startup
+- Improved chooser behavior for selected shimeji
+- Case-insensitive unused folder detection
+- Fixed invisible window glitch on Windows 10
+- Better multi-screen behavior when "Move Between Screens" is disabled
+- Fixed "Restore Windows" functionality
+- Added "Dismiss All Others" to right-click menu
+- Added OffsetX/OffsetY properties to Dragged action
+- Critical security fixes
+
+### Version 1.0.16
+
+- "Move Between Screens" toggle for multi-monitor setups
+- "Transformation" behavior toggle
+- HQX scaling filter for high-quality upscaling
+- Generic sound folder for shared audio files
+- Count variable exposed to XML conditions
+- Muting action for sound control
+- Fixed Windows lockscreen and monitor plug-in freezing issues
+
+### Version 1.0.15
+
+- Japanese Shimeji-e backwards compatibility
+
+### Version 1.0.14
+
+- Affordances system implementation
+
+### Version 1.0.13
+
+- Draggable property
+- SelfDestruct action
+- Scaling bug fixes
+- Clarified missing imageRight error messages
+
+### Version 1.0.12
+
+- Transform action
+- Shimeji scaling support
+- Menu DPI awareness
+- Improved memory usage
+- Added 3 more languages
+
+### Version 1.0.11
+
+- New menu system
+- Nimrod theming integration
+- Added 5 more languages
+
+### Version 1.0.10
+
+- Internationalization support
+- Updated build configuration
+- Improved error handling for failed shimeji loads
+
+### Version 1.0.9
+
+- Sound and Volume attributes for pose tags
+- Fixed Turn action
+- Improved error message dialogs
+
+### Version 1.0.8
+
+- Asymmetry support with ImageRight attribute
+- New MoveWithTurn and Turn actions
+- Fixed duplicate options in Add Interactive Windows dialog
+
+### Version 1.0.7
+
+- 64-bit support
+- BornMascot attribute for Breed action
+- Allowed Behaviour menu
+
+### Version 1.0.6
+
+- Added image premultiplying for translucent image support
+- Improved behavior list formatting
+
+### Version 1.0.5
+
+- Replaced windows.txt with settings.properties
+- New form design and menu system
+- Hidden form on startup
+
 ### Version 1.0.3
 
 - Decreased memory usage significantly
