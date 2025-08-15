@@ -68,6 +68,7 @@ jobs:
           lib/
           conf/
           img/
+          shell_script/
           *.txt
           *.md
           LICENSE
@@ -102,6 +103,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     steps:
+    - name: Checkout code for scripts
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          shell_script/
+        sparse-checkout-cone-mode: false
+        
     - name: Download JAR artifact
       uses: actions/download-artifact@v4
       with:
@@ -161,94 +169,12 @@ jobs:
         fi
       shell: bash
         
-    - name: Create startup script
+    - name: Copy startup script
       run: |
         if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          cat > "run_shimeji${{ matrix.script-ext }}" << 'EOF'
-        @echo off
-        cd /d "%~dp0"
-        echo Starting Shimeji-ee...
-        echo Starting Shimeji-ee...
-        
-        if not exist "jre\bin\java.exe" (
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            pause
-            exit /b 1
-        )
-        
-        if not exist "target\Shimeji-ee.jar" (
-            echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
-        
-        
-        if not exist "jre\bin\java.exe" (
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            pause
-            exit /b 1
-        )
-        
-        if not exist "target\Shimeji-ee.jar" (
-            echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
-            pause
-            exit /b 1
-        )
-        
-        "jre\bin\java.exe" -cp "target\Shimeji-ee.jar;lib\*" com.group_finity.mascot.Main
-        
-        if errorlevel 1 (
-            echo.
-            echo Shimeji-ee exited with an error.
-            pause
-        )
-        EOF
+          cp "shell_script/run_shimeji.bat" "run_shimeji${{ matrix.script-ext }}"
         else
-          cat > "run_shimeji${{ matrix.script-ext }}" << 'EOF'
-        #!/bin/bash
-        cd "$(dirname "$0")"
-        echo "Starting Shimeji-ee..."
-        echo "Starting Shimeji-ee..."
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-            echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
-        
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-            echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        "./jre/bin/java" -cp "target/Shimeji-ee.jar:lib/*" com.group_finity.mascot.Main
-        
-        if [ $? -ne 0 ]; then
-            echo ""
-            echo "Shimeji-ee exited with an error."
-            read -p "Press Enter to exit..."
-        fi
-        EOF
+          cp "shell_script/run_shimeji.sh" "run_shimeji${{ matrix.script-ext }}"
           chmod +x "run_shimeji${{ matrix.script-ext }}"
         fi
       shell: bash
