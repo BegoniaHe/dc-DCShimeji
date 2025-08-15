@@ -92,12 +92,6 @@ jobs:
             jre-os: windows
             script-ext: .bat
             zip-name: Shimeji-ee-windows-x86
-          - platform: windows-arm64
-            os: windows-latest
-            jre-arch: aarch64
-            jre-os: windows
-            script-ext: .bat
-            zip-name: Shimeji-ee-windows-arm64
           - platform: macos-x64
             os: macos-latest
             jre-arch: x64
@@ -119,8 +113,6 @@ jobs:
         if [ "${{ matrix.jre-os }}" = "windows" ]; then
           if [ "${{ matrix.jre-arch }}" = "x86-32" ]; then
             JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x86-32_windows_hotspot_8u422b05.zip"
-          elif [ "${{ matrix.jre-arch }}" = "aarch64" ]; then
-            JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_aarch64_windows_hotspot_8u422b05.zip"
           else
             JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x64_windows_hotspot_8u422b05.zip"
           fi
@@ -368,7 +360,6 @@ jobs:
         ### Platform-specific packages with embedded JRE / 包含嵌入式JRE的平台特定包:
         - **Shimeji-ee-windows-x64.zip** - Windows 64-bit with JRE 8 / Windows 64位版本，含JRE 8
         - **Shimeji-ee-windows-x86.zip** - Windows 32-bit with JRE 8 / Windows 32位版本，含JRE 8  
-        - **Shimeji-ee-windows-arm64.zip** - Windows ARM64 with JRE 8 / Windows ARM64版本，含JRE 8
         - **Shimeji-ee-macos-x64.zip** - macOS Intel with JRE 8 / macOS Intel版本，含JRE 8
         
         ### JAR file for advanced users / 高级用户JAR文件:
@@ -406,8 +397,8 @@ jobs:
         - Platform packages include OpenJDK 8u422-b05 / 平台包包含 OpenJDK 8u422-b05
         - All packages are portable and don't require installation / 所有包都是便携的，无需安装
         - On macOS, you might need to allow the app in Security & Privacy settings / 在 macOS 上，您可能需要在安全性与隐私设置中允许该应用
-        - **Note for macOS ARM64 users**: JRE 8 is not available for Apple Silicon Macs. Please use the JAR version with a newer JRE, or use Rosetta 2 with the Intel version.
-        - **macOS ARM64 用户注意**: Apple Silicon Mac 没有可用的 JRE 8。请使用较新 JRE 的 JAR 版本，或通过 Rosetta 2 使用 Intel 版本。
+        - **Note for ARM64 users**: JRE 8 is not available for ARM64 architecture (Windows ARM64, macOS Apple Silicon). Please use the JAR version with a newer JRE, or use compatibility layers (Rosetta 2 on macOS, x86 emulation on Windows).
+        - **ARM64 用户注意**: ARM64 架构（Windows ARM64、macOS Apple Silicon）没有可用的 JRE 8。请使用较新 JRE 的 JAR 版本，或使用兼容层（macOS 上的 Rosetta 2，Windows 上的 x86 模拟）。
         
         This is an automated pre-release build generated at $BUILD_TIME. For stable releases, please check the main releases page.
         
@@ -443,7 +434,6 @@ jobs:
           --prerelease \
           Shimeji-ee-windows-x64.zip \
           Shimeji-ee-windows-x86.zip \
-          Shimeji-ee-windows-arm64.zip \
           Shimeji-ee-macos-x64.zip \
           Shimeji-ee-prerelease.zip \
           target/Shimeji-ee.jar
