@@ -179,6 +179,15 @@ jobs:
         
         if not exist "target\Shimeji-ee.jar" (
             echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
+        
+        
+        if not exist "jre\bin\java.exe" (
+            echo Error: JRE not found! Please make sure the jre folder exists.
+            pause
+            exit /b 1
+        )
+        
+        if not exist "target\Shimeji-ee.jar" (
             echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
             pause
             exit /b 1
