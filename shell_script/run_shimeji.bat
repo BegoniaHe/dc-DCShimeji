@@ -14,10 +14,11 @@ if not exist "target\Shimeji-ee.jar" (
     exit /b 1
 )
 
-"jre\bin\java.exe" -cp "target\Shimeji-ee.jar;lib\*" com.group_finity.mascot.Main
+echo Launching Shimeji-ee in the background...
+start "" "jre\bin\java.exe" -cp "target\Shimeji-ee.jar;lib\*" com.group_finity.mascot.Main
 
-if errorlevel 1 (
-    echo.
-    echo Shimeji-ee exited with an error.
-    pause
-)
+echo Shimeji-ee has been started successfully!
+echo You can now close this window safely.
+echo To stop Shimeji-ee, right-click on the mascot or use Task Manager.
+echo.
+pause

@@ -193,7 +193,9 @@ jobs:
         
         ### Windows:
         Double-click \`run_shimeji.bat\` or run it from command prompt.
+        The program will start in the background and you can safely close the script window.
         双击 \`run_shimeji.bat\` 或在命令提示符中运行。
+        程序将在后台启动，您可以安全地关闭脚本窗口。
         
         ### macOS/Linux:
         1. Open Terminal and navigate to this folder
@@ -220,6 +222,8 @@ jobs:
            检查是否有足够的权限运行脚本
         3. On macOS, you might need to allow the app in System Preferences > Security & Privacy
            在 macOS 上，您可能需要在系统偏好设置 > 安全性与隐私中允许该应用
+        4. On Windows, the program runs in the background. To stop it, right-click on the mascot or use Task Manager
+           在 Windows 上，程序在后台运行。要停止它，请右键单击吉祥物或使用任务管理器
         
         ## Platform Information / 平台信息:
         - Platform / 平台: ${{ matrix.platform }}
