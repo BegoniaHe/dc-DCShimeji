@@ -226,6 +226,16 @@ jobs:
         fi
         
         if [ ! -f "target/Shimeji-ee.jar" ]; then
+
+        
+        if [ ! -f "jre/bin/java" ]; then
+            echo "Error: JRE not found! Please make sure the jre folder exists."
+
+            read -p "Press Enter to exit..."
+            exit 1
+        fi
+        
+        if [ ! -f "target/Shimeji-ee.jar" ]; then
             echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
             read -p "Press Enter to exit..."
             exit 1
