@@ -131,6 +131,7 @@ jobs:
     - name: Extract JRE
       run: |
         mkdir -p jre
+        mkdir -p jre_temp
         if [ "${{ matrix.jre-os }}" = "windows" ]; then
           if command -v unzip >/dev/null 2>&1; then
             unzip -q jre.zip -d jre_temp
