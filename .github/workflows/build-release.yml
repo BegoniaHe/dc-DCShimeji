@@ -198,7 +198,6 @@ jobs:
         if errorlevel 1 (
             echo.
             echo Shimeji-ee exited with an error.
-            echo Shimeji-ee exited with an error.
             pause
         )
         EOF
