@@ -168,18 +168,18 @@ jobs:
         @echo off
         cd /d "%~dp0"
         echo Starting Shimeji-ee...
-        echo 正在启动 Shimeji-ee...
+        echo Starting Shimeji-ee...
         
         if not exist "jre\bin\java.exe" (
             echo Error: JRE not found! Please make sure the jre folder exists.
-            echo 错误：未找到JRE！请确保jre文件夹存在。
+            echo Error: JRE not found! Please make sure the jre folder exists.
             pause
             exit /b 1
         )
         
         if not exist "target\Shimeji-ee.jar" (
             echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
-            echo 错误：未找到Shimeji-ee.jar！请确保target文件夹存在。
+            echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
             pause
             exit /b 1
         )
@@ -189,7 +189,7 @@ jobs:
         if errorlevel 1 (
             echo.
             echo Shimeji-ee exited with an error.
-            echo Shimeji-ee 运行出现错误。
+            echo Shimeji-ee exited with an error.
             pause
         )
         EOF
@@ -198,18 +198,18 @@ jobs:
         #!/bin/bash
         cd "$(dirname "$0")"
         echo "Starting Shimeji-ee..."
-        echo "正在启动 Shimeji-ee..."
+        echo "Starting Shimeji-ee..."
         
         if [ ! -f "jre/bin/java" ]; then
             echo "Error: JRE not found! Please make sure the jre folder exists."
-            echo "错误：未找到JRE！请确保jre文件夹存在。"
+            echo "Error: JRE not found! Please make sure the jre folder exists."
             read -p "Press Enter to exit..."
             exit 1
         fi
         
         if [ ! -f "target/Shimeji-ee.jar" ]; then
             echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
-            echo "错误：未找到Shimeji-ee.jar！请确保target文件夹存在。"
+            echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
             read -p "Press Enter to exit..."
             exit 1
         fi
@@ -219,7 +219,7 @@ jobs:
         if [ $? -ne 0 ]; then
             echo ""
             echo "Shimeji-ee exited with an error."
-            echo "Shimeji-ee 运行出现错误。"
+            echo "Shimeji-ee exited with an error."
             read -p "Press Enter to exit..."
         fi
         EOF
