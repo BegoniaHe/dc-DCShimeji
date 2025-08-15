@@ -236,7 +236,6 @@ jobs:
         if [ $? -ne 0 ]; then
             echo ""
             echo "Shimeji-ee exited with an error."
-            echo "Shimeji-ee exited with an error."
             read -p "Press Enter to exit..."
         fi
         EOF
