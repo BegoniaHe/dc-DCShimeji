@@ -279,7 +279,8 @@ public class Main
     	if( !System.getProperty("sun.arch.data.model").equals( "64" ) )
             platform = Platform.x86;
         else
-            platform = Platform.x86_64;        // load properties
+            platform = Platform.x86_64;
+        // load properties
         properties = new Properties();
         try (FileInputStream input = new FileInputStream("./conf/settings.properties")) {
             properties.load(input);
