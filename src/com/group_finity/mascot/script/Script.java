@@ -142,6 +142,9 @@ public class Script extends Variable {
 	 */
 	private void populateScope(Context cx, Scriptable scope, VariableMap variables) {
 		// Use getRawMap() to avoid triggering Variable.get() which causes recursion
+		if (variables == null || variables.getRawMap() == null) {
+			return;
+		}
 		for (Map.Entry<String, Variable> entry : variables.getRawMap().entrySet()) {
 			String key = entry.getKey();
 			Variable variable = entry.getValue();
