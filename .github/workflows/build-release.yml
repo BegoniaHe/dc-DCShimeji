@@ -109,18 +109,12 @@ jobs:
       with:
         name: shimeji-jar
         
-    - name: Build jpackage MSI installer
+    - name: Build jpackage Windows packages
       run: |
-        echo "Building MSI installer using jpackage..."
-        ant jpackage
-        echo "Checking for generated MSI files:"
+        echo "Building Windows packages using jpackage..."
+        ant -f build-jpackage-windows.xml jpackage-windows-all
+        echo "Checking for generated files:"
         dir target\*.msi
-        
-    - name: Build jpackage portable version
-      run: |
-        echo "Building portable version using jpackage..."
-        ant jpackage-portable
-        echo "Checking for generated portable files:"
         dir target\*.zip
         
     - name: Upload Windows MSI installer
