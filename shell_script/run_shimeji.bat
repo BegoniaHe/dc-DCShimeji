@@ -1,33 +1,33 @@
 @echo off
 chcp 65001 > nul
 cd /d "%~dp0"
-title Shimeji-ee (JRE 21 便携版本)
+title Shimeji-ee (JRE 21 Portable Version)
 echo ========================================
-echo   Shimeji-ee - JRE 21 便携版本
+echo   Shimeji-ee - JRE 21 Portable Version
 echo ========================================
 echo.
 
-REM 检查是否存在绑定的 JRE 21
+REM Check for bundled JRE 21
 if exist "jre\bin\java.exe" (
-    echo 检测到绑定的 JRE 21，使用绑定版本...
+    echo Found bundled JRE 21, using bundled version...
     set JAVA_CMD=jre\bin\java.exe
 ) else (
-    echo 错误: 未找到绑定的 JRE 21
-    echo 此便携版本仅支持内置的 JRE 21，请确保 jre 文件夹存在
+    echo Error: Bundled JRE 21 not found
+    echo This portable version only supports bundled JRE 21, please ensure jre folder exists
     pause
     exit /b 1
 )
 
 if not exist "target\Shimeji-ee.jar" (
-    echo 错误: 未找到 Shimeji-ee.jar 文件！
-    echo 请确保 target 文件夹存在
+    echo Error: Shimeji-ee.jar file not found!
+    echo Please ensure target folder exists
     pause
     exit /b 1
 )
 
-echo 使用内置 JRE 21 启动 Shimeji-ee...
+echo Starting Shimeji-ee with bundled JRE 21...
 echo.
-echo 启动 Shimeji-ee...
+echo Launching Shimeji-ee...
 start "" "%JAVA_CMD%" -Dfile.encoding=UTF-8 ^
      -Xms64m ^
      -Xmx512m ^
@@ -35,10 +35,10 @@ start "" "%JAVA_CMD%" -Dfile.encoding=UTF-8 ^
      com.group_finity.mascot.Main
 
 echo.
-echo Shimeji-ee 已成功启动！(使用内置 JRE 21)
-echo 现在您可以安全地关闭此窗口。
-echo 要停止 Shimeji-ee，请右键点击桌面精灵或使用任务管理器。
+echo Shimeji-ee has been successfully started! (using bundled JRE 21)
+echo You can now safely close this window.
+echo To stop Shimeji-ee, right-click on the desktop mascot or use Task Manager.
 echo.
-echo 提示: 此便携版本使用内置的 JRE 21，无需额外安装 Java
+echo Note: This portable version uses bundled JRE 21, no additional Java installation required
 echo.
 pause

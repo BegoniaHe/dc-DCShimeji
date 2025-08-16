@@ -1,35 +1,35 @@
 #!/bin/bash
 
-# Shimeji-ee JRE 21 便携启动脚本 (Unix/Linux/macOS)
+# Shimeji-ee JRE 21 Portable Startup Script (Unix/Linux/macOS)
 
 cd "$(dirname "$0")"
 
 echo "========================================"
-echo "  Shimeji-ee - JRE 21 便携版本"
+echo "  Shimeji-ee - JRE 21 Portable Version"
 echo "========================================"
 echo
 
-# 检查是否存在绑定的 JRE 21
+# Check for bundled JRE 21
 if [ -f "jre/bin/java" ]; then
-    echo "检测到绑定的 JRE 21，使用绑定版本..."
+    echo "Found bundled JRE 21, using bundled version..."
     JAVA_CMD="./jre/bin/java"
 else
-    echo "错误: 未找到绑定的 JRE 21"
-    echo "此便携版本仅支持内置的 JRE 21，请确保 jre 文件夹存在"
-    read -p "按 Enter 键退出..."
+    echo "Error: Bundled JRE 21 not found"
+    echo "This portable version only supports bundled JRE 21, please ensure jre folder exists"
+    read -p "Press Enter to exit..."
     exit 1
 fi
 
 if [ ! -f "target/Shimeji-ee.jar" ]; then
-    echo "错误: 未找到 Shimeji-ee.jar 文件！"
-    echo "请确保 target 文件夹存在"
-    read -p "按 Enter 键退出..."
+    echo "Error: Shimeji-ee.jar file not found!"
+    echo "Please ensure target folder exists"
+    read -p "Press Enter to exit..."
     exit 1
 fi
 
-echo "使用内置 JRE 21 启动 Shimeji-ee..."
+echo "Starting Shimeji-ee with bundled JRE 21..."
 echo
-echo "启动 Shimeji-ee..."
+echo "Launching Shimeji-ee..."
 
 $JAVA_CMD -Dfile.encoding=UTF-8 \
      -Xms64m \
@@ -39,10 +39,10 @@ $JAVA_CMD -Dfile.encoding=UTF-8 \
 
 JAVA_PID=$!
 echo
-echo "Shimeji-ee 已成功启动！(使用内置 JRE 21, PID: $JAVA_PID)"
-echo "现在您可以安全地关闭此终端。"
-echo "要停止 Shimeji-ee，请右键点击桌面精灵或使用以下命令："
+echo "Shimeji-ee has been successfully started! (using bundled JRE 21, PID: $JAVA_PID)"
+echo "You can now safely close this terminal."
+echo "To stop Shimeji-ee, right-click on the desktop mascot or use the following command:"
 echo "kill $JAVA_PID"
 echo
-echo "提示: 此便携版本使用内置的 JRE 21，无需额外安装 Java"
+echo "Note: This portable version uses bundled JRE 21, no additional Java installation required"
 echo
