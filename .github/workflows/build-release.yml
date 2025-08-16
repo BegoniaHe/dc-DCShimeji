@@ -95,7 +95,7 @@ jobs:
         
     - name: Install WiX Toolset
       run: |
-        choco install wixtoolset --version=3.14.1
+        winget install --id=WiXToolset.WiXToolset -e
         # Add WiX to PATH
         echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" >> $GITHUB_PATH
       
