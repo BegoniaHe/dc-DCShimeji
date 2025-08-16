@@ -193,7 +193,7 @@ jobs:
         if [ "${{ matrix.jre-os }}" = "windows" ]; then
           cp "shell_script/run_shimeji.bat" "run_shimeji${{ matrix.script-ext }}"
         else
-          cp "shell_script/run_shimeji.sh" "run_shimeji${{ matrix.script-ext }}"
+          cp "shell_script/run_shimeji_darwin.sh" "run_shimeji${{ matrix.script-ext }}"
           chmod +x "run_shimeji${{ matrix.script-ext }}"
         fi
       shell: bash
@@ -241,7 +241,12 @@ jobs:
            检查是否有足够的权限运行脚本
         3. On macOS, you might need to allow the app in System Preferences > Security & Privacy
            在 macOS 上，您可能需要在系统偏好设置 > 安全性与隐私中允许该应用
-        4. On Windows, the program runs in the background. To stop it, right-click on the mascot or use Task Manager
+        4. **Important for macOS users**: If you get security warnings about the JRE, run this command in Terminal:
+           **macOS 用户重要提示**：如果您收到关于 JRE 的安全警告，请在终端中运行此命令：
+           \`xattr -r -d com.apple.quarantine jre/\`
+           This removes the quarantine flag from downloaded JRE files.
+           这将移除从网上下载的 JRE 文件的隔离标志。
+        5. On Windows, the program runs in the background. To stop it, right-click on the mascot or use Task Manager
            在 Windows 上，程序在后台运行。要停止它，请右键单击吉祥物或使用任务管理器
         
         ## Platform Information / 平台信息:
@@ -375,6 +380,7 @@ jobs:
         - Platform packages include OpenJDK 21.0.8+9 / 平台包包含 OpenJDK 21.0.8+9
         - All packages are portable and don't require installation / 所有包都是便携的，无需安装
         - On macOS, you might need to allow the app in Security & Privacy settings / 在 macOS 上，您可能需要在安全性与隐私设置中允许该应用
+        - **Important for macOS users**: If you encounter security warnings about the JRE, run \`xattr -r -d com.apple.quarantine jre/\` in Terminal to remove the quarantine flag from downloaded JRE files / **macOS 用户重要提示**：如果遇到关于 JRE 的安全警告，请在终端运行 \`xattr -r -d com.apple.quarantine jre/\` 来移除下载文件的隔离标志
         - **Note for ARM64 users**: ARM64 JRE 21 is available for both Windows and macOS. Consider using ARM64-optimized versions for better performance on Apple Silicon and Windows ARM64 devices.
         - **ARM64 用户注意**: ARM64 架构的 JRE 21 在 Windows 和 macOS 上都可用。建议在 Apple Silicon 和 Windows ARM64 设备上使用 ARM64 优化版本以获得更好的性能。
         
