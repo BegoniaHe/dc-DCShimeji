@@ -1,4 +1,4 @@
-name: Build and Release Platform-Specific Packages
+name: Build and Release jpackage Native Packages
 
 on:
   schedule:
@@ -22,10 +22,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up JDK 8
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '21'
         distribution: 'temurin'
         
     - name: Install Apache Ant
@@ -74,260 +74,152 @@ jobs:
           MANIFEST.MF
         retention-days: 1
 
-  build-platform-packages:
+  build-jpackage-windows:
     needs: build-jar
     if: needs.build-jar.outputs.build-success == 'true'
-    strategy:
-      matrix:
-        include:
-          - platform: windows-x64
-            os: windows-latest
-            jre-arch: x64
-            jre-os: windows
-            script-ext: .bat
-            zip-name: Shimeji-ee-windows-x64
-          - platform: windows-x86
-            os: windows-latest
-            jre-arch: x86-32
-            jre-os: windows
-            script-ext: .bat
-            zip-name: Shimeji-ee-windows-x86
-          - platform: macos-x64
-            os: macos-latest
-            jre-arch: x64
-            jre-os: mac
-            script-ext: .sh
-            zip-name: Shimeji-ee-macos-x64
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Install Apache Ant
+      run: |
+        choco install ant
+        
+    - name: Install WiX Toolset
+      run: |
+        # Download and install WiX Toolset v3.14.1
+        $url = "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314.exe"
+        $output = "$env:TEMP\wix314.exe"
+        Invoke-WebRequest -Uri $url -OutFile $output
+        Start-Process -FilePath $output -ArgumentList "/install", "/quiet", "/norestart" -Wait
+        # Add WiX to PATH
+        echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" >> $env:GITHUB_PATH
+      shell: powershell
+      
     - name: Download JAR artifact
       uses: actions/download-artifact@v4
       with:
         name: shimeji-jar
         
-    - name: Download JRE 8
-      id: download-jre
+    - name: Build jpackage Windows packages
       run: |
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          if [ "${{ matrix.jre-arch }}" = "x86-32" ]; then
-            JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x86-32_windows_hotspot_8u422b05.zip"
-          else
-            JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x64_windows_hotspot_8u422b05.zip"
-          fi
-        else
-          JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x64_mac_hotspot_8u422b05.tar.gz"
-        fi
+        echo "Building Windows packages using jpackage..."
+        ant -f build-jpackage-windows.xml jpackage-windows-all
+        echo "Checking for generated files:"
+        dir target\*.msi
+        dir target\*.zip
         
-        echo "Downloading JRE from: $JRE_URL"
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          curl -L -o jre.zip "$JRE_URL"
-        else
-          curl -L -o jre.tar.gz "$JRE_URL"
-        fi
-      shell: bash
-        
-    - name: Extract JRE
-      run: |
-        mkdir -p jre
-        mkdir -p jre_temp
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          if command -v unzip >/dev/null 2>&1; then
-            unzip -q jre.zip -d jre_temp
-          else
-            powershell -Command "Expand-Archive -Path jre.zip -DestinationPath jre_temp"
-          fi
-          # Find the JRE directory and move it to jre/
-          JRE_DIR=$(find jre_temp -name "jdk8u*" -type d | head -1)
-          if [ -n "$JRE_DIR" ]; then
-            mv "$JRE_DIR"/* jre/ 2>/dev/null || cp -r "$JRE_DIR"/* jre/
-          fi
-        else
-          tar -xzf jre.tar.gz -C jre_temp
-          # Find the JRE directory and move it to jre/
-          JRE_DIR=$(find jre_temp -name "jdk8u*" -type d | head -1)
-          if [ -n "$JRE_DIR" ]; then
-            mv "$JRE_DIR"/* jre/
-          fi
-        fi
-        
-        # Clean up
-        rm -rf jre_temp
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          rm jre.zip
-        else
-          rm jre.tar.gz
-        fi
-      shell: bash
-        
-    - name: Create startup script
-      run: |
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          cat > "run_shimeji${{ matrix.script-ext }}" << 'EOF'
-        @echo off
-        cd /d "%~dp0"
-        echo Starting Shimeji-ee...
-        echo Starting Shimeji-ee...
-        
-        if not exist "jre\bin\java.exe" (
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            pause
-            exit /b 1
-        )
-        
-        if not exist "target\Shimeji-ee.jar" (
-            echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
-        
-        
-        if not exist "jre\bin\java.exe" (
-            echo Error: JRE not found! Please make sure the jre folder exists.
-            pause
-            exit /b 1
-        )
-        
-        if not exist "target\Shimeji-ee.jar" (
-            echo Error: Shimeji-ee.jar not found! Please make sure the target folder exists.
-            pause
-            exit /b 1
-        )
-        
-        "jre\bin\java.exe" -cp "target\Shimeji-ee.jar;lib\*" com.group_finity.mascot.Main
-        
-        if errorlevel 1 (
-            echo.
-            echo Shimeji-ee exited with an error.
-            pause
-        )
-        EOF
-        else
-          cat > "run_shimeji${{ matrix.script-ext }}" << 'EOF'
-        #!/bin/bash
-        cd "$(dirname "$0")"
-        echo "Starting Shimeji-ee..."
-        echo "Starting Shimeji-ee..."
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-            echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
-        
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-
-        
-        if [ ! -f "jre/bin/java" ]; then
-            echo "Error: JRE not found! Please make sure the jre folder exists."
-
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        if [ ! -f "target/Shimeji-ee.jar" ]; then
-            echo "Error: Shimeji-ee.jar not found! Please make sure the target folder exists."
-            read -p "Press Enter to exit..."
-            exit 1
-        fi
-        
-        "./jre/bin/java" -cp "target/Shimeji-ee.jar:lib/*" com.group_finity.mascot.Main
-        
-        if [ $? -ne 0 ]; then
-            echo ""
-            echo "Shimeji-ee exited with an error."
-            read -p "Press Enter to exit..."
-        fi
-        EOF
-          chmod +x "run_shimeji${{ matrix.script-ext }}"
-        fi
-      shell: bash
-      
-    - name: Create README
-      run: |
-        cat > "README_${{ matrix.platform }}.md" << EOF
-        # Shimeji-ee - ${{ matrix.platform }} Portable Version
-        # Shimeji-ee - ${{ matrix.platform }} 便携版
-        
-        This is a portable version of Shimeji-ee that includes Java Runtime Environment (JRE 8) so you don't need to install Java separately.
-        
-        这是 Shimeji-ee 的便携版本，内置了 Java 运行环境 (JRE 8)，无需单独安装 Java。
-        
-        ## How to run / 如何运行:
-        
-        ### Windows:
-        Double-click \`run_shimeji.bat\` or run it from command prompt.
-        双击 \`run_shimeji.bat\` 或在命令提示符中运行。
-        
-        ### macOS/Linux:
-        1. Open Terminal and navigate to this folder
-           打开终端并导航到此文件夹
-        2. Run: \`./run_shimeji.sh\`
-           运行：\`./run_shimeji.sh\`
-        
-        ## Folder structure / 文件夹结构:
-        - \`jre/\` - Java Runtime Environment / Java 运行环境
-        - \`target/\` - Contains Shimeji-ee.jar / 包含 Shimeji-ee.jar
-        - \`lib/\` - Required libraries / 必需的库文件
-        - \`conf/\` - Configuration files / 配置文件
-        - \`img/\` - Images and mascot sprites / 图片和吉祥物精灵
-        - \`run_shimeji${{ matrix.script-ext }}\` - Startup script / 启动脚本
-        
-        ## Troubleshooting / 故障排除:
-        
-        If the program doesn't start:
-        如果程序无法启动：
-        
-        1. Make sure all folders are present (jre, target, lib, conf, img)
-           确保所有文件夹都存在 (jre, target, lib, conf, img)
-        2. Check that you have sufficient permissions to run the script
-           检查是否有足够的权限运行脚本
-        3. On macOS, you might need to allow the app in System Preferences > Security & Privacy
-           在 macOS 上，您可能需要在系统偏好设置 > 安全性与隐私中允许该应用
-        
-        ## Platform Information / 平台信息:
-        - Platform / 平台: ${{ matrix.platform }}
-        - JRE Architecture / JRE 架构: ${{ matrix.jre-arch }}
-        - JRE Version / JRE 版本: OpenJDK 8u422-b05
-        
-        For more information, visit: https://github.com/BegoniaHe/dc-DCShimeji
-        更多信息请访问：https://github.com/BegoniaHe/dc-DCShimeji
-        EOF
-      shell: bash
-      
-    - name: Create platform package
-      run: |
-        # Create the platform-specific zip
-        if [ "${{ matrix.jre-os }}" = "windows" ]; then
-          if command -v zip >/dev/null 2>&1; then
-            zip -r "${{ matrix.zip-name }}.zip" jre/ target/ lib/ conf/ img/ run_shimeji${{ matrix.script-ext }} README_${{ matrix.platform }}.md *.txt LICENSE MANIFEST.MF
-          else
-            powershell -Command "Compress-Archive -Path 'jre', 'target', 'lib', 'conf', 'img', 'run_shimeji${{ matrix.script-ext }}', 'README_${{ matrix.platform }}.md', '*.txt', 'LICENSE', 'MANIFEST.MF' -DestinationPath '${{ matrix.zip-name }}.zip'"
-          fi
-        else
-          zip -r "${{ matrix.zip-name }}.zip" jre/ target/ lib/ conf/ img/ run_shimeji${{ matrix.script-ext }} README_${{ matrix.platform }}.md *.txt LICENSE MANIFEST.MF
-        fi
-      shell: bash
-      
-    - name: Upload platform package
+    - name: Upload Windows MSI installer
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.zip-name }}
-        path: ${{ matrix.zip-name }}.zip
+        name: Shimeji-ee-windows-msi
+        path: |
+          target/*.msi
+          target/*.exe
+        retention-days: 1
+        if-no-files-found: warn
+        
+    - name: Upload Windows portable package
+      uses: actions/upload-artifact@v4
+      with:
+        name: Shimeji-ee-windows-portable
+        path: target/Shimeji-ee_*_Portable.zip
+        retention-days: 1
+        if-no-files-found: warn
+
+  build-jpackage-macos:
+    needs: build-jar
+    if: needs.build-jar.outputs.build-success == 'true'
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Install Apache Ant
+      run: |
+        brew install ant
+        
+    - name: Download JAR artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: shimeji-jar
+        
+    - name: Build jpackage macOS app
+      run: |
+        echo "Building macOS app using jpackage..."
+        ant -f build-jpackage-macos.xml jpackage-macos
+        
+    - name: Create macOS distribution package
+      run: |
+        cd target/jpackage-macos
+        zip -r ../../Shimeji-ee-macos.zip Shimeji-ee.app
+        
+    - name: Upload macOS package
+      uses: actions/upload-artifact@v4
+      with:
+        name: Shimeji-ee-macos
+        path: Shimeji-ee-macos.zip
+        retention-days: 1
+
+  build-jpackage-linux:
+    needs: build-jar
+    if: needs.build-jar.outputs.build-success == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Install Apache Ant
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ant
+        
+    - name: Download JAR artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: shimeji-jar
+        
+    - name: Build jpackage Linux package
+      run: |
+        echo "Building Linux package using jpackage..."
+        ant -f build-jpackage-linux.xml jpackage-linux
+        
+    - name: Create Linux distribution package
+      run: |
+        cd target/jpackage-linux
+        tar -czf ../../Shimeji-ee-linux.tar.gz Shimeji-ee/
+        
+    - name: Upload Linux package
+      uses: actions/upload-artifact@v4
+      with:
+        name: Shimeji-ee-linux
+        path: Shimeji-ee-linux.tar.gz
         retention-days: 1
 
   create-release:
-    needs: [build-jar, build-platform-packages]
+    needs: [build-jar, build-jpackage-windows, build-jpackage-macos, build-jpackage-linux]
     runs-on: ubuntu-latest
     if: needs.build-jar.outputs.build-success == 'true'
     
@@ -377,17 +269,18 @@ jobs:
         # Generate release notes
         BUILD_TIME=$(date '+%Y-%m-%d %H:%M:%S UTC')
         cat > release_notes.md << EOF
-        # Shimeji-ee Pre-release Build / Shimeji-ee 预发布版本
+        # Shimeji-ee jpackage Native Builds / Shimeji-ee jpackage 原生版本
         
         **Build Date / 构建日期:** $BUILD_TIME  
         **Commit / 提交:** ${{ github.sha }}
         
         ## What's included / 包含内容:
         
-        ### Platform-specific packages with embedded JRE / 包含嵌入式JRE的平台特定包:
-        - **Shimeji-ee-windows-x64.zip** - Windows 64-bit with JRE 8 / Windows 64位版本，含JRE 8
-        - **Shimeji-ee-windows-x86.zip** - Windows 32-bit with JRE 8 / Windows 32位版本，含JRE 8  
-        - **Shimeji-ee-macos-x64.zip** - macOS Intel with JRE 8 / macOS Intel版本，含JRE 8
+        ### Native packages built with jpackage / 使用 jpackage 构建的原生包:
+        - **Shimeji-ee-windows-msi** - Windows MSI installer with embedded JRE / Windows MSI 安装程序，含嵌入式 JRE
+        - **Shimeji-ee-windows-portable** - Windows portable version with embedded JRE / Windows 便携版，含嵌入式 JRE
+        - **Shimeji-ee-macos.zip** - macOS application bundle (.app) / macOS 应用程序包 (.app)
+        - **Shimeji-ee-linux.tar.gz** - Linux application directory / Linux 应用程序目录
         
         ### JAR file for advanced users / 高级用户JAR文件:
         - **Shimeji-ee.jar** - Main executable JAR file / 主要可执行JAR文件
@@ -395,19 +288,31 @@ jobs:
         
         ## Installation / 安装说明:
         
-        ### Recommended: Platform-specific packages / 推荐：平台特定包
-        1. Download the appropriate package for your system / 下载适合您系统的包
-        2. Extract to a folder / 解压到文件夹
-        3. Run the startup script / 运行启动脚本:
-           - **Windows**: Double-click \`run_shimeji.bat\` / 双击 \`run_shimeji.bat\`
-           - **macOS/Linux**: Run \`./run_shimeji.sh\` in Terminal / 在终端运行 \`./run_shimeji.sh\`
+        ### Recommended: Native packages / 推荐：原生包
         
-        **No Java installation required! / 无需安装Java！**
+        #### Windows (推荐使用)
+        1. **MSI Installer / MSI 安装程序**: Download and run the MSI file for system-wide installation
+           下载并运行 MSI 文件进行系统级安装
+        2. **Portable Version / 便携版**: Extract the portable zip and run Shimeji-ee.exe
+           解压便携版 zip 并运行 Shimeji-ee.exe
+        
+        #### macOS
+        1. Download Shimeji-ee-macos.zip / 下载 Shimeji-ee-macos.zip
+        2. Extract and run Shimeji-ee.app / 解压并运行 Shimeji-ee.app
+        3. If security warnings appear, run: \`xattr -r -d com.apple.quarantine Shimeji-ee.app\`
+           如果出现安全警告，运行：\`xattr -r -d com.apple.quarantine Shimeji-ee.app\`
+        
+        #### Linux
+        1. Download and extract Shimeji-ee-linux.tar.gz / 下载并解压 Shimeji-ee-linux.tar.gz
+        2. Run the executable in the Shimeji-ee directory / 在 Shimeji-ee 目录中运行可执行文件
+        
+        **No Java installation required! All packages include embedded JRE 21.**
+        **无需安装 Java！所有包都包含嵌入式 JRE 21。**
         
         ### Advanced: JAR file only / 高级：仅JAR文件
         1. Download Shimeji-ee-prerelease.zip / 下载 Shimeji-ee-prerelease.zip
         2. Extract to a folder / 解压到文件夹
-        3. Make sure you have Java 8 or later installed / 确保已安装 Java 8 或更高版本
+        3. Make sure you have Java 21 or later installed / 确保已安装 Java 21 或更高版本
         4. Run with the command / 使用以下命令运行:
            
            **Windows:**
@@ -420,16 +325,29 @@ jobs:
            java -cp "target/Shimeji-ee.jar:lib/*" com.group_finity.mascot.Main
            \`\`\`
         
+        ## Technical Details / 技术详情:
+        - **JRE Version / JRE 版本**: OpenJDK 21 (embedded in native packages)
+        - **Build Tool / 构建工具**: jpackage (part of JDK)
+        - **Packaging / 打包方式**: Native application bundles with embedded runtime
+        - **File Size / 文件大小**: Larger than JAR-only due to embedded JRE, but no Java installation required
+        
+        ## Advantages of jpackage builds / jpackage 构建的优势:
+        - **Zero Java dependency / 零 Java 依赖**: No need to install Java separately
+        - **Native performance / 原生性能**: Better startup time and system integration
+        - **Easy distribution / 简易分发**: Single file/folder contains everything needed
+        - **System integration / 系统集成**: Proper application registration (Windows) and .app bundle (macOS)
+        
         ## Notes / 注意事项:
-        - Platform packages include OpenJDK 8u422-b05 / 平台包包含 OpenJDK 8u422-b05
-        - All packages are portable and don't require installation / 所有包都是便携的，无需安装
-        - On macOS, you might need to allow the app in Security & Privacy settings / 在 macOS 上，您可能需要在安全性与隐私设置中允许该应用
-        - **Note for ARM64 users**: JRE 8 is not available for ARM64 architecture (Windows ARM64, macOS Apple Silicon). Please use the JAR version with a newer JRE, or use compatibility layers (Rosetta 2 on macOS, x86 emulation on Windows).
-        - **ARM64 用户注意**: ARM64 架构（Windows ARM64、macOS Apple Silicon）没有可用的 JRE 8。请使用较新 JRE 的 JAR 版本，或使用兼容层（macOS 上的 Rosetta 2，Windows 上的 x86 模拟）。
+        - jpackage builds are larger due to embedded JRE but provide better user experience
+          jpackage 构建由于嵌入式 JRE 而较大，但提供更好的用户体验
+        - Windows MSI installer provides proper system integration and uninstall support
+          Windows MSI 安装程序提供适当的系统集成和卸载支持
+        - All native packages include the required JVM parameters for proper operation
+          所有原生包都包含正确运行所需的 JVM 参数
         
-        This is an automated pre-release build generated at $BUILD_TIME. For stable releases, please check the main releases page.
+        This is an automated pre-release build generated at $BUILD_TIME using jpackage technology.
         
-        这是在 $BUILD_TIME 自动生成的预发布版本。如需稳定版本，请查看主要发布页面。
+        这是在 $BUILD_TIME 使用 jpackage 技术自动生成的预发布版本。
         
         ---
         *This release was automatically generated from commit ${{ github.sha }} / 此版本由提交 ${{ github.sha }} 自动生成*
@@ -455,14 +373,41 @@ jobs:
       run: |
         echo "Creating new pre-release: ${{ steps.release_info.outputs.release_tag }}"
         
+        # List all downloaded files for debugging
+        echo "Available files:"
+        ls -la
+        
+        # Create release with files that exist
+        FILES_TO_UPLOAD=""
+        
+        # Check for MSI files
+        if ls *.msi 1> /dev/null 2>&1; then
+          FILES_TO_UPLOAD="$FILES_TO_UPLOAD *.msi"
+        fi
+        
+        # Check for ZIP files (excluding our prerelease zip)
+        if ls *.zip 1> /dev/null 2>&1; then
+          for zipfile in *.zip; do
+            if [ "$zipfile" != "Shimeji-ee-prerelease.zip" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD $zipfile"
+            fi
+          done
+        fi
+        
+        # Check for TAR.GZ files
+        if ls *.tar.gz 1> /dev/null 2>&1; then
+          FILES_TO_UPLOAD="$FILES_TO_UPLOAD *.tar.gz"
+        fi
+        
+        # Always include these
+        FILES_TO_UPLOAD="$FILES_TO_UPLOAD Shimeji-ee-prerelease.zip target/Shimeji-ee.jar"
+        
+        echo "Files to upload: $FILES_TO_UPLOAD"
+        
         gh release create "${{ steps.release_info.outputs.release_tag }}" \
           --title "${{ steps.release_info.outputs.release_name }}" \
           --notes-file release_notes.md \
           --prerelease \
-          Shimeji-ee-windows-x64.zip \
-          Shimeji-ee-windows-x86.zip \
-          Shimeji-ee-macos-x64.zip \
-          Shimeji-ee-prerelease.zip \
-          target/Shimeji-ee.jar
+          $FILES_TO_UPLOAD
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
