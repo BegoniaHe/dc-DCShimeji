@@ -113,18 +113,25 @@ jobs:
       run: |
         echo "Building MSI installer using jpackage..."
         ant jpackage
+        echo "Checking for generated MSI files:"
+        dir target\*.msi
         
     - name: Build jpackage portable version
       run: |
         echo "Building portable version using jpackage..."
         ant jpackage-portable
+        echo "Checking for generated portable files:"
+        dir target\*.zip
         
     - name: Upload Windows MSI installer
       uses: actions/upload-artifact@v4
       with:
         name: Shimeji-ee-windows-msi
-        path: target/*.msi
+        path: |
+          target/*.msi
+          target/*.exe
         retention-days: 1
+        if-no-files-found: warn
         
     - name: Upload Windows portable package
       uses: actions/upload-artifact@v4
@@ -132,6 +139,7 @@ jobs:
         name: Shimeji-ee-windows-portable
         path: target/Shimeji-ee_*_Portable.zip
         retention-days: 1
+        if-no-files-found: warn
 
   build-jpackage-macos:
     needs: build-jar
@@ -371,14 +379,41 @@ jobs:
       run: |
         echo "Creating new pre-release: ${{ steps.release_info.outputs.release_tag }}"
         
+        # List all downloaded files for debugging
+        echo "Available files:"
+        ls -la
+        
+        # Create release with files that exist
+        FILES_TO_UPLOAD=""
+        
+        # Check for MSI files
+        if ls *.msi 1> /dev/null 2>&1; then
+          FILES_TO_UPLOAD="$FILES_TO_UPLOAD *.msi"
+        fi
+        
+        # Check for ZIP files (excluding our prerelease zip)
+        if ls *.zip 1> /dev/null 2>&1; then
+          for zipfile in *.zip; do
+            if [ "$zipfile" != "Shimeji-ee-prerelease.zip" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD $zipfile"
+            fi
+          done
+        fi
+        
+        # Check for TAR.GZ files
+        if ls *.tar.gz 1> /dev/null 2>&1; then
+          FILES_TO_UPLOAD="$FILES_TO_UPLOAD *.tar.gz"
+        fi
+        
+        # Always include these
+        FILES_TO_UPLOAD="$FILES_TO_UPLOAD Shimeji-ee-prerelease.zip target/Shimeji-ee.jar"
+        
+        echo "Files to upload: $FILES_TO_UPLOAD"
+        
         gh release create "${{ steps.release_info.outputs.release_tag }}" \
           --title "${{ steps.release_info.outputs.release_name }}" \
           --notes-file release_notes.md \
           --prerelease \
-          *.msi \
-          *.zip \
-          *.tar.gz \
-          Shimeji-ee-prerelease.zip \
-          target/Shimeji-ee.jar
+          $FILES_TO_UPLOAD
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
