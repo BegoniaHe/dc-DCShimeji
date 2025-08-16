@@ -40,7 +40,39 @@ Shimeji was originally created by Yuki Yamada of Group Finity ([http://www.group
 
 - **Operating System:** Windows Vista or higher
 - **Java Runtime:** Java 8 or later
+  - ✅ **Java 8**: Full compatibility, no additional setup required
+  - ✅ **Java 9-21**: Full compatibility with DPI fixes included
+  - ⚠️ **Java 9+ High DPI Issues**: If you experience display problems on high DPI screens, use the provided compatibility scripts
 - **Memory:** At least 512MB RAM (more recommended for multiple image sets)
+
+### 🔧 Java 9+ High DPI Compatibility
+
+If you're using Java 9 or later and experiencing display issues (mascots appearing too small/large), use these solutions:
+
+**Option 1: Use the compatibility launcher (Recommended)**
+```bash
+# Windows
+run_java9plus.bat
+
+# Linux/macOS  
+./run_java9plus.sh
+```
+
+**Option 2: Manual JVM arguments**
+```bash
+java -Dsun.java2d.dpiaware=false \
+     -Dsun.java2d.uiScale=1.0 \
+     -Dsun.java2d.uiScale.enabled=false \
+     -jar Shimeji-ee.jar
+```
+
+**Option 3: Use the DPI diagnostic tool**
+```bash
+# Windows
+test_dpi.bat
+```
+
+📝 **Note**: These compatibility settings force Java 9+ to use Java 8's DPI behavior, ensuring consistent display across all Java versions.
 
 ## 🚀 Quick Start
 

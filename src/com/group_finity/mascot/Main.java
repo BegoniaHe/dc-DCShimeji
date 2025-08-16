@@ -79,6 +79,9 @@ public class Main
 
     static
     {
+        // Java 9+ 兼容性设置 - 强制使用 Java 8 DPI 行为
+        initializeJava9PlusCompatibility();
+        
         try
         {
             LogManager.getLogManager( ).readConfiguration( Main.class.getResourceAsStream( "/logging.properties" ) );
@@ -114,10 +117,119 @@ public class Main
     
     private JDialog form;
     
-       /**
-        * 获取 Main 类的单例实例。
-        * @return Main 类的实例。
-        */
+    /**
+     * 初始化 Java 9+ 兼容性设置
+     * 强制使用 Java 8 的 DPI 处理策略，解决高 DPI 显示问题
+     */
+    private static void initializeJava9PlusCompatibility() {
+        try {
+            // 获取 Java 版本信息
+            String javaVersion = System.getProperty("java.version");
+            System.out.println("当前 Java 版本: " + javaVersion);
+            
+            // 检查是否为 Java 9+
+            boolean isJava9Plus = isJava9OrHigher(javaVersion);
+            
+            if (isJava9Plus) {
+                System.out.println("检测到 Java 9+ 版本，启用 DPI 兼容模式...");
+                
+                // 核心 DPI 设置 - 强制使用 Java 8 行为
+                System.setProperty("sun.java2d.dpiaware", "false");
+                System.setProperty("sun.java2d.uiScale", "1.0");
+                System.setProperty("sun.java2d.uiScale.enabled", "false");
+                
+                // Windows 特定的 DPI 设置（Java 9+）
+                System.setProperty("sun.java2d.win.uiScaleX", "1.0");
+                System.setProperty("sun.java2d.win.uiScaleY", "1.0");
+                System.setProperty("sun.java2d.win.dpiAwareness", "false");
+                
+                // Java 11+ 额外设置
+                if (isJava11OrHigher(javaVersion)) {
+                    System.setProperty("sun.java2d.uiScale.enabled", "false");
+                    System.setProperty("sun.java2d.metal", "false"); // macOS 相关
+                }
+                
+                // Java 17+ 额外设置
+                if (isJava17OrHigher(javaVersion)) {
+                    System.setProperty("sun.java2d.renderer", "sun.java2d.pipe.hw.AccelGraphicsConfig");
+                }
+                
+                System.out.println("✓ Java 9+ DPI 兼容模式已启用");
+                System.out.println("  - DPI 感知: 已禁用");
+                System.out.println("  - UI 缩放: 已固定为 1.0");
+                System.out.println("  - 兼容模式: Java 8 行为");
+            } else {
+                System.out.println("检测到 Java 8，无需 DPI 兼容设置");
+            }
+            
+        } catch (Exception e) {
+            System.err.println("初始化 Java 9+ 兼容性设置时出错: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * 检查是否为 Java 9 或更高版本
+     */
+    private static boolean isJava9OrHigher(String javaVersion) {
+        try {
+            // Java 9+ 版本格式: 9.0.1, 11.0.1, 17.0.1 等
+            // Java 8 版本格式: 1.8.0_xxx
+            if (javaVersion.startsWith("1.8") || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.6")) {
+                return false;
+            }
+            
+            // 提取主版本号
+            String majorVersion = javaVersion.split("\\.")[0];
+            int major = Integer.parseInt(majorVersion);
+            return major >= 9;
+            
+        } catch (Exception e) {
+            // 如果解析失败，假设是较新版本
+            return true;
+        }
+    }
+    
+    /**
+     * 检查是否为 Java 11 或更高版本
+     */
+    private static boolean isJava11OrHigher(String javaVersion) {
+        try {
+            if (javaVersion.startsWith("1.")) {
+                return false; // Java 8 及以下
+            }
+            
+            String majorVersion = javaVersion.split("\\.")[0];
+            int major = Integer.parseInt(majorVersion);
+            return major >= 11;
+            
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    /**
+     * 检查是否为 Java 17 或更高版本
+     */
+    private static boolean isJava17OrHigher(String javaVersion) {
+        try {
+            if (javaVersion.startsWith("1.")) {
+                return false; // Java 8 及以下
+            }
+            
+            String majorVersion = javaVersion.split("\\.")[0];
+            int major = Integer.parseInt(majorVersion);
+            return major >= 17;
+            
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取 Main 类的单例实例。
+     * @return Main 类的实例。
+     */
     public static Main getInstance( )
     {
     	return instance;
@@ -156,19 +268,18 @@ public class Main
         }
     }
 
-       /**
-        * 运行程序的主要逻辑。
-        * 初始化、加载配置并启动桌宠管理器。
-        */
+    /**
+     * 运行程序的主要逻辑。
+     * 初始化、加载配置并启动桌宠管理器。
+     */
     public void run( )
     {
+        
     	// 检测操作系统
     	if( !System.getProperty("sun.arch.data.model").equals( "64" ) )
             platform = Platform.x86;
         else
-            platform = Platform.x86_64;
-        
-        // load properties
+            platform = Platform.x86_64;        // load properties
         properties = new Properties();
         try (FileInputStream input = new FileInputStream("./conf/settings.properties")) {
             properties.load(input);

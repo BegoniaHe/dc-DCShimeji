@@ -10,7 +10,7 @@
 
 	<target name="compile" depends="clean">
 		<mkdir dir="target/classes" />
-		<javac destdir="target/classes" target="1.8" source="1.8" debug="yes" optimize="yes" includeantruntime="false">
+		<javac destdir="target/classes" target="21" source="21" debug="yes" optimize="yes" includeantruntime="false">
 			<src path="src"/>
 			<src path="src_win"/>
 			<src path="src_mac"/>
@@ -86,6 +86,19 @@
 		<ant target="zip_package">
 			<property name="edition" value="Mischievous" />
 		</ant>
+	</target>
+
+	<!-- 添加运行目标，包含必要的 JVM 参数 -->
+	<target name="run" depends="jar">
+		<java jar="target/Shimeji-ee.jar" fork="true">
+			<jvmarg value="--enable-native-access=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens"/>
+			<jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens"/>
+			<jvmarg value="java.desktop/sun.awt=ALL-UNNAMED"/>
+			<jvmarg value="--add-opens"/>
+			<jvmarg value="java.desktop/java.awt=ALL-UNNAMED"/>
+		</java>
 	</target>
 
 	<target name="zip_package">

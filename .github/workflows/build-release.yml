@@ -22,10 +22,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up JDK 8
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '21'
         distribution: 'temurin'
         
     - name: Install Apache Ant
@@ -93,12 +93,24 @@ jobs:
             jre-os: windows
             script-ext: .bat
             zip-name: Shimeji-ee-windows-x86
+          - platform: windows-aarch64
+            os: windows-latest
+            jre-arch: aarch64
+            jre-os: windows
+            script-ext: .bat
+            zip-name: Shimeji-ee-windows-aarch64
           - platform: macos-x64
             os: macos-latest
             jre-arch: x64
             jre-os: mac
             script-ext: .sh
             zip-name: Shimeji-ee-macos-x64
+          - platform: macos-aarch64
+            os: macos-latest
+            jre-arch: aarch64
+            jre-os: mac
+            script-ext: .sh
+            zip-name: Shimeji-ee-macos-aarch64
 
     runs-on: ${{ matrix.os }}
     
@@ -115,17 +127,24 @@ jobs:
       with:
         name: shimeji-jar
         
-    - name: Download JRE 8
+    - name: Download JRE 21
       id: download-jre
       run: |
         if [ "${{ matrix.jre-os }}" = "windows" ]; then
           if [ "${{ matrix.jre-arch }}" = "x86-32" ]; then
-            JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x86-32_windows_hotspot_8u422b05.zip"
+            # Java 21 doesn't have x86-32 support, use x64 instead
+            JRE_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.8_9.zip"
+          elif [ "${{ matrix.jre-arch }}" = "aarch64" ]; then
+            JRE_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.8_9.zip"
           else
-            JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x64_windows_hotspot_8u422b05.zip"
+            JRE_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.8_9.zip"
           fi
         else
-          JRE_URL="https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u422-b05/OpenJDK8U-jre_x64_mac_hotspot_8u422b05.tar.gz"
+          if [ "${{ matrix.jre-arch }}" = "aarch64" ]; then
+            JRE_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.8_9.tar.gz"
+          else
+            JRE_URL="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_x64_mac_hotspot_21.0.8_9.tar.gz"
+          fi
         fi
         
         echo "Downloading JRE from: $JRE_URL"
@@ -147,14 +166,14 @@ jobs:
             powershell -Command "Expand-Archive -Path jre.zip -DestinationPath jre_temp"
           fi
           # Find the JRE directory and move it to jre/
-          JRE_DIR=$(find jre_temp -name "jdk8u*" -type d | head -1)
+          JRE_DIR=$(find jre_temp -name "jdk-21*" -type d | head -1)
           if [ -n "$JRE_DIR" ]; then
             mv "$JRE_DIR"/* jre/ 2>/dev/null || cp -r "$JRE_DIR"/* jre/
           fi
         else
           tar -xzf jre.tar.gz -C jre_temp
           # Find the JRE directory and move it to jre/
-          JRE_DIR=$(find jre_temp -name "jdk8u*" -type d | head -1)
+          JRE_DIR=$(find jre_temp -name "jdk-21*" -type d | head -1)
           if [ -n "$JRE_DIR" ]; then
             mv "$JRE_DIR"/* jre/
           fi
@@ -185,9 +204,9 @@ jobs:
         # Shimeji-ee - ${{ matrix.platform }} Portable Version
         # Shimeji-ee - ${{ matrix.platform }} 便携版
         
-        This is a portable version of Shimeji-ee that includes Java Runtime Environment (JRE 8) so you don't need to install Java separately.
+        This is a portable version of Shimeji-ee that includes Java Runtime Environment (JRE 21) so you don't need to install Java separately.
         
-        这是 Shimeji-ee 的便携版本，内置了 Java 运行环境 (JRE 8)，无需单独安装 Java。
+        这是 Shimeji-ee 的便携版本，内置了 Java 运行环境 (JRE 21)，无需单独安装 Java。
         
         ## How to run / 如何运行:
         
@@ -228,7 +247,7 @@ jobs:
         ## Platform Information / 平台信息:
         - Platform / 平台: ${{ matrix.platform }}
         - JRE Architecture / JRE 架构: ${{ matrix.jre-arch }}
-        - JRE Version / JRE 版本: OpenJDK 8u422-b05
+        - JRE Version / JRE 版本: OpenJDK 21.0.8+9
         
         For more information, visit: https://github.com/BegoniaHe/dc-DCShimeji
         更多信息请访问：https://github.com/BegoniaHe/dc-DCShimeji
@@ -315,9 +334,11 @@ jobs:
         ## What's included / 包含内容:
         
         ### Platform-specific packages with embedded JRE / 包含嵌入式JRE的平台特定包:
-        - **Shimeji-ee-windows-x64.zip** - Windows 64-bit with JRE 8 / Windows 64位版本，含JRE 8
-        - **Shimeji-ee-windows-x86.zip** - Windows 32-bit with JRE 8 / Windows 32位版本，含JRE 8  
-        - **Shimeji-ee-macos-x64.zip** - macOS Intel with JRE 8 / macOS Intel版本，含JRE 8
+        - **Shimeji-ee-windows-x64.zip** - Windows 64-bit with JRE 21 / Windows 64位版本，含JRE 21
+        - **Shimeji-ee-windows-x86.zip** - Windows 32-bit with JRE 21 / Windows 32位版本，含JRE 21  
+        - **Shimeji-ee-windows-aarch64.zip** - Windows ARM64 with JRE 21 / Windows ARM64版本，含JRE 21
+        - **Shimeji-ee-macos-x64.zip** - macOS Intel with JRE 21 / macOS Intel版本，含JRE 21
+        - **Shimeji-ee-macos-aarch64.zip** - macOS Apple Silicon with JRE 21 / macOS Apple Silicon版本，含JRE 21
         
         ### JAR file for advanced users / 高级用户JAR文件:
         - **Shimeji-ee.jar** - Main executable JAR file / 主要可执行JAR文件
@@ -337,7 +358,7 @@ jobs:
         ### Advanced: JAR file only / 高级：仅JAR文件
         1. Download Shimeji-ee-prerelease.zip / 下载 Shimeji-ee-prerelease.zip
         2. Extract to a folder / 解压到文件夹
-        3. Make sure you have Java 8 or later installed / 确保已安装 Java 8 或更高版本
+        3. Make sure you have Java 21 or later installed / 确保已安装 Java 21 或更高版本
         4. Run with the command / 使用以下命令运行:
            
            **Windows:**
@@ -351,11 +372,11 @@ jobs:
            \`\`\`
         
         ## Notes / 注意事项:
-        - Platform packages include OpenJDK 8u422-b05 / 平台包包含 OpenJDK 8u422-b05
+        - Platform packages include OpenJDK 21.0.8+9 / 平台包包含 OpenJDK 21.0.8+9
         - All packages are portable and don't require installation / 所有包都是便携的，无需安装
         - On macOS, you might need to allow the app in Security & Privacy settings / 在 macOS 上，您可能需要在安全性与隐私设置中允许该应用
-        - **Note for ARM64 users**: JRE 8 is not available for ARM64 architecture (Windows ARM64, macOS Apple Silicon). Please use the JAR version with a newer JRE, or use compatibility layers (Rosetta 2 on macOS, x86 emulation on Windows).
-        - **ARM64 用户注意**: ARM64 架构（Windows ARM64、macOS Apple Silicon）没有可用的 JRE 8。请使用较新 JRE 的 JAR 版本，或使用兼容层（macOS 上的 Rosetta 2，Windows 上的 x86 模拟）。
+        - **Note for ARM64 users**: ARM64 JRE 21 is available for both Windows and macOS. Consider using ARM64-optimized versions for better performance on Apple Silicon and Windows ARM64 devices.
+        - **ARM64 用户注意**: ARM64 架构的 JRE 21 在 Windows 和 macOS 上都可用。建议在 Apple Silicon 和 Windows ARM64 设备上使用 ARM64 优化版本以获得更好的性能。
         
         This is an automated pre-release build generated at $BUILD_TIME. For stable releases, please check the main releases page.
         
@@ -391,7 +412,9 @@ jobs:
           --prerelease \
           Shimeji-ee-windows-x64.zip \
           Shimeji-ee-windows-x86.zip \
+          Shimeji-ee-windows-aarch64.zip \
           Shimeji-ee-macos-x64.zip \
+          Shimeji-ee-macos-aarch64.zip \
           Shimeji-ee-prerelease.zip \
           target/Shimeji-ee.jar
       env:
