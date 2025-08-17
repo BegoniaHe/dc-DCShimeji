@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="Shimeji-ee-Linux" basedir="." default="jpackage-linux">
 
 	<property name="version" value="1.0.9" />
@@ -8,11 +8,11 @@
 		<mkdir dir="target/jpackage-linux" />
 		<delete dir="target/jpackage-linux" />
 		<mkdir dir="target/jpackage-linux" />
-		
+
 		<!-- 准备应用程序资源 -->
 		<mkdir dir="target/jpackage-linux/input" />
 		<copy file="target/Shimeji-ee.jar" todir="target/jpackage-linux/input" />
-		
+
 		<!-- 执行 jpackage 命令 -->
 		<exec executable="jpackage" dir="target/jpackage-linux" failonerror="true">
 			<arg value="--input" />
@@ -44,7 +44,7 @@
 			<arg value="--java-options" />
 			<arg value="--add-opens=java.desktop/java.awt=ALL-UNNAMED" />
 		</exec>
-		
+
 		<!-- 复制配置和资源文件到应用程序目录 -->
 		<copy todir="target/jpackage-linux/Shimeji-ee/conf">
 			<fileset dir="conf" />
@@ -52,7 +52,7 @@
 		<copy todir="target/jpackage-linux/Shimeji-ee/img">
 			<fileset dir="img" />
 		</copy>
-		
+
 		<echo message="Linux app directory created successfully!" />
 		<echo message="App directory location: target/jpackage-linux/Shimeji-ee/" />
 	</target>

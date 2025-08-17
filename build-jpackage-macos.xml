@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="Shimeji-ee-macOS" basedir="." default="jpackage-macos">
 
 	<property name="version" value="1.0.9" />
@@ -8,11 +8,11 @@
 		<mkdir dir="target/jpackage-macos" />
 		<delete dir="target/jpackage-macos" />
 		<mkdir dir="target/jpackage-macos" />
-		
+
 		<!-- 准备应用程序资源 -->
 		<mkdir dir="target/jpackage-macos/input" />
 		<copy file="target/Shimeji-ee.jar" todir="target/jpackage-macos/input" />
-		
+
 		<!-- 执行 jpackage 命令 -->
 		<exec executable="jpackage" dir="target/jpackage-macos" failonerror="true">
 			<arg value="--input" />
@@ -44,7 +44,7 @@
 			<arg value="--java-options" />
 			<arg value="--add-opens=java.desktop/java.awt=ALL-UNNAMED" />
 		</exec>
-		
+
 		<!-- 复制配置和资源文件到应用程序包内的Resources目录 -->
 		<copy todir="target/jpackage-macos/Shimeji-ee.app/Contents/app/conf">
 			<fileset dir="conf" />
@@ -52,7 +52,7 @@
 		<copy todir="target/jpackage-macos/Shimeji-ee.app/Contents/app/img">
 			<fileset dir="img" />
 		</copy>
-		
+
 		<echo message="macOS app bundle created successfully!" />
 		<echo message="App bundle location: target/jpackage-macos/Shimeji-ee.app" />
 	</target>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="Shimeji-ee-Windows" basedir="." default="jpackage-windows-all">
 
 	<property name="version" value="1.0.9" />
@@ -13,11 +13,11 @@
 		<mkdir dir="target/jpackage-windows-portable" />
 		<delete dir="target/jpackage-windows-portable" />
 		<mkdir dir="target/jpackage-windows-portable" />
-		
+
 		<!-- 准备应用程序资源 -->
 		<mkdir dir="target/jpackage-windows-portable/input" />
 		<copy file="target/Shimeji-ee.jar" todir="target/jpackage-windows-portable/input" />
-		
+
 		<!-- 执行 jpackage 命令创建应用程序镜像 -->
 		<exec executable="jpackage" dir="target/jpackage-windows-portable" failonerror="true">
 			<arg value="--input" />
@@ -49,7 +49,7 @@
 			<arg value="--java-options" />
 			<arg value="--add-opens=java.desktop/java.awt=ALL-UNNAMED" />
 		</exec>
-		
+
 		<!-- 复制配置和资源文件到应用程序根目录（与可执行文件同级） -->
 		<copy todir="target/jpackage-windows-portable/Shimeji-ee/conf">
 			<fileset dir="conf" />
@@ -57,14 +57,14 @@
 		<copy todir="target/jpackage-windows-portable/Shimeji-ee/img">
 			<fileset dir="img" />
 		</copy>
-		
+
 		<!-- 创建便携版压缩包 -->
 		<zip destfile="target/Shimeji-ee_${version}_Portable.zip">
 			<fileset dir="target/jpackage-windows-portable">
 				<include name="Shimeji-ee/**/*" />
 			</fileset>
 		</zip>
-		
+
 		<echo message="Windows portable version created successfully!" />
 		<echo message="Portable zip file: target/Shimeji-ee_${version}_Portable.zip" />
 	</target>
@@ -74,11 +74,11 @@
 		<mkdir dir="target/jpackage-windows-msi" />
 		<delete dir="target/jpackage-windows-msi" />
 		<mkdir dir="target/jpackage-windows-msi" />
-		
+
 		<!-- 准备应用程序资源 -->
 		<mkdir dir="target/jpackage-windows-msi/input" />
 		<copy file="target/Shimeji-ee.jar" todir="target/jpackage-windows-msi/input" />
-		
+
 		<!-- 先创建应用程序镜像 -->
 		<exec executable="jpackage" dir="target/jpackage-windows-msi" failonerror="true">
 			<arg value="--input" />
@@ -110,7 +110,7 @@
 			<arg value="--java-options" />
 			<arg value="--add-opens=java.desktop/java.awt=ALL-UNNAMED" />
 		</exec>
-		
+
 		<!-- 复制配置和资源文件到应用程序根目录（与可执行文件同级） -->
 		<copy todir="target/jpackage-windows-msi/Shimeji-ee/conf">
 			<fileset dir="conf" />
@@ -118,7 +118,7 @@
 		<copy todir="target/jpackage-windows-msi/Shimeji-ee/img">
 			<fileset dir="img" />
 		</copy>
-		
+
 		<!-- 然后创建 MSI 安装程序 -->
 		<exec executable="jpackage" dir="target/jpackage-windows-msi" failonerror="true">
 			<arg value="--app-image" />
@@ -140,14 +140,14 @@
 			<arg value="Games" />
 			<arg value="--win-shortcut" />
 		</exec>
-		
+
 		<!-- 将生成的 MSI 安装程序移动到 target 根目录 -->
 		<move todir="target">
 			<fileset dir="target/jpackage-windows-msi">
 				<include name="*.msi" />
 			</fileset>
 		</move>
-		
+
 		<echo message="Windows MSI installer created successfully!" />
 		<echo message="MSI installer location: target/Shimeji-ee-${version}.msi" />
 	</target>
