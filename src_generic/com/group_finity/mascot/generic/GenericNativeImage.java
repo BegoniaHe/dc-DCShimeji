@@ -33,12 +33,6 @@ class GenericNativeImage implements NativeImage{
 		this.icon = new ImageIcon(image);
 	}
 
-	@Override
-	@SuppressWarnings("removal")
-	protected void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	public void flush() {
 		this.getManagedImage().flush();
 	}

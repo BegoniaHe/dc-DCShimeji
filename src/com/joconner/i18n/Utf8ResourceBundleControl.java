@@ -15,23 +15,22 @@ import java.util.ResourceBundle;
  */
 public class Utf8ResourceBundleControl extends PackageableResourceControl {
 
-
-    public Utf8ResourceBundleControl() {}
+    public Utf8ResourceBundleControl() {
+    }
 
     public Utf8ResourceBundleControl(boolean isPackageBased) {
         super(isPackageBased);
     }
 
     public ResourceBundle newBundle(String baseName, Locale locale, String format,
-                                    ClassLoader loader, boolean reload)
+            ClassLoader loader, boolean reload)
             throws IllegalAccessException, InstantiationException, IOException {
         String bundleName = toBundleName(baseName, locale);
         ResourceBundle bundle = null;
         if (format.equals("java.class")) {
             bundle = super.newBundle(baseName, locale, format, loader, reload);
         } else if (format.equals("java.properties")) {
-            final String resourceName = bundleName.contains("://") ? null :
-                    toResourceName(bundleName, "properties");
+            final String resourceName = bundleName.contains("://") ? null : toResourceName(bundleName, "properties");
             if (resourceName == null) {
                 return bundle;
             }
@@ -70,6 +69,5 @@ public class Utf8ResourceBundleControl extends PackageableResourceControl {
         }
         return stream;
     }
-
 
 }

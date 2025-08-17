@@ -19,7 +19,8 @@ import java.awt.Point;
  * 
  * Maintains a list of mascot, the object to time.
  * 
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity
+ * (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */
 public class Manager {
@@ -27,8 +28,8 @@ public class Manager {
 	private static final Logger log = Logger.getLogger(Manager.class.getName());
 
 	/**
-	* Interval timer is running.
-	*/
+	 * Interval timer is running.
+	 */
 	public static final int TICK_INTERVAL = 40;
 
 	/**
@@ -37,19 +38,21 @@ public class Manager {
 	private final List<Mascot> mascots = new ArrayList<Mascot>();
 
 	/**
-	* The mascot will be added later.
-	* (@Link ConcurrentModificationException) to prevent the addition of the mascot (@link # tick ()) are each simultaneously reflecting.
+	 * The mascot will be added later.
+	 * (@Link ConcurrentModificationException) to prevent the addition of the mascot
+	 * (@link # tick ()) are each simultaneously reflecting.
 	 */
 	private final Set<Mascot> added = new LinkedHashSet<Mascot>();
 
 	/**
-	* The mascot will be added later.
-	* (@Link ConcurrentModificationException) to prevent the deletion of the mascot (@link # tick ()) are each simultaneously reflecting.
+	 * The mascot will be added later.
+	 * (@Link ConcurrentModificationException) to prevent the deletion of the mascot
+	 * (@link # tick ()) are each simultaneously reflecting.
 	 */
 	private final Set<Mascot> removed = new LinkedHashSet<Mascot>();
 
 	private boolean exitOnLastRemoved = true;
-	
+
 	private Thread thread;
 
 	public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
@@ -79,12 +82,12 @@ public class Manager {
 			}
 		};
 	}
-	
+
 	public void start() {
-		if ( thread!=null && thread.isAlive() ) {
+		if (thread != null && thread.isAlive()) {
 			return;
 		}
-		
+
 		thread = new Thread() {
 			@Override
 			public void run() {
@@ -112,12 +115,12 @@ public class Manager {
 			}
 		};
 		thread.setDaemon(false);
-		
+
 		thread.start();
 	}
-	
+
 	public void stop() {
-		if ( thread==null || !thread.isAlive() ) {
+		if (thread == null || !thread.isAlive()) {
 			return;
 		}
 		thread.interrupt();
@@ -127,10 +130,9 @@ public class Manager {
 		}
 	}
 
-	private void tick( )
-        {
-            // Update the first environmental information
-            NativeFactory.getInstance().getEnvironment().tick();
+	private void tick() {
+		// Update the first environmental information
+		NativeFactory.getInstance().getEnvironment().tick();
 
 		synchronized (this.getMascots()) {
 
@@ -150,7 +152,7 @@ public class Manager {
 			for (final Mascot mascot : this.getMascots()) {
 				mascot.tick();
 			}
-			
+
 			// Advance mascot's time
 			for (final Mascot mascot : this.getMascots()) {
 				mascot.apply();
@@ -184,35 +186,44 @@ public class Manager {
 		synchronized (this.getMascots()) {
 			for (final Mascot mascot : this.getMascots()) {
 				try {
-                                    Configuration configuration = Main.getInstance( ).getConfiguration( mascot.getImageSet( ) );
-				    mascot.setBehavior( configuration.buildBehavior( configuration.getSchema( ).getString( name ), mascot ) );
+					Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
+					mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
 				} catch (final BehaviorInstantiationException e) {
 					log.log(Level.SEVERE, "Failed to initialize the following actions", e);
-					Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
+					Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage")
+							+ "\n" + e.getMessage() + "\n"
+							+ Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
 					mascot.dispose();
 				} catch (final CantBeAliveException e) {
 					log.log(Level.SEVERE, "Fatal Error", e);
-                                        Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
+					Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage")
+							+ "\n" + e.getMessage() + "\n"
+							+ Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
 					mascot.dispose();
 				}
 			}
 		}
-	}	
-	
+	}
+
 	public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
 		synchronized (this.getMascots()) {
 			for (final Mascot mascot : this.getMascots()) {
 				try {
-					if( mascot.getImageSet().equals(imageSet) ) {
-						mascot.setBehavior(configuration.buildBehavior( configuration.getSchema( ).getString( name ), mascot ) );						
+					if (mascot.getImageSet().equals(imageSet)) {
+						mascot.setBehavior(
+								configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
 					}
 				} catch (final BehaviorInstantiationException e) {
 					log.log(Level.SEVERE, "Failed to initialize the following actions", e);
-					Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
+					Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage")
+							+ "\n" + e.getMessage() + "\n"
+							+ Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
 					mascot.dispose();
 				} catch (final CantBeAliveException e) {
 					log.log(Level.SEVERE, "Fatal Error", e);
-					Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
+					Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage")
+							+ "\n" + e.getMessage() + "\n"
+							+ Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
 					mascot.dispose();
 				}
 			}
@@ -223,95 +234,81 @@ public class Manager {
 		synchronized (this.getMascots()) {
 			// Keep first mascot, dispose the rest
 			getMascots().stream()
-				.skip(1)
-				.forEach(Mascot::dispose);
+					.skip(1)
+					.forEach(Mascot::dispose);
 		}
-        }
-        
-	public void remainOne( Mascot mascot )
-        {
-            synchronized( this.getMascots( ) )
-            {
-                // Dispose all mascots except the specified one
-                getMascots().stream()
-                    .filter(m -> !m.equals(mascot))
-                    .forEach(Mascot::dispose);
-            }
 	}
-	
-	public void remainOne( String imageSet ) {
+
+	public void remainOne(Mascot mascot) {
+		synchronized (this.getMascots()) {
+			// Dispose all mascots except the specified one
+			getMascots().stream()
+					.filter(m -> !m.equals(mascot))
+					.forEach(Mascot::dispose);
+		}
+	}
+
+	public void remainOne(String imageSet) {
 		synchronized (this.getMascots()) {
 			// Find all mascots with matching imageSet, keep first one and dispose rest
 			List<Mascot> matching = getMascots().stream()
-				.filter(m -> m.getImageSet().equals(imageSet))
-				.collect(Collectors.toList());
-			
+					.filter(m -> m.getImageSet().equals(imageSet))
+					.collect(Collectors.toList());
+
 			// Dispose all but the first matching mascot
 			matching.stream()
-				.skip(1)
-				.forEach(Mascot::dispose);
+					.skip(1)
+					.forEach(Mascot::dispose);
 		}
 	}
-	
-    public void remainNone( String imageSet )
-    {
-        synchronized( this.getMascots( ) )
-        {
-            // Use removeIf for more efficient removal with Java 8
-            this.getMascots().removeIf(mascot -> {
-                if (mascot.getImageSet().equals(imageSet)) {
-                    mascot.dispose();
-                    return true;
-                }
-                return false;
-            });
-        }
-    }
 
-    public void togglePauseAll( )
-    {
-        synchronized( this.getMascots( ) )
-        {
-            boolean isPaused = false;
-            if( !getMascots().isEmpty() )
-                isPaused = getMascots().get( 0 ).isPaused( );
-            
-            // Use forEach with lambda for cleaner code
-            final boolean newPausedState = !isPaused;
-            getMascots().forEach(mascot -> mascot.setPaused(newPausedState));
-        }
-    }
+	public void remainNone(String imageSet) {
+		synchronized (this.getMascots()) {
+			// Use removeIf for more efficient removal with Java 8
+			this.getMascots().removeIf(mascot -> {
+				if (mascot.getImageSet().equals(imageSet)) {
+					mascot.dispose();
+					return true;
+				}
+				return false;
+			});
+		}
+	}
 
-    public boolean isPaused( )
-    {
-        synchronized( this.getMascots( ) )
-        {
-            return !getMascots().isEmpty() && getMascots().get(0).isPaused();
-        }
-    }
+	public void togglePauseAll() {
+		synchronized (this.getMascots()) {
+			boolean isPaused = false;
+			if (!getMascots().isEmpty())
+				isPaused = getMascots().get(0).isPaused();
 
-    public int getCount( )
-    {
-        return getCount( null );
-    }
-    
-    public int getCount( String imageSet )
-    {
-        synchronized( getMascots( ) )
-        {
-            if( imageSet == null )
-            {
-                return getMascots( ).size( );
-            }
-            else   
-            {
-                // Use Stream API for counting
-                return (int) getMascots().stream()
-                    .filter(mascot -> mascot.getImageSet().equals(imageSet))
-                    .count();
-            }
-        }
-    }
+			// Use forEach with lambda for cleaner code
+			final boolean newPausedState = !isPaused;
+			getMascots().forEach(mascot -> mascot.setPaused(newPausedState));
+		}
+	}
+
+	public boolean isPaused() {
+		synchronized (this.getMascots()) {
+			return !getMascots().isEmpty() && getMascots().get(0).isPaused();
+		}
+	}
+
+	public int getCount() {
+		return getCount(null);
+	}
+
+	public int getCount(String imageSet) {
+		synchronized (getMascots()) {
+			if (imageSet == null) {
+				return getMascots().size();
+			} else {
+				// Use Stream API for counting
+				return (int) getMascots().stream()
+						.filter(mascot -> mascot.getImageSet().equals(imageSet))
+						.count();
+			}
+		}
+	}
 
 	private List<Mascot> getMascots() {
 		return this.mascots;
@@ -324,37 +321,34 @@ public class Manager {
 	private Set<Mascot> getRemoved() {
 		return this.removed;
 	}
-        
-        /**
-         * Returns a Mascot with the given affordance.
-         * @param affordance
-         * @return A WeakReference to a mascot with the required affordance, or null
-         */
-        public WeakReference<Mascot> getMascotWithAffordance( String affordance )
-        {
-            synchronized( this.getMascots( ) )
-            {
-                // Use Stream API to find first matching mascot
-                Optional<Mascot> found = getMascots().stream()
-                    .filter(mascot -> mascot.getAffordances().contains(affordance))
-                    .findFirst();
-                
-                return found.map(WeakReference::new).orElse(null);
-            }
-        }
 
-    public boolean hasOverlappingMascotsAtPoint( Point anchor )
-    {
-        synchronized( this.getMascots( ) )
-        {
-            // Use Stream API to count mascots at the given anchor point
-            long count = getMascots().stream()
-                .filter(mascot -> mascot.getAnchor().equals(anchor))
-                .count();
-            
-            return count > 1;
-        }
-    }
+	/**
+	 * Returns a Mascot with the given affordance.
+	 * 
+	 * @param affordance
+	 * @return A WeakReference to a mascot with the required affordance, or null
+	 */
+	public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
+		synchronized (this.getMascots()) {
+			// Use Stream API to find first matching mascot
+			Optional<Mascot> found = getMascots().stream()
+					.filter(mascot -> mascot.getAffordances().contains(affordance))
+					.findFirst();
+
+			return found.map(WeakReference::new).orElse(null);
+		}
+	}
+
+	public boolean hasOverlappingMascotsAtPoint(Point anchor) {
+		synchronized (this.getMascots()) {
+			// Use Stream API to count mascots at the given anchor point
+			long count = getMascots().stream()
+					.filter(mascot -> mascot.getAnchor().equals(anchor))
+					.count();
+
+			return count > 1;
+		}
+	}
 
 	public void disposeAll() {
 		synchronized (this.getMascots()) {
