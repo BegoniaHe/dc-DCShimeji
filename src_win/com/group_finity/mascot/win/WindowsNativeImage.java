@@ -110,13 +110,6 @@ class WindowsNativeImage implements NativeImage {
             flushNative(this.getNativeHandle(), rbgValues);
 	}
 
-	@Override
-	@SuppressWarnings("removal")
-	protected void finalize() throws Throwable {
-		super.finalize();
-		freeNative(this.getNativeHandle());
-	}
-
     /**
      * Changes to be reflected in the Windows bitmap image.
      */

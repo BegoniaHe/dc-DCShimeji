@@ -27,15 +27,14 @@ import com.group_finity.mascot.mac.jna.CFNumberRef;
 import com.group_finity.mascot.mac.jna.CFArrayRef;
 
 /**
- * Java では取得が難しい環境情報をAccessibility APIを使用して取得する.
+ * 使用 Accessibility API 获取 Java 难以获取的环境信息。
  */
 class MacEnvironment extends Environment {
 
   /**
-		Mac では、アクティブなウィンドウを取れるので、
-		それにしめじが反応するようにする。
-
-		なので、このクラス内では、activeIE に frontmostWindow という別名をつける
+   * 在 Mac 上，可以获取活动窗口，使 Shimeji 能对其做出反应。
+   * <p>
+   * 因此，在此类中，将 activeIE 命名为 frontmostWindow 的别名。
    */
 	private static Area activeIE = new Area();
   private static Area frontmostWindow = activeIE;
@@ -47,8 +46,7 @@ class MacEnvironment extends Environment {
 
 	private static Carbon carbon = Carbon.INSTANCE;
 
-	// Mac では、ManagementFactory.getRuntimeMXBean().getName()で
-	// PID@マシン名 の文字列が返ってくる
+// 在 Mac 上，ManagementFactory.getRuntimeMXBean().getName() 会返回 PID@主机名 的字符串
 	private static long myPID =
 		Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
@@ -57,7 +55,7 @@ class MacEnvironment extends Environment {
 	private static HashSet<Long> touchedProcesses = new HashSet<Long>();
 
 	static final CFStringRef
-  	kAXPosition = createCFString("AXPosition"),
+	kAXPosition = createCFString("AXPosition"),
 		kAXSize = createCFString("AXSize"),
 		kAXFocusedWindow = createCFString("AXFocusedWindow"),
 		kDock = createCFString("com.apple.Dock"),
@@ -74,9 +72,10 @@ class MacEnvironment extends Environment {
 
 		PointerByReference windowp = new PointerByReference();
 
-		// XXX: ここ以外でもエラーチェックは必要?
+		// Check if AXUIElementCopyAttributeValue succeeded (returns kAXErrorSuccess).
+		// If the call fails, ret will be set to null to indicate no valid window was found.
 		if (carbon.AXUIElementCopyAttributeValue(
-					application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
+					application, kAXFocusedWindow, windowp) == Carbon.kAXErrorSuccess) {
 			AXUIElementRef window = new AXUIElementRef();
 			window.setPointer(windowp.getValue());
 			ret = getRectOfWindow(window);
@@ -105,7 +104,7 @@ class MacEnvironment extends Environment {
 
 		carbon.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
 		axvalue.setPointer(valuep.getValue());
-		carbon.AXValueGetValue(axvalue, carbon.kAXValueCGPointType, position.getPointer());
+		carbon.AXValueGetValue(axvalue, Carbon.kAXValueCGPointType, position.getPointer());
 		position.read();
 
 		return position;
@@ -118,7 +117,7 @@ class MacEnvironment extends Environment {
 
 		carbon.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
 		axvalue.setPointer(valuep.getValue());
-		carbon.AXValueGetValue(axvalue, carbon.kAXValueCGSizeType, size.getPointer());
+		carbon.AXValueGetValue(axvalue, Carbon.kAXValueCGSizeType, size.getPointer());
 		size.read();
 
 		return size;
@@ -131,7 +130,7 @@ class MacEnvironment extends Environment {
 		PointerByReference windowp = new PointerByReference();
 
 		if (carbon.AXUIElementCopyAttributeValue(
-					application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
+					application, kAXFocusedWindow, windowp) == Carbon.kAXErrorSuccess) {
 			AXUIElementRef window = new AXUIElementRef();
 			window.setPointer(windowp.getValue());
 			moveWindow(window, (int) point.x, (int) point.y);
@@ -192,7 +191,7 @@ class MacEnvironment extends Environment {
 		CGPoint position = new CGPoint((double) x, (double) y);
 		position.write();
 		AXValueRef axvalue = carbon.AXValueCreate(
-			carbon.kAXValueCGPointType, position.getPointer());
+			Carbon.kAXValueCGPointType, position.getPointer());
 		carbon.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
 	}
 
@@ -208,21 +207,23 @@ class MacEnvironment extends Environment {
 		return screenHeight;
 	}
 
-	/**
-		 min < max のとき、
-		 min <= x <= max ならば x を返す
-		 x < min ならば min を返す
-		 x > max ならば max を返す
-	 */
+/**
+ * 当 min < max 时：
+ * <ul>
+ *   <li>如果 min <= x <= max，则返回 x</li>
+ *   <li>如果 x < min，则返回 min</li>
+ *   <li>如果 x > max，则返回 max</li>
+ * </ul>
+ */
 	private static double betweenOrLimit(double x, double min, double max) {
 		return Math.min(Math.max(x, min), max);
 	}
 
-	/**
-		画面内でウィンドウを移動しても押し返されない範囲を Rectangle で返す。
-		Mac では、ウィンドウを完全に画面外に移動させようとすると、
-		ウィンドウが画面内に押し返されてしまう。
-	 */
+/**
+ * 返回窗口在屏幕内移动时不会被弹回的范围（Rectangle）。
+ * <p>
+ * 在 Mac 上，如果尝试将窗口完全移出屏幕，窗口会被强制留在屏幕内。
+ */
 	private static Rectangle getWindowVisibleArea() {
 		final int menuBarHeight = 22;
 		int x = 1, y = menuBarHeight,
@@ -253,7 +254,7 @@ class MacEnvironment extends Environment {
 	private static String getDockOrientation() {
 		CFTypeRef orientationRef =
 			carbon.CFPreferencesCopyValue(
-				kOrientation, kDock, carbon.kCurrentUser, carbon.kAnyHost);
+				kOrientation, kDock, Carbon.kCurrentUser, Carbon.kAnyHost);
 
 		// CFPreferencesCopyValue が null を返す環境がある
 		if (orientationRef == null) {
@@ -271,21 +272,19 @@ class MacEnvironment extends Environment {
 	}
 
 	private static int getDockTileSize() {
-		/**
-			 Dock の高さを監視する効率的な方法が見当たらないため、
-			 ひとまず Dock の最大サイズより大きい定数を返しておく。
-
-			 CFPreferencesCopyValue で得られる値は、
-			 AppleScript で得られる値とは異なっていて、
-			 AppleScript のほうが正しい値。
-
-			 pid 取得して Accessibility API を使うと正しい値は取れるが、
-			 killall Dock されると SEGV してしまう。
-			 SEGV しないためには毎回 pid を取り直す必要があるが、
-			 プロセスのリストをたぐってさがす以外の方法が見当たらない。
-			 呼ばれる頻度を考えると AppleScript は使いたくない。
-			 このトレードオフはあとで考えることにする。
-		 */
+	/**
+   * 由于没有高效的方法来监控 Dock 的高度，
+   * 这里暂时返回一个大于 Dock 最大尺寸的常量。
+   *
+   * 使用 CFPreferencesCopyValue 得到的值与 AppleScript 得到的值不同，
+   * AppleScript 得到的值更为准确。
+   *
+   * 如果通过获取 pid 并使用 Accessibility API，可以获得正确的值，
+   * 但如果执行 killall Dock，会导致 SEGV。
+   * 为避免 SEGV，需要每次都重新获取 pid，但除了遍历进程列表外没有其他方法。
+   * 考虑到调用频率，不希望使用 AppleScript。
+   * 该权衡方案后续再考虑。
+   */
 		return 100;
 	}
 
@@ -309,17 +308,17 @@ class MacEnvironment extends Environment {
 	}
 
   private void updateFrontmostWindow() {
-    final Rectangle
+	final Rectangle
 			frontmostWindowRect = getFrontmostAppRect(),
 			windowVisibleArea = getWindowVisibleArea();
 
-    frontmostWindow.setVisible(
-      (frontmostWindowRect != null)
-      && frontmostWindowRect.intersects(windowVisibleArea)
+	frontmostWindow.setVisible(
+	  (frontmostWindowRect != null)
+	  && frontmostWindowRect.intersects(windowVisibleArea)
 			&& !frontmostWindowRect.contains(windowVisibleArea) // デスクトップを除外
 			);
-    frontmostWindow.set(
-      frontmostWindowRect == null ? new Rectangle(-1, -1, 0, 0) : frontmostWindowRect);
+	frontmostWindow.set(
+	  frontmostWindowRect == null ? new Rectangle(-1, -1, 0, 0) : frontmostWindowRect);
   }
 
 	private static void updateFrontmostApp() {
@@ -330,8 +329,8 @@ class MacEnvironment extends Environment {
 	@Override
 	public void tick() {
 		super.tick();
-		this.updateFrontmostApp();
-    this.updateFrontmostWindow();
+		updateFrontmostApp();
+	this.updateFrontmostWindow();
 	}
 
 	@Override
@@ -380,22 +379,22 @@ class MacEnvironment extends Environment {
 
 	@Override
 	public Area getActiveIE() {
-		return this.activeIE;
+		return activeIE;
 	}
-        
-    @Override
-    public String getActiveIETitle( )
-    {
-        return null;
-    }
+		
+	@Override
+	public String getActiveIETitle( )
+	{
+		return null;
+	}
 
-    @Override
-    public void refreshCache()
-    {
-    }
+	@Override
+	public void refreshCache()
+	{
+	}
 
-    @Override
-    public void dispose( )
-    {
-    }
+	@Override
+	public void dispose( )
+	{
+	}
 }

@@ -15,7 +15,7 @@ import com.group_finity.mascot.mac.jna.CFTypeRef;
 
 
 public interface Carbon extends Library {
-	Carbon INSTANCE = (Carbon) Native.loadLibrary("Carbon", Carbon.class);
+	Carbon INSTANCE = Native.load("Carbon", Carbon.class);
 
 	long GetFrontProcess(ProcessSerialNumber psn);
 	long GetProcessPID(final ProcessSerialNumber psn, LongByReference pidp);

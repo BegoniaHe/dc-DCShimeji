@@ -29,12 +29,6 @@ class VirtualNativeImage implements NativeImage
         //icon = new ImageIcon( image );
     }
 
-//    @Override
-//    protected void finalize( ) throws Throwable
-//    {
-//            super.finalize();
-//    }
-
     public void flush( )
     {
         managedImage.flush( );

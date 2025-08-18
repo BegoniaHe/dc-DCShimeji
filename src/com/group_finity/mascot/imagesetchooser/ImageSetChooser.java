@@ -25,7 +25,7 @@ public class ImageSetChooser extends javax.swing.JDialog
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
-    public ImageSetChooser( java.awt.Frame parent, boolean modal )
+    public ImageSetChooser( javax.swing.JFrame parent, boolean modal )
     {
         super( parent, modal );
         initComponents();
