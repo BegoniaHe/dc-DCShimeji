@@ -72,7 +72,8 @@ class MacEnvironment extends Environment {
 
 		PointerByReference windowp = new PointerByReference();
 
-		// the necessary error check is done in the method
+		// Check if AXUIElementCopyAttributeValue succeeded (returns kAXErrorSuccess).
+		// If the call fails, ret will be set to null to indicate no valid window was found.
 		if (carbon.AXUIElementCopyAttributeValue(
 					application, kAXFocusedWindow, windowp) == Carbon.kAXErrorSuccess) {
 			AXUIElementRef window = new AXUIElementRef();
