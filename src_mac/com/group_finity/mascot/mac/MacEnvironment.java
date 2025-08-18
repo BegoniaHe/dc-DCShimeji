@@ -379,7 +379,7 @@ class MacEnvironment extends Environment {
 
 	@Override
 	public Area getActiveIE() {
-		return MacEnvironment.activeIE;
+		return activeIE;
 	}
 		
 	@Override
