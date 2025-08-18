@@ -329,7 +329,7 @@ class MacEnvironment extends Environment {
 	@Override
 	public void tick() {
 		super.tick();
-		MacEnvironment.updateFrontmostApp();
+		updateFrontmostApp();
 	this.updateFrontmostWindow();
 	}
 
