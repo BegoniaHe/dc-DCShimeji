@@ -9,13 +9,12 @@ import java.util.List;
  *
  * @author Kilkakon
  */
-public class MONITORINFO extends Structure
-{
+public class MONITORINFO extends Structure {
     public NativeLong cbSize;
     public RECT rcMonitor;
     public RECT rcWork;
     public NativeLong dwFlags;
-    
+
     @Override
     protected List<String> getFieldOrder() {
         return Arrays.asList("cbSize", "rcMonitor", "rcWork", "dwFlags");

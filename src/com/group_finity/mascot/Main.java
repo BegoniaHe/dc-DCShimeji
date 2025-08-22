@@ -871,7 +871,6 @@ public class Main
                                 if( dialog.getEnvironmentReloadRequired( ) )
                                 {
                                     NativeFactory.getInstance( ).getEnvironment( ).dispose( );
-                                    NativeFactory.resetInstance( );
                                 }
                                 if( dialog.getEnvironmentReloadRequired( ) || dialog.getImageReloadRequired( ) )
                                 {

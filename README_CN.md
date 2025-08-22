@@ -39,7 +39,7 @@ Shimeji 最初由 Group Finity 的 Yuki Yamada 创建（[http://www.group-finity
 
 ## 📋 系统要求
 
-- **操作系统：** Windows Vista 或更高版本
+- **操作系统：** Windows
 - **Java 运行环境：** Java 8 或更高版本
 - **内存：** 至少 512MB RAM（推荐更多，用于多个图像集）
 
