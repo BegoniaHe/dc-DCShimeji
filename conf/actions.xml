@@ -103,17 +103,17 @@
 
 		<Action Name="Sprawl" Type="Stay" BorderType="Floor">
 			<Animation>
-				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="0,0" Duration="250" />
+				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="0,0" Duration="250" />
 			</Animation>
 		</Action>
 
 		<Action Name="Creep" Type="Move" BorderType="Floor">
 			<Animation>
-				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="0,0" Duration="28" />
-				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
+				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="0,0" Duration="28" />
 				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
-				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="-1,0" Duration="4" />
-				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="0,0" Duration="24" />
+				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
+				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="-1,0" Duration="4" />
+				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="0,0" Duration="24" />
 			</Animation>
 		</Action>
 
@@ -232,8 +232,8 @@
 			<Animation>
 				<Pose Image="/BounceExtend.png" ImageAnchor="64,128" Velocity="-8,0" Duration="8" />
 				<Pose Image="/BounceCompress.png" ImageAnchor="64,128" Velocity="-4,0" Duration="4" />
-				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
-				<Pose Image="/CreepExtend.png" ImageAnchor="64,128" Velocity="0,0" Duration="10" />
+				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
+				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="0,0" Duration="10" />
 				<Pose Image="/BounceExtend.png" ImageAnchor="64,104" Velocity="-4,0" Duration="4" />
 			</Animation>
 		</Action>
