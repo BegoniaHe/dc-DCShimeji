@@ -13,9 +13,6 @@
 		<javac destdir="target/classes" release="21" debug="yes" optimize="yes" includeantruntime="false">
 			<src path="src"/>
 			<src path="src_win"/>
-			<src path="src_mac"/>
-			<src path="src_generic"/>
-			<src path="src_virtual"/>
 			<classpath>
 				<fileset dir="lib" />
 			</classpath>

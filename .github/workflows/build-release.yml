@@ -135,91 +135,8 @@ jobs:
         retention-days: 1
         if-no-files-found: warn
 
-  build-jpackage-macos:
-    needs: build-jar
-    if: needs.build-jar.outputs.build-success == 'true'
-    runs-on: macos-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        
-    - name: Install Apache Ant
-      run: |
-        brew install ant
-        
-    - name: Download JAR artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: shimeji-jar
-        
-    - name: Build jpackage macOS app
-      run: |
-        echo "Building macOS app using jpackage..."
-        ant -f build-jpackage-macos.xml jpackage-macos
-        
-    - name: Create macOS distribution package
-      run: |
-        cd target/jpackage-macos
-        zip -r ../../Shimeji-ee-macos.zip Shimeji-ee.app
-        
-    - name: Upload macOS package
-      uses: actions/upload-artifact@v4
-      with:
-        name: Shimeji-ee-macos
-        path: Shimeji-ee-macos.zip
-        retention-days: 1
-
-  build-jpackage-linux:
-    needs: build-jar
-    if: needs.build-jar.outputs.build-success == 'true'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        
-    - name: Install Apache Ant
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ant
-        
-    - name: Download JAR artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: shimeji-jar
-        
-    - name: Build jpackage Linux package
-      run: |
-        echo "Building Linux package using jpackage..."
-        ant -f build-jpackage-linux.xml jpackage-linux
-        
-    - name: Create Linux distribution package
-      run: |
-        cd target/jpackage-linux
-        tar -czf ../../Shimeji-ee-linux.tar.gz Shimeji-ee/
-        
-    - name: Upload Linux package
-      uses: actions/upload-artifact@v4
-      with:
-        name: Shimeji-ee-linux
-        path: Shimeji-ee-linux.tar.gz
-        retention-days: 1
-
   create-release:
-    needs: [build-jar, build-jpackage-windows, build-jpackage-macos, build-jpackage-linux]
+    needs: [build-jar, build-jpackage-windows]
     runs-on: ubuntu-latest
     if: needs.build-jar.outputs.build-success == 'true'
     
@@ -279,8 +196,6 @@ jobs:
         ### Native packages built with jpackage / 使用 jpackage 构建的原生包:
         - **Shimeji-ee-windows-msi** - Windows MSI installer with embedded JRE / Windows MSI 安装程序，含嵌入式 JRE
         - **Shimeji-ee-windows-portable** - Windows portable version with embedded JRE / Windows 便携版，含嵌入式 JRE
-        - **Shimeji-ee-macos.zip** - macOS application bundle (.app) / macOS 应用程序包 (.app)
-        - **Shimeji-ee-linux.tar.gz** - Linux application directory / Linux 应用程序目录
         
         ### JAR file for advanced users / 高级用户JAR文件:
         - **Shimeji-ee.jar** - Main executable JAR file / 主要可执行JAR文件
@@ -296,16 +211,6 @@ jobs:
         2. **Portable Version / 便携版**: Extract the portable zip and run Shimeji-ee.exe
            解压便携版 zip 并运行 Shimeji-ee.exe
         
-        #### macOS
-        1. Download Shimeji-ee-macos.zip / 下载 Shimeji-ee-macos.zip
-        2. Extract and run Shimeji-ee.app / 解压并运行 Shimeji-ee.app
-        3. If security warnings appear, run: \`xattr -r -d com.apple.quarantine Shimeji-ee.app\`
-           如果出现安全警告，运行：\`xattr -r -d com.apple.quarantine Shimeji-ee.app\`
-        
-        #### Linux
-        1. Download and extract Shimeji-ee-linux.tar.gz / 下载并解压 Shimeji-ee-linux.tar.gz
-        2. Run the executable in the Shimeji-ee directory / 在 Shimeji-ee 目录中运行可执行文件
-        
         **No Java installation required! All packages include embedded JRE 21.**
         **无需安装 Java！所有包都包含嵌入式 JRE 21。**
         
@@ -318,11 +223,6 @@ jobs:
            **Windows:**
            \`\`\`
            java -cp "target\\Shimeji-ee.jar;lib\\*" com.group_finity.mascot.Main
-           \`\`\`
-           
-           **Linux/Mac:**
-           \`\`\`
-           java -cp "target/Shimeji-ee.jar:lib/*" com.group_finity.mascot.Main
            \`\`\`
         
         ## Technical Details / 技术详情:
@@ -392,11 +292,6 @@ jobs:
               FILES_TO_UPLOAD="$FILES_TO_UPLOAD $zipfile"
             fi
           done
-        fi
-        
-        # Check for TAR.GZ files
-        if ls *.tar.gz 1> /dev/null 2>&1; then
-          FILES_TO_UPLOAD="$FILES_TO_UPLOAD *.tar.gz"
         fi
         
         # Always include these
