@@ -150,7 +150,7 @@ public class ImageSetChooser extends javax.swing.JDialog
             if( new File( filePath + "info.xml" ).exists( ) )
                 infoFile = filePath + "info.xml";
 
-            String imageFile = topDir + "/" + imageSet + "/shime1.png";
+            String imageFile = topDir + "/" + imageSet + "/Preview.png";
             String caption = imageSet;
             try
             {
@@ -170,7 +170,7 @@ public class ImageSetChooser extends javax.swing.JDialog
             }
             catch( Exception ex )
             {
-                imageFile = topDir + "/" + imageSet + "/shime1.png";
+                imageFile = topDir + "/" + imageSet + "/Preview.png";
                 caption = imageSet;
             }
 
