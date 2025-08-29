@@ -71,8 +71,8 @@ public class InformationWindow extends javax.swing.JFrame
         catch( IOException ex )
         {
         }
-        Color textColour = Color.decode( themeProperties.getProperty( "nimrodlf.b", "#000000" ) );
-        Color linkColour = Color.decode( themeProperties.getProperty( "nimrodlf.p2", "#28B0F5" ) );
+        Color textColour = Color.decode( themeProperties.getProperty( "BlackColour", "#000000" ) );
+        Color linkColour = Color.decode( themeProperties.getProperty( "PrimaryColour2", "#28B0F5" ) );
         
         final ResourceBundle language = Main.getInstance( ).getLanguageBundle( );
         setTitle( config.containsInformationKey( "Name" ) ? config.getInformation( "Name" ) : language.getString( "Information" ) );
