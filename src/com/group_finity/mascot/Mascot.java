@@ -37,27 +37,27 @@ import com.group_finity.mascot.sound.Sounds;
 
 /**
  * Mascot object.
- *
+ * <p>
  * The mascot represents the long-term, complex behavior and (@link Behavior),
  * Represents a short-term movements in the monotonous work with (@link Action).
- *
+ * <p>
  * The mascot they have an internal timer, at a constant interval to call (@link
  * Action).
  * (@link Action) is (@link #animate (Point, MascotImage, boolean)) method or by
  * calling
  * To animate the mascot.
- *
+ * <p>
  * (@link Action) or exits, the other at a certain time is called (@link
  * Behavior), the next move to (@link Action).
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Mascot {
     private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
-    private static AtomicInteger lastId = new AtomicInteger();
+    private static final AtomicInteger lastId = new AtomicInteger();
 
     private final int id;
 
@@ -112,15 +112,15 @@ public class Mascot {
      */
     private boolean dragging = false;
 
-    private MascotEnvironment environment = new MascotEnvironment(this);
+    private final MascotEnvironment environment = new MascotEnvironment(this);
 
     private String sound = null;
 
     protected DebugWindow debugWindow = null;
 
-    private ArrayList<String> affordances = new ArrayList<>(5);
+    private final ArrayList<String> affordances = new ArrayList<>(5);
 
-    private ArrayList<Hotspot> hotspots = new ArrayList<>(5);
+    private final ArrayList<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this shimeji,
@@ -198,12 +198,7 @@ public class Mascot {
 
     private void mouseReleased(final MouseEvent event) {
         if (event.isPopupTrigger()) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    showPopup(event.getX(), event.getY());
-                }
-            });
+            SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
             if (!isPaused() && getBehavior() != null) {
                 try {
@@ -241,81 +236,46 @@ public class Mascot {
 
         // "Another One!" menu item
         final JMenuItem increaseMenu = new JMenuItem(languageBundle.getString("CallAnother"));
-        increaseMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                Main.getInstance().createMascot(imageSet);
-            }
-        });
+        increaseMenu.addActionListener(event -> Main.getInstance().createMascot(imageSet));
 
         // "Bye Bye!" menu item
         final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
-        disposeMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                dispose();
-            }
-        });
+        disposeMenu.addActionListener(e -> dispose());
 
         // "Follow Mouse!" Menu item
         final JMenuItem gatherMenu = new JMenuItem(languageBundle.getString("FollowCursor"));
-        gatherMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                getManager().setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER,
-                        imageSet);
-            }
-        });
+        gatherMenu.addActionListener(event -> getManager().setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER,
+                imageSet));
 
         // "Reduce to One!" menu item
         final JMenuItem oneMenu = new JMenuItem(languageBundle.getString("DismissOthers"));
-        oneMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                getManager().remainOne(imageSet);
-            }
-        });
+        oneMenu.addActionListener(event -> getManager().remainOne(imageSet));
 
         // "Reduce to One!" menu item
         final JMenuItem onlyOneMenu = new JMenuItem(languageBundle.getString("DismissAllOthers"));
-        onlyOneMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                getManager().remainOne(Mascot.this);
-            }
-        });
+        onlyOneMenu.addActionListener(event -> getManager().remainOne(Mascot.this));
 
         // "Restore IE!" menu item
         final JMenuItem restoreMenu = new JMenuItem(languageBundle.getString("RestoreWindows"));
-        restoreMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                NativeFactory.getInstance().getEnvironment().restoreIE();
-            }
-        });
+        restoreMenu.addActionListener(event -> NativeFactory.getInstance().getEnvironment().restoreIE());
 
         // Debug menu item
         final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
-        debugMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                if (debugWindow == null) {
-                    debugWindow = new DebugWindow();
-                }
-                debugWindow.setVisible(true);
+        debugMenu.addActionListener(event -> {
+            if (debugWindow == null) {
+                debugWindow = new DebugWindow();
             }
+            debugWindow.setVisible(true);
         });
 
         // "Bye Everyone!" menu item
         final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));
-        closeMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                Main.getInstance().exit();
-            }
-        });
+        closeMenu.addActionListener(e -> Main.getInstance().exit());
 
         // "Paused" Menu item
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations")
                 : languageBundle.getString("ResumeAnimations"));
-        pauseMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent event) {
-                Mascot.this.setPaused(!Mascot.this.isPaused());
-            }
-        });
+        pauseMenu.addActionListener(event -> Mascot.this.setPaused(!Mascot.this.isPaused()));
 
         // Add the Behaviors submenu. Currently slightly buggy, sometimes the menu
         // ghosts.
@@ -355,12 +315,8 @@ public class Mascot {
 
                     if (config.isBehaviorToggleable(command) && !command.contains("/")) {
                         toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(command, Mascot.this));
-                        toggleItem.addItemListener(new ItemListener() {
-                            public void itemStateChanged(final ItemEvent e) {
-                                Main.getInstance().setMascotBehaviorEnabled(command, Mascot.this,
-                                        !config.isBehaviorEnabled(command, Mascot.this));
-                            }
-                        });
+                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(command, Mascot.this,
+                                !config.isBehaviorEnabled(command, Mascot.this)));
                         allowedSubmenu.add(toggleItem);
                     }
                 }
@@ -443,7 +399,7 @@ public class Mascot {
                 getWindow().asComponent().setBounds(getBounds());
 
                 // Set Images
-                getWindow().setImage(getImage().getImage());
+                getWindow().setImage(getImage().image());
 
                 // Display
                 if (!getWindow().asComponent().isVisible()) {
@@ -459,7 +415,7 @@ public class Mascot {
             }
 
             // play sound if requested
-            if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
+            if (Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
                 synchronized (log) {
                     Clip clip = Sounds.getSound(sound);
                     if (!clip.isRunning()) {
@@ -492,7 +448,7 @@ public class Mascot {
         boolean useHand = false;
         for (final Hotspot hotspot : hotspots) {
             if (hotspot.contains(this, position) &&
-                    Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this)) {
+                    Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.behaviour(), this)) {
                 useHand = true;
                 break;
             }
@@ -542,12 +498,10 @@ public class Mascot {
         if (getImage() != null) {
             // Central area of the window find the image coordinates and ground coordinates.
             // The centre has already been adjusted for scaling
-            final int top = getAnchor().y - getImage().getCenter().y;
-            final int left = getAnchor().x - getImage().getCenter().x;
+            final int top = getAnchor().y - getImage().center().y;
+            final int left = getAnchor().x - getImage().center().x;
 
-            final Rectangle result = new Rectangle(left, top, getImage().getSize().width, getImage().getSize().height);
-
-            return result;
+            return new Rectangle(left, top, getImage().size().width, getImage().size().height);
         } else {
             // as we have no image let's return what we were last frame
             return getWindow().asComponent().getBounds();

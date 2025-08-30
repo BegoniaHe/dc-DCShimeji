@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public abstract class Environment
@@ -32,47 +32,40 @@ public abstract class Environment
 
     protected static Rectangle screenRect = new Rectangle( new Point(0, 0), Toolkit.getDefaultToolkit( ).getScreenSize( ) );
 
-    protected static Map<String, Rectangle> screenRects = new HashMap<String, Rectangle>( );
+    protected static Map<String, Rectangle> screenRects = new HashMap<>();
     
-    private static final Thread thread = new Thread( )
-    {
-        @Override
-        public void run( )
+    private static final Thread thread = new Thread(() -> {
+        try
         {
-            try
+            while( true )
             {
-                while( true )
-                {
-                    updateScreenRect( );
-                    Thread.sleep( 5000 );
-                }
-            }
-            catch( final InterruptedException e )
-            {
+                updateScreenRect( );
+                Thread.sleep( 5000 );
             }
         }
-    };
+        catch( final InterruptedException ignored)
+        {
+        }
+    });
 
-    public ComplexArea complexScreen = new ComplexArea( );
+    public final ComplexArea complexScreen = new ComplexArea( );
 
-    public Area screen = new Area( );
+    public final Area screen = new Area( );
 
-    public Location cursor = new Location( );
+    public final Location cursor = new Location( );
 
     private static void updateScreenRect( )
     {
         Rectangle virtualBounds = new Rectangle( );
 
-        Map<String, Rectangle> screenRects = new HashMap<String, Rectangle>( );
+        Map<String, Rectangle> screenRects = new HashMap<>();
 
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment( );
         final GraphicsDevice[ ] gs = ge.getScreenDevices( );
 
-        for( int j = 0; j < gs.length; j++ )
-        {
-            final GraphicsDevice gd = gs[ j ];
-            screenRects.put( gd.getIDstring( ), gd.getDefaultConfiguration( ).getBounds( ) );
-            virtualBounds = virtualBounds.union( gd.getDefaultConfiguration( ).getBounds( ) );
+        for (final GraphicsDevice gd : gs) {
+            screenRects.put(gd.getIDstring(), gd.getDefaultConfiguration().getBounds());
+            virtualBounds = virtualBounds.union(gd.getDefaultConfiguration().getBounds());
         }
 
         Environment.screenRects = screenRects;

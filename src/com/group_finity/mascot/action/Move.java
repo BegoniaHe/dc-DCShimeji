@@ -11,7 +11,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Move extends BorderedAction
@@ -109,12 +109,10 @@ public class Move extends BorderedAction
         // had to expose both animations and varibles for this
         // is there a better way?
         List<Animation> animations = super.getAnimations( );
-        for( int index = 0; index < animations.size( ); index++ )
-        {
-            if( animations.get( index ).isEffective( getVariables( ) ) && 
-                turning == animations.get( index ).isTurn( ) )
-            {
-                return animations.get( index );
+        for (Animation animation : animations) {
+            if (animation.isEffective(getVariables()) &&
+                    turning == animation.isTurn()) {
+                return animation;
             }
         }
 
@@ -127,10 +125,8 @@ public class Move extends BorderedAction
         {
             hasTurning = false;
             List<Animation> animations = super.getAnimations( );
-            for( int index = 0; index < animations.size( ); index++ )
-            {
-                if( animations.get( index ).isTurn( ) )
-                {
+            for (Animation animation : animations) {
+                if (animation.isTurn()) {
                     hasTurning = true;
                     break;
                 }

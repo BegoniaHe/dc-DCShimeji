@@ -9,11 +9,11 @@ import com.group_finity.mascot.image.TranslucentWindow;
 
 /**
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class NativeFactoryImpl extends NativeFactory {
-    private Environment environment = new WindowsEnvironment();
+    private final Environment environment = new WindowsEnvironment();
 
     @Override
     public Environment getEnvironment() {

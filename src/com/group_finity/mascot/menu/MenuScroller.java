@@ -39,8 +39,8 @@ public class MenuScroller {
   //private JMenu menu;
   private JPopupMenu menu;
   private Component[] menuItems;
-  private MenuScrollItem upItem;
-  private MenuScrollItem downItem;
+  private final MenuScrollItem upItem;
+  private final MenuScrollItem downItem;
   private final MenuScrollListener menuListener = new MenuScrollListener();
   private int scrollCount;
   private int interval;
@@ -396,8 +396,7 @@ public class MenuScroller {
     if (item == null) {
       keepVisibleIndex = -1;
     } else {
-      int index = menu.getComponentIndex(item);
-      keepVisibleIndex = index;
+        keepVisibleIndex = menu.getComponentIndex(item);
     }
   }
 
@@ -502,13 +501,9 @@ public class MenuScroller {
   private class MenuScrollTimer extends Timer {
 
     public MenuScrollTimer(final int increment, int interval) {
-      super(interval, new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          firstIndex += increment;
-          refreshMenu();
-        }
+      super(interval, e -> {
+        firstIndex += increment;
+        refreshMenu();
       });
     }
   }
@@ -516,7 +511,7 @@ public class MenuScroller {
   private class MenuScrollItem extends JMenuItem
           implements ChangeListener {
 
-    private MenuScrollTimer timer;
+    private final MenuScrollTimer timer;
 
     public MenuScrollItem(MenuIcon icon, int increment) {
       setIcon(icon);
@@ -540,7 +535,7 @@ public class MenuScroller {
     }
   }
 
-  private static enum MenuIcon implements Icon {
+  private enum MenuIcon implements Icon {
 
     UP(9, 1, 9),
     DOWN(1, 9, 1);

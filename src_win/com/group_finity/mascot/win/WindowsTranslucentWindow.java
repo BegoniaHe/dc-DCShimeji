@@ -2,6 +2,7 @@ package com.group_finity.mascot.win;
 
 import java.awt.Graphics;
 import java.awt.Component;
+import java.io.Serial;
 import javax.swing.JWindow;
 
 import com.group_finity.mascot.image.NativeImage;
@@ -17,18 +18,19 @@ import com.sun.jna.Pointer;
 
 /**
  * The image window with alpha.
- * {@link #setImage(WindowsNativeImage)} set in {@link WindowsNativeImage} can
+ *  set in {@link WindowsNativeImage} can
  * be displayed on the desktop.
- * 
+ * <p>
  * {@link #setAlpha(int)} may be specified when the concentration of view.
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
- * Currently developed by Shimeji-ee Group.
+ * (http://www.group-finity.com/Shimeji/)<a href="
+ ">* Currently developed by Shimeji-e</a>e Group.
  */
 class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 
 	@Override
 	public Component asComponent() {

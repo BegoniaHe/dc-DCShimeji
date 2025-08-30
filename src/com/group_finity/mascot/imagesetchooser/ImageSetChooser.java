@@ -19,9 +19,7 @@ import org.w3c.dom.Document;
  */
 public class ImageSetChooser extends javax.swing.JDialog
 {
-    private final String configFile = "./conf/settings.properties"; // Config file name
-    private final String topDir = "./img"; // Top Level Directory
-    private ArrayList<String> imageSets = new ArrayList<String>( );
+    private final ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
@@ -33,24 +31,22 @@ public class ImageSetChooser extends javax.swing.JDialog
 
         ArrayList<String> activeImageSets = readConfigFile();
 
-        ArrayList<ImageSetChooserPanel> data1 = new ArrayList<ImageSetChooserPanel>();
-        ArrayList<ImageSetChooserPanel> data2 = new ArrayList<ImageSetChooserPanel>();
-        ArrayList<Integer> si1 = new ArrayList<Integer>();
-        ArrayList<Integer> si2 = new ArrayList<Integer>();
+        ArrayList<ImageSetChooserPanel> data1 = new ArrayList<>();
+        ArrayList<ImageSetChooserPanel> data2 = new ArrayList<>();
+        ArrayList<Integer> si1 = new ArrayList<>();
+        ArrayList<Integer> si2 = new ArrayList<>();
 
         // Get list of imagesets (directories under img)
-        FilenameFilter fileFilter = new FilenameFilter()
-        {
-            public boolean accept( File dir, String name )
+        FilenameFilter fileFilter = (dir, name) -> {
+            if( name.equalsIgnoreCase( "unused" ) || name.startsWith( "." ) )
             {
-                if( name.equalsIgnoreCase( "unused" ) || name.startsWith( "." ) )
-                {
-                    return false;
-                }
-                return new File( dir + "/" + name ).isDirectory();
+                return false;
             }
+            return new File( dir + "/" + name ).isDirectory();
         };
-        File dir = new File( topDir );
+        // Top Level Directory
+        String topDir = "./img";
+        File dir = new File(topDir);
         String[] children = dir.list( fileFilter );
 
         // Create ImageSetChooserPanels for ShimejiList
@@ -61,20 +57,20 @@ public class ImageSetChooser extends javax.swing.JDialog
             // Determine actions file
             String filePath = "./conf/";
             String actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "\u52D5\u4F5C.xml" ).exists( ) )
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
+            if( new File( filePath + "動作.xml" ).exists( ) )
+                actionsFile = filePath + "動作.xml";
             
             filePath = "./conf/" + imageSet + "/";
             if( new File( filePath + "actions.xml" ).exists( ) )
                 actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "\u52D5\u4F5C.xml" ).exists( ) )
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
-            if( new File( filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml" ).exists( ) )
-                actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-            if( new File( filePath + "\u00A6-\u00BA@.xml" ).exists( ) )
-                actionsFile = filePath + "\u00A6-\u00BA@.xml";
-            if( new File( filePath + "\u00F4\u00AB\u00EC\u00FD.xml" ).exists( ) )
-                actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
+            if( new File( filePath + "動作.xml" ).exists( ) )
+                actionsFile = filePath + "動作.xml";
+            if( new File( filePath + "Õïòõ¢£.xml" ).exists( ) )
+                actionsFile = filePath + "Õïòõ¢£.xml";
+            if( new File( filePath + "¦-º@.xml" ).exists( ) )
+                actionsFile = filePath + "¦-º@.xml";
+            if( new File( filePath + "ô«ìý.xml" ).exists( ) )
+                actionsFile = filePath + "ô«ìý.xml";
             if( new File( filePath + "one.xml" ).exists( ) )
                 actionsFile = filePath + "one.xml";
             if( new File( filePath + "1.xml" ).exists( ) )
@@ -83,14 +79,14 @@ public class ImageSetChooser extends javax.swing.JDialog
             filePath = "./img/" + imageSet + "/conf/";
             if( new File( filePath + "actions.xml" ).exists( ) )
                 actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "\u52D5\u4F5C.xml" ).exists( ) )
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
-            if( new File( filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml" ).exists( ) )
-                actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-            if( new File( filePath + "\u00A6-\u00BA@.xml" ).exists( ) )
-                actionsFile = filePath + "\u00A6-\u00BA@.xml";
-            if( new File( filePath + "\u00F4\u00AB\u00EC\u00FD.xml" ).exists( ) )
-                actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
+            if( new File( filePath + "動作.xml" ).exists( ) )
+                actionsFile = filePath + "動作.xml";
+            if( new File( filePath + "Õïòõ¢£.xml" ).exists( ) )
+                actionsFile = filePath + "Õïòõ¢£.xml";
+            if( new File( filePath + "¦-º@.xml" ).exists( ) )
+                actionsFile = filePath + "¦-º@.xml";
+            if( new File( filePath + "ô«ìý.xml" ).exists( ) )
+                actionsFile = filePath + "ô«ìý.xml";
             if( new File( filePath + "one.xml" ).exists( ) )
                 actionsFile = filePath + "one.xml";
             if( new File( filePath + "1.xml" ).exists( ) )
@@ -99,22 +95,22 @@ public class ImageSetChooser extends javax.swing.JDialog
             // Determine behaviours file
             filePath = "./conf/";
             String behaviorsFile = filePath + "behaviors.xml";
-            if( new File( filePath + "\u884C\u52D5.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
+            if( new File( filePath + "行動.xml" ).exists( ) )
+                behaviorsFile = filePath + "行動.xml";
             
             filePath = "./conf/" + imageSet + "/";
             if( new File( filePath + "behaviors.xml" ).exists( ) )
                 behaviorsFile = filePath + "behaviors.xml";
             if( new File( filePath + "behavior.xml" ).exists( ) )
                 behaviorsFile = filePath + "behavior.xml";
-            if( new File( filePath + "\u884C\u52D5.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
-            if( new File( filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-            if( new File( filePath + "\u00AA\u00B5\u00A6-.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-            if( new File( filePath + "\u00ECs\u00F4\u00AB.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
+            if( new File( filePath + "行動.xml" ).exists( ) )
+                behaviorsFile = filePath + "行動.xml";
+            if( new File( filePath + "ÞíîÕïò.xml" ).exists( ) )
+                behaviorsFile = filePath + "ÞíîÕïò.xml";
+            if( new File( filePath + "ªµ¦-.xml" ).exists( ) )
+                behaviorsFile = filePath + "ªµ¦-.xml";
+            if( new File( filePath + "ìsô«.xml" ).exists( ) )
+                behaviorsFile = filePath + "ìsô«.xml";
             if( new File( filePath + "two.xml" ).exists( ) )
                 behaviorsFile = filePath + "two.xml";
             if( new File( filePath + "2.xml" ).exists( ) )
@@ -125,14 +121,14 @@ public class ImageSetChooser extends javax.swing.JDialog
                 behaviorsFile = filePath + "behaviors.xml";
             if( new File( filePath + "behavior.xml" ).exists( ) )
                 behaviorsFile = filePath + "behavior.xml";
-            if( new File( filePath + "\u884C\u52D5.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
-            if( new File( filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-            if( new File( filePath + "\u00AA\u00B5\u00A6-.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-            if( new File( filePath + "\u00ECs\u00F4\u00AB.xml" ).exists( ) )
-                behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
+            if( new File( filePath + "行動.xml" ).exists( ) )
+                behaviorsFile = filePath + "行動.xml";
+            if( new File( filePath + "ÞíîÕïò.xml" ).exists( ) )
+                behaviorsFile = filePath + "ÞíîÕïò.xml";
+            if( new File( filePath + "ªµ¦-.xml" ).exists( ) )
+                behaviorsFile = filePath + "ªµ¦-.xml";
+            if( new File( filePath + "ìsô«.xml" ).exists( ) )
+                behaviorsFile = filePath + "ìsô«.xml";
             if( new File( filePath + "two.xml" ).exists( ) )
                 behaviorsFile = filePath + "two.xml";
             if( new File( filePath + "2.xml" ).exists( ) )
@@ -150,7 +146,7 @@ public class ImageSetChooser extends javax.swing.JDialog
             if( new File( filePath + "info.xml" ).exists( ) )
                 infoFile = filePath + "info.xml";
 
-            String imageFile = topDir + "/" + imageSet + "/shime1.png";
+            String imageFile = topDir + "/" + imageSet + "/Preview.png";
             String caption = imageSet;
             try
             {
@@ -158,7 +154,7 @@ public class ImageSetChooser extends javax.swing.JDialog
                 
                 if( new File( infoFile ).exists( ) )
                 {
-                    final Document information = DocumentBuilderFactory.newInstance( ).newDocumentBuilder( ).parse( new FileInputStream( new File( infoFile ) ) );
+                    final Document information = DocumentBuilderFactory.newInstance( ).newDocumentBuilder( ).parse( new FileInputStream(infoFile) );
 
                     configuration.load( new Entry( information.getDocumentElement( ) ), imageSet );
                 }
@@ -170,7 +166,7 @@ public class ImageSetChooser extends javax.swing.JDialog
             }
             catch( Exception ex )
             {
-                imageFile = topDir + "/" + imageSet + "/shime1.png";
+                imageFile = topDir + "/" + imageSet + "/Preview.png";
                 caption = imageSet;
             }
 
@@ -229,9 +225,8 @@ public class ImageSetChooser extends javax.swing.JDialog
     private ArrayList<String> readConfigFile()
     {
         // now with properties style loading!
-        ArrayList<String> activeImageSets = new ArrayList<String>( );
-        activeImageSets.addAll( Arrays.asList( Main.getInstance( ).getProperties( ).getProperty( "ActiveShimeji", "" ).split( "/" ) ) );
-        selectAllSets = activeImageSets.get( 0 ).trim( ).isEmpty( ); // if no active ones, activate them all!
+        ArrayList<String> activeImageSets = new ArrayList<>(Arrays.asList(Main.getInstance().getProperties().getProperty("ActiveShimeji", "").split("/")));
+        selectAllSets = activeImageSets.getFirst().trim( ).isEmpty( ); // if no active ones, activate them all!
         return activeImageSets;
     }
 
@@ -239,15 +234,11 @@ public class ImageSetChooser extends javax.swing.JDialog
     {
         try
         {
-            FileOutputStream output = new FileOutputStream( configFile );
-            try
-            {
-                Main.getInstance( ).getProperties( ).setProperty( "ActiveShimeji", imageSets.toString( ).replace( "[", "" ).replace( "]", "" ).replace( ", ", "/" ) );
-                Main.getInstance( ).getProperties( ).store( output, "Shimeji-ee Configuration Options" );
-            }
-            finally
-            {
-                output.close( );
+            // Config file name
+            String configFile = "./conf/settings.properties";
+            try (FileOutputStream output = new FileOutputStream(configFile)) {
+                Main.getInstance().getProperties().setProperty("ActiveShimeji", imageSets.toString().replace("[", "").replace("]", "").replace(", ", "/"));
+                Main.getInstance().getProperties().store(output, "Shimeji-ee Configuration Options");
             }
         }
         catch( Exception e )
@@ -265,18 +256,18 @@ public class ImageSetChooser extends javax.swing.JDialog
     private void initComponents()
     {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
+        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
         jList1 = new ShimejiList();
         jList2 = new ShimejiList();
         jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
         useAllButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
         clearAllLabel = new javax.swing.JLabel();
-        slashLabel = new javax.swing.JLabel();
+        javax.swing.JLabel slashLabel = new javax.swing.JLabel();
         selectAllLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation( javax.swing.WindowConstants.DISPOSE_ON_CLOSE );
@@ -285,7 +276,7 @@ public class ImageSetChooser extends javax.swing.JDialog
 
         jScrollPane1.setPreferredSize( new java.awt.Dimension( 518, 100 ) );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout( jPanel2 );
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout( jPanel2Layout );
         jPanel2Layout.setHorizontalGroup(
                 jPanel2Layout.createParallelGroup( javax.swing.GroupLayout.Alignment.LEADING )
@@ -298,7 +289,7 @@ public class ImageSetChooser extends javax.swing.JDialog
                 .addComponent( jList2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE )
                 .addComponent( jList1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE ) );
 
-        jScrollPane1.setViewportView( jPanel2 );
+        jScrollPane1.setViewportView(jPanel2);
 
         jLabel1.setText( "Select Image Sets to Use:" );
 
@@ -307,42 +298,24 @@ public class ImageSetChooser extends javax.swing.JDialog
         useSelectedButton.setText( "Use Selected" );
         useSelectedButton.setMaximumSize( new java.awt.Dimension( 130, 26 ) );
         useSelectedButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        useSelectedButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                useSelectedButtonActionPerformed( evt );
-            }
-        } );
+        useSelectedButton.addActionListener(evt -> useSelectedButtonActionPerformed( evt ));
         jPanel1.add( useSelectedButton );
 
         useAllButton.setText( "Use All" );
         useAllButton.setMaximumSize( new java.awt.Dimension( 95, 23 ) );
         useAllButton.setMinimumSize( new java.awt.Dimension( 95, 23 ) );
         useAllButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        useAllButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                useAllButtonActionPerformed( evt );
-            }
-        } );
+        useAllButton.addActionListener(evt -> useAllButtonActionPerformed( evt ));
         jPanel1.add( useAllButton );
 
         cancelButton.setText( "Cancel" );
         cancelButton.setMaximumSize( new java.awt.Dimension( 95, 23 ) );
         cancelButton.setMinimumSize( new java.awt.Dimension( 95, 23 ) );
         cancelButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        cancelButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                cancelButtonActionPerformed( evt );
-            }
-        } );
+        cancelButton.addActionListener(evt -> cancelButtonActionPerformed( evt ));
         jPanel1.add( cancelButton );
 
-        jPanel4.setLayout( new javax.swing.BoxLayout( jPanel4, javax.swing.BoxLayout.LINE_AXIS ) );
+        jPanel4.setLayout( new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS ) );
 
         clearAllLabel.setForeground( new java.awt.Color( 0, 0, 204 ) );
         clearAllLabel.setText( "Clear All" );
@@ -357,7 +330,7 @@ public class ImageSetChooser extends javax.swing.JDialog
         jPanel4.add( clearAllLabel );
 
         slashLabel.setText( " / " );
-        jPanel4.add( slashLabel );
+        jPanel4.add(slashLabel);
 
         selectAllLabel.setForeground( new java.awt.Color( 0, 0, 204 ) );
         selectAllLabel.setText( "Select All" );
@@ -378,12 +351,12 @@ public class ImageSetChooser extends javax.swing.JDialog
                 .addGroup( layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup( layout.createParallelGroup( javax.swing.GroupLayout.Alignment.LEADING )
-                .addComponent( jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE )
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE )
                 .addGroup( layout.createSequentialGroup()
                 .addComponent( jLabel1 )
                 .addPreferredGap( javax.swing.LayoutStyle.ComponentPlacement.RELATED, 384, Short.MAX_VALUE )
-                .addComponent( jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE ) )
-                .addComponent( jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE ) )
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE ) )
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE ) )
                 .addContainerGap() ) );
         layout.setVerticalGroup(
                 layout.createParallelGroup( javax.swing.GroupLayout.Alignment.LEADING )
@@ -391,11 +364,11 @@ public class ImageSetChooser extends javax.swing.JDialog
                 .addContainerGap()
                 .addGroup( layout.createParallelGroup( javax.swing.GroupLayout.Alignment.TRAILING )
                 .addComponent( jLabel1 )
-                .addComponent( jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE ) )
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE ) )
                 .addPreferredGap( javax.swing.LayoutStyle.ComponentPlacement.RELATED )
-                .addComponent( jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE )
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE )
                 .addPreferredGap( javax.swing.LayoutStyle.ComponentPlacement.UNRELATED )
-                .addComponent( jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE )
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE )
                 .addGap( 11, 11, 11 ) ) );
 
         pack();
@@ -448,7 +421,7 @@ public class ImageSetChooser extends javax.swing.JDialog
         int[] ret = new int[ integers.size() ];
         for( int i = 0; i < ret.length; i++ )
         {
-            ret[i] = integers.get( i ).intValue();
+            ret[i] = integers.get(i);
         }
         return ret;
     }
@@ -494,16 +467,12 @@ public class ImageSetChooser extends javax.swing.JDialog
     /**
      * @param args the command line arguments
      */
-    public static void main( String args[] )
+    public static void main(String[] args)
     {
-        java.awt.EventQueue.invokeLater( new Runnable()
-        {
-            public void run()
-            {
-                new ImageSetChooser( new javax.swing.JFrame(), true ).display( );
-                System.exit( 0 );
-            }
-        } );
+        java.awt.EventQueue.invokeLater(() -> {
+            new ImageSetChooser( new javax.swing.JFrame(), true ).display( );
+            System.exit( 0 );
+        });
     }
     // Variables declaration - do not modify
     private javax.swing.JButton cancelButton;
@@ -511,12 +480,7 @@ public class ImageSetChooser extends javax.swing.JDialog
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<ImageSetChooserPanel> jList1;
     private javax.swing.JList<ImageSetChooserPanel> jList2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel selectAllLabel;
-    private javax.swing.JLabel slashLabel;
     private javax.swing.JButton useAllButton;
     private javax.swing.JButton useSelectedButton;
     // End of variables declaration

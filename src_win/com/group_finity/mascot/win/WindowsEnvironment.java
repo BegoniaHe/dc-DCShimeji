@@ -18,15 +18,15 @@ import com.sun.jna.ptr.LongByReference;
 
 /**
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 class WindowsEnvironment extends Environment {
-    private static HashMap<Pointer, Boolean> ieCache = new LinkedHashMap<Pointer, Boolean>();
+    private static final HashMap<Pointer, Boolean> ieCache = new LinkedHashMap<>();
 
-    public static Area workArea = new Area();
+    public static final Area workArea = new Area();
 
-    public static Area activeIE = new Area();
+    public static final Area activeIE = new Area();
 
     private static Pointer activeIEobject = null;
 
@@ -34,7 +34,7 @@ class WindowsEnvironment extends Environment {
 
     private enum IEResult {
         INVALID, NOT_IE, IE_OUT_OF_BOUNDS, IE
-    };
+    }
 
     private static boolean isIE(final Pointer ie) {
         final Boolean cachedValue = ieCache.get(ie);
@@ -108,23 +108,16 @@ class WindowsEnvironment extends Environment {
     private static Pointer findActiveIE() {
         activeIEobject = null;
 
-        User32.INSTANCE.EnumWindows(new User32.WNDENUMPROC() {
-            @Override
-            public boolean callback(Pointer ie, Pointer data) {
-                switch (isViableIE(ie)) {
-                    case IE:
-                        activeIEobject = ie;
-                        return false;
-
-                    case IE_OUT_OF_BOUNDS:
-                    case NOT_IE: // Valid window but not interactive according to user settings
-                        return true;
-
-                    case INVALID: // Something invalid is the foreground object
-                    default:
-                        activeIEobject = null;
-                        return false;
-                }
+        User32.INSTANCE.EnumWindows((ie, data) -> switch (isViableIE(ie)) {
+            case IE -> {
+                activeIEobject = ie;
+                yield false;
+            }
+            case IE_OUT_OF_BOUNDS, NOT_IE -> // Valid window but not interactive according to user settings
+                    true; // Something invalid is the foreground object
+            default -> {
+                activeIEobject = null;
+                yield false;
             }
         }, null);
 
@@ -183,10 +176,10 @@ class WindowsEnvironment extends Environment {
         }
     }
 
-    private static boolean moveIE(final Pointer ie, final Rectangle rect) {
+    private static void moveIE(final Pointer ie, final Rectangle rect) {
 
         if (ie == null) {
-            return false;
+            return;
         }
 
         final RECT out = new RECT();
@@ -203,7 +196,6 @@ class WindowsEnvironment extends Environment {
         User32.INSTANCE.MoveWindow(ie, rect.x - in.left, rect.y - in.top, rect.width + out.Width() - in.Width(),
                 rect.height + out.Height() - in.Height(), 1);
 
-        return true;
     }
 
     private static void restoreAllIEs() {
@@ -237,8 +229,8 @@ class WindowsEnvironment extends Environment {
         workArea.set(getWorkAreaRect());
 
         final Rectangle ieRect = getIERect(findActiveIE());
-        activeIE.setVisible((ieRect != null) && ieRect.intersects(getScreen().toRectangle()));
-        activeIE.set(ieRect == null ? new Rectangle(-1, -1, 0, 0) : ieRect);
+        activeIE.setVisible(ieRect.intersects(getScreen().toRectangle()));
+        activeIE.set(ieRect);
     }
 
     @Override

@@ -3,15 +3,15 @@ package com.group_finity.mascot.environment;
 import java.awt.Point;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
 public class Wall implements Border {
 
-	private Area area;
+	private final Area area;
 
-	private boolean right;
+	private final boolean right;
 
 	public Wall(final Area area, final boolean right) {
 		this.area = area;

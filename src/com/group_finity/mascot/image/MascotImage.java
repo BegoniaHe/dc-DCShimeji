@@ -7,38 +7,15 @@ import java.awt.image.BufferedImage;
 import com.group_finity.mascot.NativeFactory;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
-public class MascotImage {
+public record MascotImage(NativeImage image, Point center, Dimension size) {
 
-	private final NativeImage image;
+    public MascotImage(final BufferedImage image, final Point center) {
+        this(NativeFactory.getInstance().newNativeImage(image), center, new Dimension(image.getWidth(), image.getHeight()));
+    }
 
-	private final Point center;
-
-	private final Dimension size;
-
-	public MascotImage(final NativeImage image, final Point center, final Dimension size) {
-		this.image = image;
-		this.center = center;
-		this.size = size;
-	}
-
-	public MascotImage(final BufferedImage image, final Point center) {
-		this(NativeFactory.getInstance().newNativeImage(image), center, new Dimension(image.getWidth(), image.getHeight()));
-	}
-
-	public NativeImage getImage() {
-		return this.image;
-	}
-
-	public Point getCenter() {
-		return this.center;
-	}
-
-	public Dimension getSize() {
-		return this.size;
-	}
 
 }

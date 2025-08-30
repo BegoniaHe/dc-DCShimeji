@@ -28,3 +28,5 @@ target/
 # build scripts (optional - remove these lines if you want to track the scripts)
 # build_and_run.bat
 # build_and_run.sh
+
+.idea/

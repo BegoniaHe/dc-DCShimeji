@@ -2,6 +2,7 @@ package com.group_finity.mascot.config;
 
 import com.group_finity.mascot.Main;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,7 +27,7 @@ import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -36,9 +37,9 @@ public class ActionBuilder implements IActionBuilder {
 	private final String type;
 	private final String name;
 	private final String className;
-	private final Map<String, String> params = new LinkedHashMap<String, String>( );
-	private final List<AnimationBuilder> animationBuilders = new ArrayList<AnimationBuilder>( );
-	private final List<IActionBuilder> actionRefs = new ArrayList<IActionBuilder>( );
+	private final Map<String, String> params = new LinkedHashMap<>();
+	private final List<AnimationBuilder> animationBuilders = new ArrayList<>();
+	private final List<IActionBuilder> actionRefs = new ArrayList<>();
         private final ResourceBundle schema;
 
 	public ActionBuilder( final Configuration configuration, final Entry actionNode, final String imageSet ) throws IOException
@@ -108,19 +109,15 @@ public class ActionBuilder implements IActionBuilder {
 					}
 
 					return cls.getDeclaredConstructor().newInstance();
-				} catch (final InstantiationException e) {
+				} catch (final InstantiationException | InvocationTargetException | NoSuchMethodException e) {
 					throw new ActionInstantiationException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedClassActionInitialiseErrorMessage" ) + "(" + this + ")", e);
 				} catch (final IllegalAccessException e) {
 					throw new ActionInstantiationException( Main.getInstance( ).getLanguageBundle( ).getString( "CannotAccessClassActionErrorMessage" ) + "(" + this + ")", e);
 				} catch (final ClassNotFoundException e) {
 					throw new ActionInstantiationException( Main.getInstance( ).getLanguageBundle( ).getString( "ClassNotFoundErrorMessage" ) + "(" + this + ")", e);
-				} catch (final NoSuchMethodException e) {
-					throw new ActionInstantiationException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedClassActionInitialiseErrorMessage" ) + "(" + this + ")", e);
-				} catch (final java.lang.reflect.InvocationTargetException e) {
-					throw new ActionInstantiationException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedClassActionInitialiseErrorMessage" ) + "(" + this + ")", e);
 				}
 
-			} else if( this.type.equals( schema.getString( "Move" ) ) ) {
+                        } else if( this.type.equals( schema.getString( "Move" ) ) ) {
                             return new Move( schema, animations, variables );
 			} else if( this.type.equals( schema.getString( "Stay" ) ) ) {
                             return new Stay( schema, animations, variables);
@@ -149,15 +146,15 @@ public class ActionBuilder implements IActionBuilder {
 	}
 	
 	private List<Action> createActions( ) throws ActionInstantiationException {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		for (final IActionBuilder ref : this.getActionRefs()) {
-			actions.add( ref.buildAction( new HashMap<String, String>( ) ) );
+			actions.add( ref.buildAction(new HashMap<>() ) );
 		}
 		return actions;
 	}
 
 	private List<Animation> createAnimations() throws AnimationInstantiationException {
-		final List<Animation> animations = new ArrayList<Animation>();
+		final List<Animation> animations = new ArrayList<>();
 		for (final AnimationBuilder animationFactory : this.getAnimationBuilders()) {
 			animations.add(animationFactory.buildAnimation());
 		}

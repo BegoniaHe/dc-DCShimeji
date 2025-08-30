@@ -12,14 +12,14 @@ import hqx.*;
 import java.awt.Color;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
 public class ImagePairLoader
 {
-    public enum Filter { NEAREST_NEIGHBOUR, HQX, BICUBIC };
-    
+    public enum Filter { NEAREST_NEIGHBOUR, HQX, BICUBIC }
+
     /**
      */
     public static void load( final String name, final String rightName, final Point center, final double scaling, final Filter filter, final double opacity ) throws IOException
@@ -69,7 +69,7 @@ public class ImagePairLoader
             {
                 colour = new Color( source.getRGB( x, y ), true );
                 components = colour.getComponents( null );
-                components[ 3 ] *= opacity;
+                components[ 3 ] *= (float) opacity;
                 components[ 0 ] = components[ 3 ] * components[ 0 ];
                 components[ 1 ] = components[ 3 ] * components[ 1 ];
                 components[ 2 ] = components[ 3 ] * components[ 2 ];

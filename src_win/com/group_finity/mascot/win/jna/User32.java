@@ -6,7 +6,7 @@ import com.sun.jna.win32.StdCallLibrary;
 
 /**
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -21,7 +21,7 @@ public interface User32 extends StdCallLibrary {
 
 	int SPI_GETWORKAREA = 48;
 
-	int SystemParametersInfoW(int uiAction, int uiParam, RECT pvParam, int fWinIni);
+	void SystemParametersInfoW(int uiAction, int uiParam, RECT pvParam, int fWinIni);
 
 	Pointer GetForegroundWindow();
 
@@ -39,7 +39,7 @@ public interface User32 extends StdCallLibrary {
 
 	int GetWindowLongW(Pointer hWnd, int nIndex);
 
-	int SetWindowLongW(Pointer hWnd, int nIndex, int dwNewLong);
+	void SetWindowLongW(Pointer hWnd, int nIndex, int dwNewLong);
 
 	int WS_MAXIMIZE = 0x01000000;
 	int WS_EX_LAYERED = 0x00080000;
@@ -52,33 +52,33 @@ public interface User32 extends StdCallLibrary {
 
 	int GetClassNameW(Pointer hWnd, char[] lpString, int nMaxCount);
 
-	int GetWindowRect(Pointer hWnd, RECT lpRect);
+	void GetWindowRect(Pointer hWnd, RECT lpRect);
 
 	int ERROR = 0;
 
 	int GetWindowRgn(Pointer hWnd, Pointer hRgn);
 
-	int MoveWindow(Pointer hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint);
+	void MoveWindow(Pointer hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint);
 
-	int BringWindowToTop(Pointer hWnd);
+	void BringWindowToTop(Pointer hWnd);
 
 	Pointer GetDC(Pointer hWnd);
 
-	int ReleaseDC(Pointer hWnd, Pointer hDC);
+	void ReleaseDC(Pointer hWnd, Pointer hDC);
 
 	int ULW_ALPHA = 2;
 
-	int UpdateLayeredWindow(Pointer hWnd, Pointer hdcDst,
-			POINT pptDst, SIZE psize,
-			Pointer hdcSrc, POINT pptSrc, int crKey,
-			BLENDFUNCTION pblend, int dwFlags);
+	void UpdateLayeredWindow(Pointer hWnd, Pointer hdcDst,
+                             POINT pptDst, SIZE psize,
+                             Pointer hdcSrc, POINT pptSrc, int crKey,
+                             BLENDFUNCTION pblend, int dwFlags);
 
 	interface WNDENUMPROC extends StdCallCallback {
 		/** Return whether to continue enumeration. */
 		boolean callback(Pointer hWnd, Pointer arg);
 	}
 
-	boolean EnumWindows(WNDENUMPROC lpEnumFunc, Pointer arg);
+	void EnumWindows(WNDENUMPROC lpEnumFunc, Pointer arg);
 
 	int SetProcessDPIAware();
 

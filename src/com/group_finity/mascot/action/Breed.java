@@ -15,7 +15,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Breed extends Animate
@@ -98,13 +98,7 @@ public class Breed extends Animate
                     mascot.setBehavior( Main.getInstance( ).getConfiguration( childType ).buildBehavior( getBornBehaviour( ), action.getMascot( ) ) );
                     action.getMascot( ).getManager( ).add( mascot );
                 }
-                catch( final BehaviorInstantiationException e )
-                {
-                    log.log( Level.SEVERE, "Fatal Exception", e );
-                    Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                    mascot.dispose( );
-                }
-                catch( final CantBeAliveException e )
+                catch( final BehaviorInstantiationException | CantBeAliveException e )
                 {
                     log.log( Level.SEVERE, "Fatal Exception", e );
                     Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );

@@ -14,7 +14,7 @@ import java.util.logging.Level;
 
 /**
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/) Currently developed by Shimeji-ee
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>) Currently developed by Shimeji-ee
  * Group.
  */
 public class Interact extends Animate
@@ -47,12 +47,7 @@ public class Interact extends Animate
             {
                 getMascot( ).setBehavior( Main.getInstance( ).getConfiguration( getMascot( ).getImageSet( ) ).buildBehavior( getBehavior( ), getMascot( ) ) );
             }
-            catch( final BehaviorInstantiationException e )
-            {
-                log.log( Level.SEVERE, "Fatal Exception", e );
-                Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-            }
-            catch( final CantBeAliveException e )
+            catch( final BehaviorInstantiationException | CantBeAliveException e )
             {
                 log.log( Level.SEVERE, "Fatal Exception", e );
                 Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );

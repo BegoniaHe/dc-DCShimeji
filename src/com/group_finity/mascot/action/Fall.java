@@ -10,7 +10,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Fall extends ActionBase {
@@ -64,11 +64,8 @@ public class Fall extends ActionBase {
 	public boolean hasNext() throws VariableException {
 
 		Point pos = getMascot().getAnchor();
-		boolean onBorder = false;
-		if ( getEnvironment().getFloor().isOn(pos) ) {
-			onBorder = true;
-		}
-		if ( getEnvironment().getWall().isOn(pos) ) {
+		boolean onBorder = getEnvironment().getFloor().isOn(pos);
+        if ( getEnvironment().getWall().isOn(pos) ) {
 			onBorder = true;
 		}
 		return super.hasNext() && !onBorder;

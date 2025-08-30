@@ -6,7 +6,7 @@ import com.sun.jna.win32.StdCallLibrary;
 
 /**
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -18,16 +18,16 @@ public interface Gdi32 extends StdCallLibrary {
 
 	Pointer SelectObject(Pointer HDC, Pointer HGDIOBJ);
 
-	int DeleteDC(Pointer hdc);
+	void DeleteDC(Pointer hdc);
 
 	int DIB_RGB_COLORS = 0;
 
 	Pointer CreateDIBSection(Pointer hdc, BITMAPINFOHEADER pbmi, int iUsage, Pointer ppvBits, Pointer hSection,
 			int dwOffset);
 
-	int GetObjectW(Pointer hgdiobj, int cbBuffer, BITMAP lpvObject);
+	void GetObjectW(Pointer hgdiobj, int cbBuffer, BITMAP lpvObject);
 
-	int DeleteObject(Pointer hObject);
+	void DeleteObject(Pointer hObject);
 
 	Pointer CreateRectRgn(
 			int nLeftRect,
@@ -35,5 +35,5 @@ public interface Gdi32 extends StdCallLibrary {
 			int nRightRect,
 			int nBottomRect);
 
-	int GetRgnBox(Pointer hrgn, RECT lprc);
+	void GetRgnBox(Pointer hrgn, RECT lprc);
 }

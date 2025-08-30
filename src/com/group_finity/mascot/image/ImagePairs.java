@@ -4,12 +4,12 @@ import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class ImagePairs
 {
-    private static ConcurrentHashMap<String,ImagePair> imagepairs = new ConcurrentHashMap<String,ImagePair>( ); 
+    private static final ConcurrentHashMap<String,ImagePair> imagepairs = new ConcurrentHashMap<>();
 
     public static void load( final String filename, final ImagePair imagepair )
     {
@@ -21,8 +21,7 @@ public class ImagePairs
     {
         if( !imagepairs.containsKey( filename ) )
             return null;
-        ImagePair ip = imagepairs.get( filename );
-        return ip;
+        return imagepairs.get( filename );
     }	
 
     public static boolean contains( String filename )

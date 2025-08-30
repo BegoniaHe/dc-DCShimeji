@@ -123,7 +123,7 @@ public class ComplexJump extends ActionBase
     }
 
     @Override
-    protected void tick( ) throws LostGroundException, VariableException
+    protected void tick( ) throws VariableException
     {
         int targetX = 0;
         int targetY = 0;
@@ -187,17 +187,7 @@ public class ComplexJump extends ActionBase
                         target.get( ).setLookRight( !getMascot( ).isLookRight( ) );
                     }
                 }
-                catch( final NullPointerException e )
-                {
-                    log.log( Level.SEVERE, "Fatal Exception", e );
-                    Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                }
-                catch( final BehaviorInstantiationException e )
-                {
-                    log.log( Level.SEVERE, "Fatal Exception", e );
-                    Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                }
-                catch( final CantBeAliveException e )
+                catch( final NullPointerException | CantBeAliveException | BehaviorInstantiationException e )
                 {
                     log.log( Level.SEVERE, "Fatal Exception", e );
                     Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );

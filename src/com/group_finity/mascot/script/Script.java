@@ -11,7 +11,7 @@ import java.util.Map;
 import com.group_finity.mascot.exception.VariableException;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -39,25 +39,16 @@ public class Script extends Variable {
 		@Override
 		protected boolean hasFeature(Context cx, int featureIndex) {
 			// Disable potentially dangerous features
-			switch (featureIndex) {
-				case Context.FEATURE_DYNAMIC_SCOPE:
-					return false;
-				case Context.FEATURE_STRICT_VARS:
-					return true; // Enable strict variable handling
-				case Context.FEATURE_STRICT_EVAL:
-					return true; // Enable strict eval
-				default:
-					return super.hasFeature(cx, featureIndex);
-			}
+            return switch (featureIndex) {
+                case Context.FEATURE_DYNAMIC_SCOPE -> false;
+                case Context.FEATURE_STRICT_VARS -> true; // Enable strict variable handling
+                case Context.FEATURE_STRICT_EVAL -> true; // Enable strict eval
+                default -> super.hasFeature(cx, featureIndex);
+            };
 		}
 	};
-	
-	// Configure context factory for better security and performance
-	static {
-		// Additional static configuration if needed
-	}
-        
-	private final String source;
+
+    private final String source;
 	
 	private final boolean clearAtInitFrame;
 	
@@ -159,8 +150,7 @@ public class Script extends Variable {
 			} catch (Exception e) {
 				// Log warning but continue with other variables
 				// Could add logging here if needed
-				continue;
-			}
+            }
 		}
 	}
 	
@@ -168,10 +158,9 @@ public class Script extends Variable {
 	 * Safely get variable value without causing recursion
 	 */
 	private Object getVariableValueSafely(Variable variable, VariableMap variables) throws VariableException {
-		if (variable instanceof Script) {
+		if (variable instanceof Script scriptVar) {
 			// For Script variables, use their cached value if available to prevent recursion
-			Script scriptVar = (Script) variable;
-			return scriptVar.getValue();
+            return scriptVar.getValue();
 		} else {
 			// Safe to evaluate non-Script variables (Constant variables)
 			return variable.get(variables);

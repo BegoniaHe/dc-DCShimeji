@@ -9,7 +9,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public abstract class ComplexAction extends ActionBase {
@@ -19,7 +19,7 @@ public abstract class ComplexAction extends ActionBase {
 	private int currentAction;
 
 	public ComplexAction( java.util.ResourceBundle schema, final VariableMap params, final Action... actions) {
-		super( schema, new ArrayList<Animation>(), params);
+		super( schema, new ArrayList<>(), params);
 		if (actions.length == 0) {
 			throw new IllegalArgumentException("actions.length==0");
 		}
