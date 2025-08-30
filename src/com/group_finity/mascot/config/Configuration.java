@@ -24,17 +24,17 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
 public class Configuration
 {
     private static final Logger log = Logger.getLogger( Configuration.class.getName( ) );
-    private final Map<String, String> constants = new LinkedHashMap<String, String>( 2 );
-    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<String, ActionBuilder>( );
-    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<String, BehaviorBuilder>( );
-    private final Map<String, String> information = new LinkedHashMap<String, String>( 8 );
+    private final Map<String, String> constants = new LinkedHashMap<>(2);
+    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
+    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
+    private final Map<String, String> information = new LinkedHashMap<>(8);
     private ResourceBundle schema;
 
     public void load( final Entry configurationNode, final String imageSet ) throws IOException, ConfigurationException
@@ -46,8 +46,8 @@ public class Configuration
         Locale locale;
 
         // check for Japanese XML tag and adapt locale accordingly
-        if( configurationNode.hasChild( "\u52D5\u4F5C\u30EA\u30B9\u30C8" ) ||
-            configurationNode.hasChild( "\u884C\u52D5\u30EA\u30B9\u30C8" ) )
+        if( configurationNode.hasChild( "動作リスト" ) ||
+            configurationNode.hasChild( "行動リスト" ) )
         {
             log.log( Level.INFO, "Using ja-JP schema" );
             locale = Locale.forLanguageTag( "ja-JP" );
@@ -87,7 +87,7 @@ public class Configuration
         {
             log.log( Level.INFO, "Behavior List..." );
 
-            loadBehaviors( list, new ArrayList<String>( ) );
+            loadBehaviors( list, new ArrayList<>() );
         }
         
         for( final Entry list : configurationNode.selectChildren( schema.getString( "Information" ) ) )
@@ -106,7 +106,7 @@ public class Configuration
             {
                 if( node.getName( ).equals( schema.getString( "Condition" ) ) )
                 {
-                    final List<String> newConditions = new ArrayList<String>( conditions );
+                    final List<String> newConditions = new ArrayList<>(conditions);
                     newConditions.add( node.getAttribute( schema.getString( "Condition" ) ) );
 
                     loadBehaviors(node, newConditions);
@@ -173,7 +173,7 @@ public class Configuration
         context.putAll( getConstants( ) ); // put first so they can't override mascot
         context.put( "mascot", mascot );
 
-        final List<BehaviorBuilder> candidates = new ArrayList<BehaviorBuilder>( );
+        final List<BehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
         for( final BehaviorBuilder behaviorFactory : this.getBehaviorBuilders( ).values( ) )
         {

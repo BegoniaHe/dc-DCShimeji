@@ -25,9 +25,7 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
-        distribution: 'temurin'
-        
+
     - name: Install Apache Ant
       run: |
         sudo apt-get update
@@ -62,17 +60,7 @@ jobs:
       if: steps.build.outputs.build_success == 'true'
       uses: actions/upload-artifact@v4
       with:
-        name: shimeji-jar
-        path: |
-          target/Shimeji-ee.jar
-          lib/
-          conf/
-          img/
-          *.txt
-          *.md
-          LICENSE
-          MANIFEST.MF
-        retention-days: 1
+
 
   build-jpackage-windows:
     needs: build-jar
@@ -86,9 +74,7 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
-        distribution: 'temurin'
-        
+
     - name: Install Apache Ant
       run: |
         choco install ant
@@ -107,8 +93,7 @@ jobs:
     - name: Download JAR artifact
       uses: actions/download-artifact@v4
       with:
-        name: shimeji-jar
-        
+
     - name: Build jpackage Windows packages
       run: |
         echo "Building Windows packages using jpackage..."
@@ -120,20 +105,11 @@ jobs:
     - name: Upload Windows MSI installer
       uses: actions/upload-artifact@v4
       with:
-        name: Shimeji-ee-windows-msi
-        path: |
-          target/*.msi
-          target/*.exe
-        retention-days: 1
-        if-no-files-found: warn
-        
+
     - name: Upload Windows portable package
       uses: actions/upload-artifact@v4
       with:
-        name: Shimeji-ee-windows-portable
-        path: target/Shimeji-ee_*_Portable.zip
-        retention-days: 1
-        if-no-files-found: warn
+
 
   create-release:
     needs: [build-jar, build-jpackage-windows]
@@ -147,14 +123,11 @@ jobs:
     - name: Download all platform packages
       uses: actions/download-artifact@v4
       with:
-        pattern: Shimeji-ee-*
-        merge-multiple: true
-        
+
     - name: Download JAR artifact
       uses: actions/download-artifact@v4
       with:
-        name: shimeji-jar
-        
+
     - name: Check for existing pre-release
       id: check_prerelease
       run: |

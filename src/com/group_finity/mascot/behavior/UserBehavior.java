@@ -23,9 +23,9 @@ import com.group_finity.mascot.hotspot.Hotspot;
 
 /**
  * Simple Sample Behavior.
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/) Currently developed by Shimeji-ee
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>) Currently developed by Shimeji-ee
  * Group.
  */
 public class UserBehavior implements Behavior
@@ -38,7 +38,7 @@ public class UserBehavior implements Behavior
 
     public static final String BEHAVIOURNAME_THROWN = "Thrown";
     
-    private enum HotspotResult { INACTIVE, ACTIVE_NULL, ACTIVE };
+    private enum HotspotResult { INACTIVE, ACTIVE_NULL, ACTIVE }
 
     private final String name;
 
@@ -109,7 +109,7 @@ public class UserBehavior implements Behavior
 
     /**
      * On Mouse Pressed. Start dragging.
-     *
+     * <p>
      * @ Throws CantBeAliveException
      */
     public synchronized void mousePressed( final MouseEvent event ) throws CantBeAliveException
@@ -124,19 +124,19 @@ public class UserBehavior implements Behavior
                 for( final Hotspot hotspot : mascot.getHotspots( ) )
                 {
                     if( hotspot.contains( mascot, event.getPoint( ) ) &&
-                        Main.getInstance( ).getConfiguration( mascot.getImageSet( ) ).isBehaviorEnabled( hotspot.getBehaviour( ), mascot ) )
+                        Main.getInstance( ).getConfiguration( mascot.getImageSet( ) ).isBehaviorEnabled( hotspot.behaviour( ), mascot ) )
                     {
                         // activate hotspot
                         handled = true;
                         try
                         {
                             getMascot( ).setCursorPosition( event.getPoint( ) );
-                            if( hotspot.getBehaviour( ) != null )
-                                getMascot( ).setBehavior( configuration.buildBehavior( hotspot.getBehaviour( ), mascot ) );
+                            if( hotspot.behaviour( ) != null )
+                                getMascot( ).setBehavior( configuration.buildBehavior( hotspot.behaviour( ), mascot ) );
                         }
                         catch( final BehaviorInstantiationException e )
                         {
-                            throw new CantBeAliveException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedInitialiseFollowingBehaviourErrorMessage" ) + " " + hotspot.getBehaviour(), e );
+                            throw new CantBeAliveException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedInitialiseFollowingBehaviourErrorMessage" ) + " " + hotspot.behaviour(), e );
                         }
                         break;
                     }
@@ -173,7 +173,7 @@ public class UserBehavior implements Behavior
 
     /**
      * On Mouse Release. End dragging.
-     *
+     * <p>
      * @ Throws CantBeAliveException
      */
     public synchronized void mouseReleased( final MouseEvent event ) throws CantBeAliveException
@@ -224,15 +224,15 @@ public class UserBehavior implements Behavior
                             try
                             {
                                 // no need to set cursor position, it's already set
-                                if( hotspot.getBehaviour( ) != null )
+                                if( hotspot.behaviour( ) != null )
                                 {
                                     hotspotIsActive = HotspotResult.ACTIVE;
-                                    getMascot( ).setBehavior( configuration.buildBehavior( hotspot.getBehaviour( ), mascot ) );
+                                    getMascot( ).setBehavior( configuration.buildBehavior( hotspot.behaviour( ), mascot ) );
                                 }
                             }
                             catch( final BehaviorInstantiationException e )
                             {
-                                throw new CantBeAliveException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedInitialiseFollowingBehaviourErrorMessage" ) + " " + hotspot.getBehaviour(), e );
+                                throw new CantBeAliveException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedInitialiseFollowingBehaviourErrorMessage" ) + " " + hotspot.behaviour(), e );
                             }
                             break;
                         }

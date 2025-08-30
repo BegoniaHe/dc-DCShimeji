@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  */
 public class PackageableResourceControl extends ResourceBundle.Control {
 
-    boolean isPackageBased;
+    final boolean isPackageBased;
 
     public PackageableResourceControl() {
         this(true);
@@ -41,7 +41,7 @@ public class PackageableResourceControl extends ResourceBundle.Control {
             if (nBasePackage > 0) {
                 strBuilder.append(basePackageName).append(".");
             }
-            if (langSubPackage.length() > 0) {
+            if (!langSubPackage.isEmpty()) {
                 strBuilder.append(langSubPackage).append(".");
             }
             strBuilder.append(resName);

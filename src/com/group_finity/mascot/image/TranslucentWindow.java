@@ -3,19 +3,19 @@ package com.group_finity.mascot.image;
 import java.awt.Component;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
 public interface TranslucentWindow
 {
-    public Component asComponent( );
+    Component asComponent();
 
-    public void setImage( NativeImage image );
+    void setImage(NativeImage image);
 
-    public void updateImage( );
+    void updateImage();
     
-    public void dispose( );
+    void dispose();
     
-    public void setAlwaysOnTop( boolean onTop );
+    void setAlwaysOnTop(boolean onTop);
 }

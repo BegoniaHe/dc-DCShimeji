@@ -24,7 +24,7 @@ import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -33,14 +33,14 @@ public class AnimationBuilder
     private static final Logger log = Logger.getLogger(AnimationBuilder.class.getName( ) );
     private final String condition;
     private String imageSet = "";
-    private final List<Pose> poses = new ArrayList<Pose>( );
-    private final List<Hotspot> hotspots = new ArrayList<Hotspot>( );
+    private final List<Pose> poses = new ArrayList<>();
+    private final List<Hotspot> hotspots = new ArrayList<>();
     private final ResourceBundle schema;
     private final String turn;
 
     public AnimationBuilder( final ResourceBundle schema, final Entry animationNode, final String imageSet ) throws IOException
     {
-        if( !imageSet.equals( "" ) )
+        if(!imageSet.isEmpty())
             this.imageSet = "/"+imageSet;
 
         this.schema = schema;
@@ -130,7 +130,7 @@ public class AnimationBuilder
             }
         }
 
-        final Pose pose = new Pose( imageText, imageRightText, move.x, move.y, duration, soundText != null ? soundText : null );
+        final Pose pose = new Pose( imageText, imageRightText, move.x, move.y, duration, soundText);
 
         log.log( Level.INFO, "ReadPosition({0})" , pose );
 

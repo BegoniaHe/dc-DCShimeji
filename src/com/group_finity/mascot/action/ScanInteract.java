@@ -118,17 +118,7 @@ public class ScanInteract extends BorderedAction
                         target.get( ).setLookRight( !getMascot( ).isLookRight( ) );
                     }
                 }
-                catch( final NullPointerException e )
-                {
-                    log.log( Level.SEVERE, "Fatal Exception", e );
-                    Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                }
-                catch( final BehaviorInstantiationException e )
-                {
-                    log.log( Level.SEVERE, "Fatal Exception", e );
-                    Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                }
-                catch( final CantBeAliveException e )
+                catch( final NullPointerException | CantBeAliveException | BehaviorInstantiationException e )
                 {
                     log.log( Level.SEVERE, "Fatal Exception", e );
                     Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
@@ -141,12 +131,10 @@ public class ScanInteract extends BorderedAction
     protected Animation getAnimation( ) throws VariableException
     {
         List<Animation> animations = super.getAnimations( );
-        for( int index = 0; index < animations.size( ); index++ )
-        {
-            if( animations.get( index ).isEffective( getVariables( ) ) && 
-                turning == animations.get( index ).isTurn( ) )
-            {
-                return animations.get( index );
+        for (Animation animation : animations) {
+            if (animation.isEffective(getVariables()) &&
+                    turning == animation.isTurn()) {
+                return animation;
             }
         }
 

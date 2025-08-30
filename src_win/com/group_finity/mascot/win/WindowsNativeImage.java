@@ -15,12 +15,12 @@ import com.sun.jna.Pointer;
 
 /**
  * (@link WindowsTranslucentWindow) a value that can be used with images.
- * 
+ * <p>
  * {@link WindowsTranslucentWindow} is available because only Windows bitmap
  * {@link BufferedImage} existing copy pixels from a Windows bitmap.
- * 
+ * <p>
  * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/)
+ * (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 class WindowsNativeImage implements NativeImage {
@@ -40,10 +40,8 @@ class WindowsNativeImage implements NativeImage {
 		bmi.biPlanes = 1;
 		bmi.biBitCount = 32;
 
-		final Pointer hBitmap = Gdi32.INSTANCE.CreateDIBSection(
-				Pointer.NULL, bmi, Gdi32.DIB_RGB_COLORS, Pointer.NULL, Pointer.NULL, 0);
-
-		return hBitmap;
+        return Gdi32.INSTANCE.CreateDIBSection(
+                Pointer.NULL, bmi, Gdi32.DIB_RGB_COLORS, Pointer.NULL, Pointer.NULL, 0);
 	}
 
 	/**

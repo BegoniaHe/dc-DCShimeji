@@ -8,13 +8,13 @@ import javax.sound.sampled.Clip;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
- * 
+ * <p>
  * Visit kilkakon.com/shimeji for updates
  * @author Kilkakon
  */
 public class Sounds
 {
-    private final static ConcurrentHashMap<String,Clip> SOUNDS = new ConcurrentHashMap<String,Clip>( );
+    private final static ConcurrentHashMap<String,Clip> SOUNDS = new ConcurrentHashMap<>();
 
     public static void load( final String filename, final Clip clip )
     {
@@ -51,7 +51,7 @@ public class Sounds
     
     public static boolean isMuted( )
     {
-        return ! Boolean.parseBoolean( Main.getInstance( ).getProperties( ).getProperty( "Sounds", "true" ) );
+        return Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Sounds", "true"));
     }
     
     public static void setMuted( boolean mutedFlag )

@@ -12,7 +12,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Dragged extends ActionBase
@@ -63,7 +63,7 @@ public class Dragged extends ActionBase
     }
 
     @Override
-    protected void tick( ) throws LostGroundException, VariableException
+    protected void tick( ) throws VariableException
     {
         getMascot( ).setLookRight( false );
         getMascot( ).setDragging( true );

@@ -1,7 +1,7 @@
 package com.group_finity.mascot.image;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
@@ -9,11 +9,11 @@ public class ImagePair {
 
 	/**
 	 */
-	private MascotImage leftImage;
+	private final MascotImage leftImage;
 
 	/**
 	 */
-	private MascotImage rightImage;
+	private final MascotImage rightImage;
 
 	/**
 	 */

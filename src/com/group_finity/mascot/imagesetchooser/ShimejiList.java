@@ -13,16 +13,15 @@ public class ShimejiList extends JList<ImageSetChooserPanel> {
     setCellRenderer(new CustomCellRenderer());
   }
 
-  class CustomCellRenderer implements ListCellRenderer<ImageSetChooserPanel> {
+  static class CustomCellRenderer implements ListCellRenderer<ImageSetChooserPanel> {
     public Component getListCellRendererComponent (JList<? extends ImageSetChooserPanel> list, ImageSetChooserPanel value,
 			int index,boolean isSelected,boolean cellHasFocus) {
       if (value instanceof ImageSetChooserPanel)
       {
-        ImageSetChooserPanel component = (ImageSetChooserPanel) value;
-        component.setForeground (Color.white);
-        component.setBackground (isSelected ? SystemColor.controlHighlight : Color.white);
-        component.setCheckbox( isSelected );
-        return component;
+          ((ImageSetChooserPanel) value).setForeground (Color.white);
+        ((ImageSetChooserPanel) value).setBackground (isSelected ? SystemColor.controlHighlight : Color.white);
+        ((ImageSetChooserPanel) value).setCheckbox( isSelected );
+        return (ImageSetChooserPanel) value;
       }
       else
       {

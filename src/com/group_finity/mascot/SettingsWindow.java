@@ -35,12 +35,11 @@ import com.formdev.flatlaf.FlatLaf;
  * @author Kilkakon
  */
 public class SettingsWindow extends javax.swing.JDialog {
-        private final String configFile = "./conf/settings.properties"; // Config file name
-        private final String themeFile = "./conf/theme.properties";
+    private final String themeFile = "./conf/theme.properties";
         private Properties themeProperties = new Properties();
-        private Properties oldThemeProperties = new Properties();
+        private final Properties oldThemeProperties = new Properties();
         private LookAndFeel lookAndFeel;
-        private final ArrayList<String> listData = new ArrayList<String>();
+        private final ArrayList<String> listData = new ArrayList<>();
         private Boolean alwaysShowShimejiChooser = false;
         private Boolean alwaysShowInformationScreen = false;
         private String filter = "nearest";
@@ -48,9 +47,7 @@ public class SettingsWindow extends javax.swing.JDialog {
         private double opacity = 1.0;
         private Boolean windowedMode = false;
         private Dimension windowSize = new Dimension(600, 500);
-        private Dimension buttonSize;
-        private Dimension aboutButtonSize;
-        private Color backgroundColour = new Color(0, 255, 0);
+    private Color backgroundColour = new Color(0, 255, 0);
         private String backgroundMode = "centre";
         private String backgroundImage = null;
         private final String[] backgroundModes = { "centre", "fill", "fit", "stretch" };
@@ -83,7 +80,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 grpFilter.add(radFilterNearest);
                 grpFilter.add(radFilterBicubic);
                 grpFilter.add(radFilterHqx);
-                java.util.Hashtable<Integer, JLabel> labelTable = new java.util.Hashtable<Integer, JLabel>();
+                java.util.Hashtable<Integer, JLabel> labelTable = new java.util.Hashtable<>();
                 for (int index = 0; index < 9; index++)
                         labelTable.put(index * 10, new JLabel(index + "x"));
                 sldScaling.setLabelTable(labelTable);
@@ -107,8 +104,8 @@ public class SettingsWindow extends javax.swing.JDialog {
                 windowedMode = properties.getProperty("Environment", "generic").equals("virtual");
                 String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
                 windowSize = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
-                buttonSize = btnDone.getPreferredSize();
-                aboutButtonSize = btnWebsite.getPreferredSize();
+            Dimension buttonSize = btnDone.getPreferredSize();
+            Dimension aboutButtonSize = btnWebsite.getPreferredSize();
                 backgroundColour = Color.decode(properties.getProperty("Background", "#00FF00"));
                 backgroundImage = properties.getProperty("BackgroundImage", "");
                 backgroundMode = properties.getProperty("BackgroundMode", "centre");
@@ -132,8 +129,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 try {
                         input = new FileInputStream(themeFile);
                         themeProperties.load(input);
-                } catch (FileNotFoundException ex) {
-                } catch (IOException ex) {
+                } catch (IOException ignored) {
                 }
                 primaryColour1 = Color.decode(themeProperties.getProperty("PrimaryColour1", "#1EA6EB"));
                 primaryColour2 = Color.decode(themeProperties.getProperty("PrimaryColour2", "#28B0F5"));
@@ -265,7 +261,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 }
         }
 
-        public boolean display() {
+        public void display() {
                 float menuScaling = Float.parseFloat(Main.getInstance().getProperties().getProperty("MenuDPI", "96"))
                                 / 96;
 
@@ -479,8 +475,8 @@ public class SettingsWindow extends javax.swing.JDialog {
                 lblIcon.setPreferredSize(new Dimension((int) (lblIcon.getPreferredSize().width * menuScaling),
                                 (int) (lblIcon.getPreferredSize().height * menuScaling)));
                 lblIcon.setMaximumSize(lblIcon.getPreferredSize());
-                if (getIconImages().size() > 0)
-                        lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(
+                if (!getIconImages().isEmpty())
+                        lblIcon.setIcon(new ImageIcon(getIconImages().getFirst().getScaledInstance(
                                         lblIcon.getPreferredSize().width,
                                         lblIcon.getPreferredSize().height, java.awt.Image.SCALE_DEFAULT)));
                 btnWebsite.setPreferredSize(new Dimension((int) (btnWebsite.getPreferredSize().width * menuScaling),
@@ -502,7 +498,6 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pack();
                 setVisible(true);
 
-                return true;
         }
 
         /**
@@ -589,7 +584,7 @@ public class SettingsWindow extends javax.swing.JDialog {
 
                 grpFilter = new javax.swing.ButtonGroup();
                 pnlTabs = new javax.swing.JTabbedPane();
-                pnlGeneral = new javax.swing.JPanel();
+            JPanel pnlGeneral = new JPanel();
                 chkAlwaysShowShimejiChooser = new javax.swing.JCheckBox();
                 lblScaling = new javax.swing.JLabel();
                 sldScaling = new javax.swing.JSlider();
@@ -600,150 +595,150 @@ public class SettingsWindow extends javax.swing.JDialog {
                 sldOpacity = new javax.swing.JSlider();
                 lblOpacity = new javax.swing.JLabel();
                 chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
-                pnlInteractiveWindows = new javax.swing.JPanel();
+            JPanel pnlInteractiveWindows = new JPanel();
                 pnlInteractiveButtons = new javax.swing.JPanel();
                 btnAddInteractiveWindow = new javax.swing.JButton();
                 btnRemoveInteractiveWindow = new javax.swing.JButton();
-                jScrollPane1 = new javax.swing.JScrollPane();
+            javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
                 lstInteractiveWindows = new javax.swing.JList<>();
-                pnlTheme = new javax.swing.JPanel();
+            JPanel pnlTheme = new JPanel();
                 pnlThemeButtons = new javax.swing.JPanel();
                 btnChangeFont = new javax.swing.JButton();
                 btnReset = new javax.swing.JButton();
                 lblPrimaryColour1 = new javax.swing.JLabel();
                 txtPrimaryColour1 = new javax.swing.JTextField();
                 pnlPrimaryColour1PreviewContainer = new javax.swing.JPanel();
-                gluePrimaryColour1a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler gluePrimaryColour1a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlPrimaryColour1Preview = new javax.swing.JPanel();
-                gluePrimaryColour1b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler gluePrimaryColour1b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnPrimaryColour1Change = new javax.swing.JButton();
                 lblPrimaryColour2 = new javax.swing.JLabel();
                 txtPrimaryColour2 = new javax.swing.JTextField();
                 pnlPrimaryColour2PreviewContainer = new javax.swing.JPanel();
-                gluePrimaryColour2a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler gluePrimaryColour2a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlPrimaryColour2Preview = new javax.swing.JPanel();
-                gluePrimaryColour2b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler gluePrimaryColour2b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnPrimaryColour2Change = new javax.swing.JButton();
                 lblPrimaryColour3 = new javax.swing.JLabel();
                 txtPrimaryColour3 = new javax.swing.JTextField();
                 pnlPrimaryColour3PreviewContainer = new javax.swing.JPanel();
-                gluePrimaryColour3a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler gluePrimaryColour3a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlPrimaryColour3Preview = new javax.swing.JPanel();
-                gluePrimaryColour3b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler gluePrimaryColour3b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnPrimaryColour3Change = new javax.swing.JButton();
                 lblSecondaryColour1 = new javax.swing.JLabel();
                 txtSecondaryColour1 = new javax.swing.JTextField();
                 pnlSecondaryColour1PreviewContainer = new javax.swing.JPanel();
-                glueSecondaryColour1a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueSecondaryColour1a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlSecondaryColour1Preview = new javax.swing.JPanel();
-                glueSecondaryColour1b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler glueSecondaryColour1b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnSecondaryColour1Change = new javax.swing.JButton();
                 lblSecondaryColour2 = new javax.swing.JLabel();
                 txtSecondaryColour2 = new javax.swing.JTextField();
                 pnlSecondaryColour2PreviewContainer = new javax.swing.JPanel();
-                glueSecondaryColour2a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueSecondaryColour2a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlSecondaryColour2Preview = new javax.swing.JPanel();
-                glueSecondaryColour2b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler glueSecondaryColour2b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnSecondaryColour2Change = new javax.swing.JButton();
                 lblSecondaryColour3 = new javax.swing.JLabel();
                 txtSecondaryColour3 = new javax.swing.JTextField();
                 pnlSecondaryColour3PreviewContainer = new javax.swing.JPanel();
-                glueSecondaryColour3a = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueSecondaryColour3a = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlSecondaryColour3Preview = new javax.swing.JPanel();
-                glueSecondaryColour3b = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler glueSecondaryColour3b = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnSecondaryColour3Change = new javax.swing.JButton();
                 lblMenuOpacity = new javax.swing.JLabel();
                 sldMenuOpacity = new javax.swing.JSlider();
                 lblBlackColour = new javax.swing.JLabel();
                 txtBlackColour = new javax.swing.JTextField();
                 pnlBlackColourPreviewContainer = new javax.swing.JPanel();
-                glueBlackColoura = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueBlackColoura = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlBlackColourPreview = new javax.swing.JPanel();
-                glueBlackColourb = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler glueBlackColourb = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnBlackColourChange = new javax.swing.JButton();
                 lblWhiteColour = new javax.swing.JLabel();
                 txtWhiteColour = new javax.swing.JTextField();
                 pnlWhiteColourPreviewContainer = new javax.swing.JPanel();
-                glueWhiteColoura = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueWhiteColoura = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlWhiteColourPreview = new javax.swing.JPanel();
-                glueWhiteColourb = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
+            javax.swing.Box.Filler glueWhiteColourb = new javax.swing.Box.Filler(new Dimension(0, 0),
+                    new Dimension(0, 0),
+                    new Dimension(0, 0));
                 btnWhiteColourChange = new javax.swing.JButton();
-                pnlWindowMode = new javax.swing.JPanel();
+            JPanel pnlWindowMode = new JPanel();
                 chkWindowModeEnabled = new javax.swing.JCheckBox();
                 lblDimensions = new javax.swing.JLabel();
-                lblDimensionsX = new javax.swing.JLabel();
+            JLabel lblDimensionsX = new JLabel();
                 lblBackground = new javax.swing.JLabel();
                 txtBackgroundColour = new javax.swing.JTextField();
                 btnBackgroundColourChange = new javax.swing.JButton();
                 spnWindowWidth = new javax.swing.JSpinner();
                 spnWindowHeight = new javax.swing.JSpinner();
-                lblBackgroundColour = new javax.swing.JLabel();
+            JLabel lblBackgroundColour = new JLabel();
                 pnlBackgroundPreviewContainer = new javax.swing.JPanel();
-                glueBackground = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glueBackground = new javax.swing.Box.Filler(new Dimension(0, 0), new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlBackgroundPreview = new javax.swing.JPanel();
-                glueBackground2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 0));
-                lblBackgroundImageCaption = new javax.swing.JLabel();
+            javax.swing.Box.Filler glueBackground2 = new javax.swing.Box.Filler(new Dimension(0, 0), new Dimension(0, 0),
+                    new Dimension(0, 0));
+            JLabel lblBackgroundImageCaption = new JLabel();
                 pnlBackgroundImage = new javax.swing.JPanel();
                 lblBackgroundImage = new javax.swing.JLabel();
                 btnBackgroundImageChange = new javax.swing.JButton();
                 btnBackgroundImageRemove = new javax.swing.JButton();
-                cmbBackgroundImageMode = new javax.swing.JComboBox<String>();
-                pnlAbout = new javax.swing.JPanel();
-                glue1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+                cmbBackgroundImageMode = new javax.swing.JComboBox<>();
+            JPanel pnlAbout = new JPanel();
+            javax.swing.Box.Filler glue1 = new javax.swing.Box.Filler(new Dimension(0, 0), new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 lblIcon = new javax.swing.JLabel();
-                rigid1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15),
-                                new java.awt.Dimension(0, 15));
+            javax.swing.Box.Filler rigid1 = new javax.swing.Box.Filler(new Dimension(0, 15), new Dimension(0, 15),
+                    new Dimension(0, 15));
                 lblShimejiEE = new javax.swing.JLabel();
-                rigid2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 5),
-                                new java.awt.Dimension(0, 10));
-                lblVersion = new javax.swing.JLabel();
-                rigid3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15),
-                                new java.awt.Dimension(0, 15));
+            javax.swing.Box.Filler rigid2 = new javax.swing.Box.Filler(new Dimension(0, 10), new Dimension(0, 5),
+                    new Dimension(0, 10));
+            JLabel lblVersion = new JLabel();
+            javax.swing.Box.Filler rigid3 = new javax.swing.Box.Filler(new Dimension(0, 15), new Dimension(0, 15),
+                    new Dimension(0, 15));
                 lblDevelopedBy = new javax.swing.JLabel();
-                lblKilkakon = new javax.swing.JLabel();
-                rigid4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 30), new java.awt.Dimension(0, 30),
-                                new java.awt.Dimension(0, 30));
+            JLabel lblKilkakon = new JLabel();
+            javax.swing.Box.Filler rigid4 = new javax.swing.Box.Filler(new Dimension(0, 30), new Dimension(0, 30),
+                    new Dimension(0, 30));
                 pnlAboutButtons = new javax.swing.JPanel();
                 btnWebsite = new javax.swing.JButton();
                 btnDiscord = new javax.swing.JButton();
                 btnPatreon = new javax.swing.JButton();
-                glue2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
-                                new java.awt.Dimension(0, 32767));
+            javax.swing.Box.Filler glue2 = new javax.swing.Box.Filler(new Dimension(0, 0), new Dimension(0, 0),
+                    new Dimension(0, 32767));
                 pnlFooter = new javax.swing.JPanel();
                 btnDone = new javax.swing.JButton();
                 btnCancel = new javax.swing.JButton();
@@ -751,11 +746,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
                 chkAlwaysShowShimejiChooser.setText("Always Show Shimeji Chooser");
-                chkAlwaysShowShimejiChooser.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                chkAlwaysShowShimejiChooserItemStateChanged(evt);
-                        }
-                });
+                chkAlwaysShowShimejiChooser.addItemListener(evt -> chkAlwaysShowShimejiChooserItemStateChanged(evt));
 
                 lblScaling.setText("Scaling");
 
@@ -767,34 +758,18 @@ public class SettingsWindow extends javax.swing.JDialog {
                 sldScaling.setSnapToTicks(true);
                 sldScaling.setValue(10);
                 sldScaling.setPreferredSize(new java.awt.Dimension(300, 45));
-                sldScaling.addChangeListener(new javax.swing.event.ChangeListener() {
-                        public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                                sldScalingStateChanged(evt);
-                        }
-                });
+                sldScaling.addChangeListener(evt -> sldScalingStateChanged(evt));
 
                 lblFilter.setText("Filter");
 
                 radFilterNearest.setText("Nearest");
-                radFilterNearest.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                radFilterItemStateChanged(evt);
-                        }
-                });
+                radFilterNearest.addItemListener(evt -> radFilterItemStateChanged(evt));
 
                 radFilterBicubic.setText("Bicubic");
-                radFilterBicubic.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                radFilterItemStateChanged(evt);
-                        }
-                });
+                radFilterBicubic.addItemListener(evt -> radFilterItemStateChanged(evt));
 
                 radFilterHqx.setText("hqx");
-                radFilterHqx.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                radFilterItemStateChanged(evt);
-                        }
-                });
+                radFilterHqx.addItemListener(evt -> radFilterItemStateChanged(evt));
 
                 sldOpacity.setMajorTickSpacing(10);
                 sldOpacity.setMinorTickSpacing(5);
@@ -803,20 +778,12 @@ public class SettingsWindow extends javax.swing.JDialog {
                 sldOpacity.setSnapToTicks(true);
                 sldOpacity.setValue(10);
                 sldOpacity.setPreferredSize(new java.awt.Dimension(300, 45));
-                sldOpacity.addChangeListener(new javax.swing.event.ChangeListener() {
-                        public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                                sldOpacityStateChanged(evt);
-                        }
-                });
+                sldOpacity.addChangeListener(evt -> sldOpacityStateChanged(evt));
 
                 lblOpacity.setText("Opacity");
 
                 chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
-                chkAlwaysShowInformationScreen.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                chkAlwaysShowInformationScreenItemStateChanged(evt);
-                        }
-                });
+                chkAlwaysShowInformationScreen.addItemListener(evt -> chkAlwaysShowInformationScreenItemStateChanged(evt));
 
                 javax.swing.GroupLayout pnlGeneralLayout = new javax.swing.GroupLayout(pnlGeneral);
                 pnlGeneral.setLayout(pnlGeneralLayout);
@@ -902,39 +869,31 @@ public class SettingsWindow extends javax.swing.JDialog {
                 btnAddInteractiveWindow.setMinimumSize(new java.awt.Dimension(95, 23));
                 btnAddInteractiveWindow.setName(""); // NOI18N
                 btnAddInteractiveWindow.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnAddInteractiveWindow.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnAddInteractiveWindowActionPerformed(evt);
-                        }
-                });
+                btnAddInteractiveWindow.addActionListener(evt -> btnAddInteractiveWindowActionPerformed(evt));
                 pnlInteractiveButtons.add(btnAddInteractiveWindow);
 
                 btnRemoveInteractiveWindow.setText("Remove");
                 btnRemoveInteractiveWindow.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnRemoveInteractiveWindow.setMinimumSize(new java.awt.Dimension(95, 23));
                 btnRemoveInteractiveWindow.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnRemoveInteractiveWindow.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnRemoveInteractiveWindowActionPerformed(evt);
-                        }
-                });
+                btnRemoveInteractiveWindow.addActionListener(evt -> btnRemoveInteractiveWindowActionPerformed(evt));
                 pnlInteractiveButtons.add(btnRemoveInteractiveWindow);
 
-                lstInteractiveWindows.setModel(new javax.swing.AbstractListModel<String>() {
-                        String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+                lstInteractiveWindows.setModel(new javax.swing.AbstractListModel<>() {
+                    final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
 
-                        public int getSize() {
-                                return strings.length;
-                        }
+                    public int getSize() {
+                        return strings.length;
+                    }
 
-                        public String getElementAt(int i) {
-                                return strings[i];
-                        }
+                    public String getElementAt(int i) {
+                        return strings[i];
+                    }
                 });
                 jScrollPane1.setViewportView(lstInteractiveWindows);
 
                 javax.swing.GroupLayout pnlInteractiveWindowsLayout = new javax.swing.GroupLayout(
-                                pnlInteractiveWindows);
+                        pnlInteractiveWindows);
                 pnlInteractiveWindows.setLayout(pnlInteractiveWindowsLayout);
                 pnlInteractiveWindowsLayout.setHorizontalGroup(
                                 pnlInteractiveWindowsLayout
@@ -977,22 +936,14 @@ public class SettingsWindow extends javax.swing.JDialog {
                 btnChangeFont.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnChangeFont.setName(""); // NOI18N
                 btnChangeFont.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnChangeFont.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnChangeFontActionPerformed(evt);
-                        }
-                });
+                btnChangeFont.addActionListener(evt -> btnChangeFontActionPerformed(evt));
                 pnlThemeButtons.add(btnChangeFont);
 
                 btnReset.setText("Reset");
                 btnReset.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnReset.setMinimumSize(new java.awt.Dimension(95, 23));
                 btnReset.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnReset.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnResetActionPerformed(evt);
-                        }
-                });
+                btnReset.addActionListener(evt -> btnResetActionPerformed(evt));
                 pnlThemeButtons.add(btnReset);
 
                 lblPrimaryColour1.setText("Primary 1");
@@ -1027,11 +978,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlPrimaryColour1PreviewContainer.add(gluePrimaryColour1b);
 
                 btnPrimaryColour1Change.setText("Change");
-                btnPrimaryColour1Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnPrimaryColour1ChangeActionPerformed(evt);
-                        }
-                });
+                btnPrimaryColour1Change.addActionListener(evt -> btnPrimaryColour1ChangeActionPerformed(evt));
 
                 lblPrimaryColour2.setText("Primary 2");
 
@@ -1065,11 +1012,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlPrimaryColour2PreviewContainer.add(gluePrimaryColour2b);
 
                 btnPrimaryColour2Change.setText("Change");
-                btnPrimaryColour2Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnPrimaryColour2ChangeActionPerformed(evt);
-                        }
-                });
+                btnPrimaryColour2Change.addActionListener(evt -> btnPrimaryColour2ChangeActionPerformed(evt));
 
                 lblPrimaryColour3.setText("Primary 3");
 
@@ -1103,11 +1046,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlPrimaryColour3PreviewContainer.add(gluePrimaryColour3b);
 
                 btnPrimaryColour3Change.setText("Change");
-                btnPrimaryColour3Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnPrimaryColour3ChangeActionPerformed(evt);
-                        }
-                });
+                btnPrimaryColour3Change.addActionListener(evt -> btnPrimaryColour3ChangeActionPerformed(evt));
 
                 lblSecondaryColour1.setText("Secondary 1");
 
@@ -1141,11 +1080,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlSecondaryColour1PreviewContainer.add(glueSecondaryColour1b);
 
                 btnSecondaryColour1Change.setText("Change");
-                btnSecondaryColour1Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnSecondaryColour1ChangeActionPerformed(evt);
-                        }
-                });
+                btnSecondaryColour1Change.addActionListener(evt -> btnSecondaryColour1ChangeActionPerformed(evt));
 
                 lblSecondaryColour2.setText("Secondary 2");
 
@@ -1179,11 +1114,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlSecondaryColour2PreviewContainer.add(glueSecondaryColour2b);
 
                 btnSecondaryColour2Change.setText("Change");
-                btnSecondaryColour2Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnSecondaryColour2ChangeActionPerformed(evt);
-                        }
-                });
+                btnSecondaryColour2Change.addActionListener(evt -> btnSecondaryColour2ChangeActionPerformed(evt));
 
                 lblSecondaryColour3.setText("Secondary 3");
 
@@ -1217,11 +1148,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlSecondaryColour3PreviewContainer.add(glueSecondaryColour3b);
 
                 btnSecondaryColour3Change.setText("Change");
-                btnSecondaryColour3Change.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnSecondaryColour3ChangeActionPerformed(evt);
-                        }
-                });
+                btnSecondaryColour3Change.addActionListener(evt -> btnSecondaryColour3ChangeActionPerformed(evt));
 
                 lblMenuOpacity.setText("Menu Opacity");
 
@@ -1232,11 +1159,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 sldMenuOpacity.setSnapToTicks(true);
                 sldMenuOpacity.setValue(10);
                 sldMenuOpacity.setPreferredSize(new java.awt.Dimension(300, 45));
-                sldMenuOpacity.addChangeListener(new javax.swing.event.ChangeListener() {
-                        public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                                sldMenuOpacityStateChanged(evt);
-                        }
-                });
+                sldMenuOpacity.addChangeListener(evt -> sldMenuOpacityStateChanged(evt));
 
                 lblBlackColour.setText("Text");
 
@@ -1269,11 +1192,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlBlackColourPreviewContainer.add(glueBlackColourb);
 
                 btnBlackColourChange.setText("Change");
-                btnBlackColourChange.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnBlackColourChangeActionPerformed(evt);
-                        }
-                });
+                btnBlackColourChange.addActionListener(evt -> btnBlackColourChangeActionPerformed(evt));
 
                 lblWhiteColour.setText("Background");
                 lblWhiteColour.setToolTipText("");
@@ -1307,11 +1226,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlWhiteColourPreviewContainer.add(glueWhiteColourb);
 
                 btnWhiteColourChange.setText("Change");
-                btnWhiteColourChange.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnWhiteColourChangeActionPerformed(evt);
-                        }
-                });
+                btnWhiteColourChange.addActionListener(evt -> btnWhiteColourChangeActionPerformed(evt));
 
                 javax.swing.GroupLayout pnlThemeLayout = new javax.swing.GroupLayout(pnlTheme);
                 pnlTheme.setLayout(pnlThemeLayout);
@@ -1670,11 +1585,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlTabs.addTab("Theme", pnlTheme);
 
                 chkWindowModeEnabled.setText("Enable Windowed Mode");
-                chkWindowModeEnabled.addItemListener(new java.awt.event.ItemListener() {
-                        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                                chkWindowModeEnabledItemStateChanged(evt);
-                        }
-                });
+                chkWindowModeEnabled.addItemListener(evt -> chkWindowModeEnabledItemStateChanged(evt));
 
                 lblDimensions.setText("Dimensions");
 
@@ -1687,28 +1598,16 @@ public class SettingsWindow extends javax.swing.JDialog {
                 txtBackgroundColour.setPreferredSize(new java.awt.Dimension(70, 24));
 
                 btnBackgroundColourChange.setText("Change");
-                btnBackgroundColourChange.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnBackgroundColourChangeActionPerformed(evt);
-                        }
-                });
+                btnBackgroundColourChange.addActionListener(evt -> btnBackgroundColourChangeActionPerformed(evt));
 
                 spnWindowWidth.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
                 spnWindowWidth.setPreferredSize(new java.awt.Dimension(60, 24));
-                spnWindowWidth.addChangeListener(new javax.swing.event.ChangeListener() {
-                        public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                                spnWindowWidthStateChanged(evt);
-                        }
-                });
+                spnWindowWidth.addChangeListener(evt -> spnWindowWidthStateChanged(evt));
 
                 spnWindowHeight.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
                 spnWindowHeight.setMinimumSize(new java.awt.Dimension(30, 20));
                 spnWindowHeight.setPreferredSize(new java.awt.Dimension(60, 24));
-                spnWindowHeight.addChangeListener(new javax.swing.event.ChangeListener() {
-                        public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                                spnWindowHeightStateChanged(evt);
-                        }
-                });
+                spnWindowHeight.addChangeListener(evt -> spnWindowHeightStateChanged(evt));
 
                 lblBackgroundColour.setText("Colour");
 
@@ -1746,25 +1645,13 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlBackgroundImage.add(lblBackgroundImage, java.awt.BorderLayout.CENTER);
 
                 btnBackgroundImageChange.setText("Change");
-                btnBackgroundImageChange.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnBackgroundImageChangeActionPerformed(evt);
-                        }
-                });
+                btnBackgroundImageChange.addActionListener(evt -> btnBackgroundImageChangeActionPerformed(evt));
 
                 btnBackgroundImageRemove.setText("Remove");
-                btnBackgroundImageRemove.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnBackgroundImageRemoveActionPerformed(evt);
-                        }
-                });
+                btnBackgroundImageRemove.addActionListener(evt -> btnBackgroundImageRemoveActionPerformed(evt));
 
-                cmbBackgroundImageMode.setModel(new javax.swing.DefaultComboBoxModel<String>());
-                cmbBackgroundImageMode.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                cmbBackgroundImageModeActionPerformed(evt);
-                        }
-                });
+                cmbBackgroundImageMode.setModel(new javax.swing.DefaultComboBoxModel<>());
+                cmbBackgroundImageMode.addActionListener(evt -> cmbBackgroundImageModeActionPerformed(evt));
 
                 javax.swing.GroupLayout pnlWindowModeLayout = new javax.swing.GroupLayout(pnlWindowMode);
                 pnlWindowMode.setLayout(pnlWindowModeLayout);
@@ -1961,33 +1848,21 @@ public class SettingsWindow extends javax.swing.JDialog {
                 btnWebsite.setAlignmentX(0.5F);
                 btnWebsite.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnWebsite.setPreferredSize(new java.awt.Dimension(100, 26));
-                btnWebsite.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnWebsiteActionPerformed(evt);
-                        }
-                });
+                btnWebsite.addActionListener(evt -> btnWebsiteActionPerformed(evt));
                 pnlAboutButtons.add(btnWebsite);
 
                 btnDiscord.setText("Discord");
                 btnDiscord.setAlignmentX(0.5F);
                 btnDiscord.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnDiscord.setPreferredSize(new java.awt.Dimension(100, 26));
-                btnDiscord.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnDiscordActionPerformed(evt);
-                        }
-                });
+                btnDiscord.addActionListener(evt -> btnDiscordActionPerformed(evt));
                 pnlAboutButtons.add(btnDiscord);
 
                 btnPatreon.setText("Patreon");
                 btnPatreon.setAlignmentX(0.5F);
                 btnPatreon.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnPatreon.setPreferredSize(new java.awt.Dimension(100, 26));
-                btnPatreon.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnPatreonActionPerformed(evt);
-                        }
-                });
+                btnPatreon.addActionListener(evt -> btnPatreonActionPerformed(evt));
                 pnlAboutButtons.add(btnPatreon);
 
                 pnlAbout.add(pnlAboutButtons);
@@ -2003,22 +1878,14 @@ public class SettingsWindow extends javax.swing.JDialog {
                 btnDone.setMinimumSize(new java.awt.Dimension(95, 23));
                 btnDone.setName(""); // NOI18N
                 btnDone.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnDone.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnDoneActionPerformed(evt);
-                        }
-                });
+                btnDone.addActionListener(evt -> btnDoneActionPerformed(evt));
                 pnlFooter.add(btnDone);
 
                 btnCancel.setText("Cancel");
                 btnCancel.setMaximumSize(new java.awt.Dimension(130, 26));
                 btnCancel.setMinimumSize(new java.awt.Dimension(95, 23));
                 btnCancel.setPreferredSize(new java.awt.Dimension(130, 26));
-                btnCancel.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                btnCancelActionPerformed(evt);
-                        }
-                });
+                btnCancel.addActionListener(evt -> btnCancelActionPerformed(evt));
                 pnlFooter.add(btnCancel);
 
                 javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -2077,74 +1944,70 @@ public class SettingsWindow extends javax.swing.JDialog {
                                         Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
                         interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "")
                                         .equals(interactiveWindows);
-                        FileOutputStream output = new FileOutputStream(configFile);
+                    // Config file name
+                    String configFile = "./conf/settings.properties";
 
-                        try {
-                                properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
-                                properties.setProperty("AlwaysShowInformationScreen",
-                                                alwaysShowInformationScreen.toString());
-                                properties.setProperty("Opacity", Double.toString(opacity));
-                                properties.setProperty("Scaling", Double.toString(scaling));
-                                properties.setProperty("Filter", filter);
-                                properties.setProperty("InteractiveWindows", interactiveWindows);
-                                properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
-                                if (windowedMode) {
-                                        properties.setProperty("WindowSize",
-                                                        windowSize.width + "x" + windowSize.height);
-                                        properties.setProperty("Background",
-                                                        String.format("#%02X%02X%02X", backgroundColour.getRed(),
-                                                                        backgroundColour.getGreen(),
-                                                                        backgroundColour.getBlue()));
-                                        properties.setProperty("BackgroundMode", backgroundMode);
-                                        properties.setProperty("BackgroundImage",
-                                                        backgroundImage == null ? "" : backgroundImage);
-                                }
-
-                                properties.store(output, "Shimeji-ee Configuration Options");
-                        } finally {
-                                output.close();
+                    try (FileOutputStream output = new FileOutputStream(configFile)) {
+                        properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
+                        properties.setProperty("AlwaysShowInformationScreen",
+                                alwaysShowInformationScreen.toString());
+                        properties.setProperty("Opacity", Double.toString(opacity));
+                        properties.setProperty("Scaling", Double.toString(scaling));
+                        properties.setProperty("Filter", filter);
+                        properties.setProperty("InteractiveWindows", interactiveWindows);
+                        properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
+                        if (windowedMode) {
+                            properties.setProperty("WindowSize",
+                                    windowSize.width + "x" + windowSize.height);
+                            properties.setProperty("Background",
+                                    String.format("#%02X%02X%02X", backgroundColour.getRed(),
+                                            backgroundColour.getGreen(),
+                                            backgroundColour.getBlue()));
+                            properties.setProperty("BackgroundMode", backgroundMode);
+                            properties.setProperty("BackgroundImage",
+                                    backgroundImage == null ? "" : backgroundImage);
                         }
 
-                        FileOutputStream themeOutput = new FileOutputStream(themeFile);
-                        try {
-                                Properties themeProps = new Properties();
-                                themeProps.setProperty("PrimaryColour1",
-                                                String.format("#%02X%02X%02X", primaryColour1.getRed(),
-                                                                primaryColour1.getGreen(), primaryColour1.getBlue()));
-                                themeProps.setProperty("PrimaryColour2",
-                                                String.format("#%02X%02X%02X", primaryColour2.getRed(),
-                                                                primaryColour2.getGreen(), primaryColour2.getBlue()));
-                                themeProps.setProperty("PrimaryColour3",
-                                                String.format("#%02X%02X%02X", primaryColour3.getRed(),
-                                                                primaryColour3.getGreen(), primaryColour3.getBlue()));
-                                themeProps.setProperty("SecondaryColour1",
-                                                String.format("#%02X%02X%02X", secondaryColour1.getRed(),
-                                                                secondaryColour1.getGreen(),
-                                                                secondaryColour1.getBlue()));
-                                themeProps.setProperty("SecondaryColour2",
-                                                String.format("#%02X%02X%02X", secondaryColour2.getRed(),
-                                                                secondaryColour2.getGreen(),
-                                                                secondaryColour2.getBlue()));
-                                themeProps.setProperty("SecondaryColour3",
-                                                String.format("#%02X%02X%02X", secondaryColour3.getRed(),
-                                                                secondaryColour3.getGreen(),
-                                                                secondaryColour3.getBlue()));
-                                themeProps.setProperty("BlackColour",
-                                                String.format("#%02X%02X%02X", blackColour.getRed(),
-                                                                blackColour.getGreen(), blackColour.getBlue()));
-                                themeProps.setProperty("WhiteColour",
-                                                String.format("#%02X%02X%02X", whiteColour.getRed(),
-                                                                whiteColour.getGreen(), whiteColour.getBlue()));
-                                themeProps.setProperty("MenuOpacity", String.valueOf((int) (menuOpacity * 255)));
-                                themeProps.setProperty("FontName", font.getName());
-                                themeProps.setProperty("FontStyle", String.valueOf(font.getStyle()));
-                                themeProps.setProperty("FontSize", String.valueOf(font.getSize()));
+                        properties.store(output, "Shimeji-ee Configuration Options");
+                    }
 
-                                themeProps.store(themeOutput, "FlatLaf Theme Configuration");
-                        } finally {
-                                themeOutput.close();
-                        }
-                } catch (Exception e) {
+                    try (FileOutputStream themeOutput = new FileOutputStream(themeFile)) {
+                        Properties themeProps = new Properties();
+                        themeProps.setProperty("PrimaryColour1",
+                                String.format("#%02X%02X%02X", primaryColour1.getRed(),
+                                        primaryColour1.getGreen(), primaryColour1.getBlue()));
+                        themeProps.setProperty("PrimaryColour2",
+                                String.format("#%02X%02X%02X", primaryColour2.getRed(),
+                                        primaryColour2.getGreen(), primaryColour2.getBlue()));
+                        themeProps.setProperty("PrimaryColour3",
+                                String.format("#%02X%02X%02X", primaryColour3.getRed(),
+                                        primaryColour3.getGreen(), primaryColour3.getBlue()));
+                        themeProps.setProperty("SecondaryColour1",
+                                String.format("#%02X%02X%02X", secondaryColour1.getRed(),
+                                        secondaryColour1.getGreen(),
+                                        secondaryColour1.getBlue()));
+                        themeProps.setProperty("SecondaryColour2",
+                                String.format("#%02X%02X%02X", secondaryColour2.getRed(),
+                                        secondaryColour2.getGreen(),
+                                        secondaryColour2.getBlue()));
+                        themeProps.setProperty("SecondaryColour3",
+                                String.format("#%02X%02X%02X", secondaryColour3.getRed(),
+                                        secondaryColour3.getGreen(),
+                                        secondaryColour3.getBlue()));
+                        themeProps.setProperty("BlackColour",
+                                String.format("#%02X%02X%02X", blackColour.getRed(),
+                                        blackColour.getGreen(), blackColour.getBlue()));
+                        themeProps.setProperty("WhiteColour",
+                                String.format("#%02X%02X%02X", whiteColour.getRed(),
+                                        whiteColour.getGreen(), whiteColour.getBlue()));
+                        themeProps.setProperty("MenuOpacity", String.valueOf((int) (menuOpacity * 255)));
+                        themeProps.setProperty("FontName", font.getName());
+                        themeProps.setProperty("FontStyle", String.valueOf(font.getStyle()));
+                        themeProps.setProperty("FontSize", String.valueOf(font.getSize()));
+
+                        themeProps.store(themeOutput, "FlatLaf Theme Configuration");
+                    }
+                } catch (Exception ignored) {
                 }
                 dispose();
         }// GEN-LAST:event_btnDoneActionPerformed
@@ -2521,40 +2384,15 @@ public class SettingsWindow extends javax.swing.JDialog {
         private javax.swing.JCheckBox chkAlwaysShowShimejiChooser;
         private javax.swing.JCheckBox chkWindowModeEnabled;
         private javax.swing.JComboBox<String> cmbBackgroundImageMode;
-        private javax.swing.Box.Filler glue1;
-        private javax.swing.Box.Filler glue2;
-        private javax.swing.Box.Filler glueBackground;
-        private javax.swing.Box.Filler glueBackground2;
-        private javax.swing.Box.Filler glueBlackColoura;
-        private javax.swing.Box.Filler glueBlackColourb;
-        private javax.swing.Box.Filler gluePrimaryColour1a;
-        private javax.swing.Box.Filler gluePrimaryColour1b;
-        private javax.swing.Box.Filler gluePrimaryColour2a;
-        private javax.swing.Box.Filler gluePrimaryColour2b;
-        private javax.swing.Box.Filler gluePrimaryColour3a;
-        private javax.swing.Box.Filler gluePrimaryColour3b;
-        private javax.swing.Box.Filler glueSecondaryColour1a;
-        private javax.swing.Box.Filler glueSecondaryColour1b;
-        private javax.swing.Box.Filler glueSecondaryColour2a;
-        private javax.swing.Box.Filler glueSecondaryColour2b;
-        private javax.swing.Box.Filler glueSecondaryColour3a;
-        private javax.swing.Box.Filler glueSecondaryColour3b;
-        private javax.swing.Box.Filler glueWhiteColoura;
-        private javax.swing.Box.Filler glueWhiteColourb;
-        private javax.swing.ButtonGroup grpFilter;
-        private javax.swing.JScrollPane jScrollPane1;
-        private javax.swing.JLabel lblBackground;
-        private javax.swing.JLabel lblBackgroundColour;
-        private javax.swing.JLabel lblBackgroundImage;
-        private javax.swing.JLabel lblBackgroundImageCaption;
-        private javax.swing.JLabel lblBlackColour;
+    private javax.swing.ButtonGroup grpFilter;
+    private javax.swing.JLabel lblBackground;
+    private javax.swing.JLabel lblBackgroundImage;
+    private javax.swing.JLabel lblBlackColour;
         private javax.swing.JLabel lblDevelopedBy;
         private javax.swing.JLabel lblDimensions;
-        private javax.swing.JLabel lblDimensionsX;
-        private javax.swing.JLabel lblFilter;
+    private javax.swing.JLabel lblFilter;
         private javax.swing.JLabel lblIcon;
-        private javax.swing.JLabel lblKilkakon;
-        private javax.swing.JLabel lblMenuOpacity;
+    private javax.swing.JLabel lblMenuOpacity;
         private javax.swing.JLabel lblOpacity;
         private javax.swing.JLabel lblPrimaryColour1;
         private javax.swing.JLabel lblPrimaryColour2;
@@ -2564,21 +2402,17 @@ public class SettingsWindow extends javax.swing.JDialog {
         private javax.swing.JLabel lblSecondaryColour2;
         private javax.swing.JLabel lblSecondaryColour3;
         private javax.swing.JLabel lblShimejiEE;
-        private javax.swing.JLabel lblVersion;
-        private javax.swing.JLabel lblWhiteColour;
+    private javax.swing.JLabel lblWhiteColour;
         private javax.swing.JList<String> lstInteractiveWindows;
-        private javax.swing.JPanel pnlAbout;
-        private javax.swing.JPanel pnlAboutButtons;
+    private javax.swing.JPanel pnlAboutButtons;
         private javax.swing.JPanel pnlBackgroundImage;
         private javax.swing.JPanel pnlBackgroundPreview;
         private javax.swing.JPanel pnlBackgroundPreviewContainer;
         private javax.swing.JPanel pnlBlackColourPreview;
         private javax.swing.JPanel pnlBlackColourPreviewContainer;
         private javax.swing.JPanel pnlFooter;
-        private javax.swing.JPanel pnlGeneral;
-        private javax.swing.JPanel pnlInteractiveButtons;
-        private javax.swing.JPanel pnlInteractiveWindows;
-        private javax.swing.JPanel pnlPrimaryColour1Preview;
+    private javax.swing.JPanel pnlInteractiveButtons;
+    private javax.swing.JPanel pnlPrimaryColour1Preview;
         private javax.swing.JPanel pnlPrimaryColour1PreviewContainer;
         private javax.swing.JPanel pnlPrimaryColour2Preview;
         private javax.swing.JPanel pnlPrimaryColour2PreviewContainer;
@@ -2591,19 +2425,13 @@ public class SettingsWindow extends javax.swing.JDialog {
         private javax.swing.JPanel pnlSecondaryColour3Preview;
         private javax.swing.JPanel pnlSecondaryColour3PreviewContainer;
         private javax.swing.JTabbedPane pnlTabs;
-        private javax.swing.JPanel pnlTheme;
-        private javax.swing.JPanel pnlThemeButtons;
+    private javax.swing.JPanel pnlThemeButtons;
         private javax.swing.JPanel pnlWhiteColourPreview;
         private javax.swing.JPanel pnlWhiteColourPreviewContainer;
-        private javax.swing.JPanel pnlWindowMode;
-        private javax.swing.JRadioButton radFilterBicubic;
+    private javax.swing.JRadioButton radFilterBicubic;
         private javax.swing.JRadioButton radFilterHqx;
         private javax.swing.JRadioButton radFilterNearest;
-        private javax.swing.Box.Filler rigid1;
-        private javax.swing.Box.Filler rigid2;
-        private javax.swing.Box.Filler rigid3;
-        private javax.swing.Box.Filler rigid4;
-        private javax.swing.JSlider sldMenuOpacity;
+    private javax.swing.JSlider sldMenuOpacity;
         private javax.swing.JSlider sldOpacity;
         private javax.swing.JSlider sldScaling;
         private javax.swing.JSpinner spnWindowHeight;

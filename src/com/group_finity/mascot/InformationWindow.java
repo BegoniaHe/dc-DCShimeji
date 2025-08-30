@@ -20,8 +20,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent;
 
@@ -30,9 +29,7 @@ import javax.swing.event.HyperlinkEvent;
  */
 public class InformationWindow extends javax.swing.JFrame
 {
-    private final String themeFile = "./conf/theme.properties";
-    private String imageSet;
-    
+
     /**
      * Creates new form InformationWindow
      */
@@ -45,15 +42,14 @@ public class InformationWindow extends javax.swing.JFrame
     {
         // initialise controls
         setLocationRelativeTo( null );
-        this.imageSet = imageSet;
-        
+
         // load image
         Image image = new ImageIcon( "./img/" + imageSet + "/" + config.getInformation( "SplashImage" ) ).getImage( );
         try
         {
             lblSplashImage.setIcon( new ImageIcon( image ) );
         }
-        catch( Exception e )
+        catch( Exception ignored)
         {
         }
         
@@ -62,13 +58,11 @@ public class InformationWindow extends javax.swing.JFrame
         FileInputStream input;
         try
         {
-            input = new FileInputStream( themeFile );
+            String themeFile = "./conf/theme.properties";
+            input = new FileInputStream(themeFile);
             themeProperties.load( input );
         }
-        catch( FileNotFoundException ex )
-        {
-        }
-        catch( IOException ex )
+        catch( IOException ignored)
         {
         }
         Color textColour = Color.decode( themeProperties.getProperty( "BlackColour", "#000000" ) );
@@ -163,44 +157,39 @@ public class InformationWindow extends javax.swing.JFrame
         html.append( "</center>" );
         
         pnlEditorPane.setText( html.toString( ) );
-        pnlEditorPane.addHyperlinkListener( new HyperlinkListener( )
-        {
-            @Override
-            public void hyperlinkUpdate( HyperlinkEvent e )
+        pnlEditorPane.addHyperlinkListener(e -> {
+            if( e.getEventType( ) == HyperlinkEvent.EventType.ACTIVATED )
             {
-                if( e.getEventType( ) == HyperlinkEvent.EventType.ACTIVATED )
+                StringTokenizer st = new StringTokenizer( e.getDescription( ), " " );
+                if( st.hasMoreTokens( ) )
                 {
-                    StringTokenizer st = new StringTokenizer( e.getDescription( ), " " );
-                    if( st.hasMoreTokens( ) )
+                    String url = st.nextToken( );
+                    if( JOptionPane.showConfirmDialog(
+                        InformationWindow.this,
+                        language.getString( "ConfirmVisitWebsiteMessage" ) + "\n" + language.getString( "ExerciseCautionAndBewareSusLinksMessage" ) + "\n" +url,
+                        language.getString( "VisitWebsite" ),
+                        JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
                     {
-                        String url = st.nextToken( );
-                        if( JOptionPane.showConfirmDialog(
-                            InformationWindow.this,
-                            language.getString( "ConfirmVisitWebsiteMessage" ) + "\n" + language.getString( "ExerciseCautionAndBewareSusLinksMessage" ) + "\n" +url,
-                            language.getString( "VisitWebsite" ),
-                            JOptionPane.YES_NO_OPTION ) == javax.swing.JOptionPane.YES_OPTION )
+                        try
                         {
-                            try
-                            {
-                                Desktop desktop = Desktop.isDesktopSupported( ) ? Desktop.getDesktop( ) : null;
-                                if( desktop != null && desktop.isSupported( Desktop.Action.BROWSE ) )
-                                    desktop.browse( new URI( url ) );
-                                else
-                                    throw new UnsupportedOperationException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedOpenWebBrowserErrorMessage" ) + " " + url );
-                            }
-                            catch( Exception exc )
-                            {
-                                JOptionPane.showMessageDialog( InformationWindow.this, exc.getMessage( ), "Error", JOptionPane.PLAIN_MESSAGE );
-                            }
+                            Desktop desktop = Desktop.isDesktopSupported( ) ? Desktop.getDesktop( ) : null;
+                            if( desktop != null && desktop.isSupported( Desktop.Action.BROWSE ) )
+                                desktop.browse( new URI( url ) );
+                            else
+                                throw new UnsupportedOperationException( Main.getInstance( ).getLanguageBundle( ).getString( "FailedOpenWebBrowserErrorMessage" ) + " " + url );
+                        }
+                        catch( Exception exc )
+                        {
+                            JOptionPane.showMessageDialog( InformationWindow.this, exc.getMessage( ), "Error", JOptionPane.PLAIN_MESSAGE );
                         }
                     }
                 }
             }
-        } );
+        });
         btnClose.setText( language.getString( "Close" ) );
     }
     
-    public boolean display( )
+    public void display( )
     {
         float menuScaling = Float.parseFloat( Main.getInstance( ).getProperties( ).getProperty( "MenuDPI", "96" ) ) / 96;
         pnlEditorPane.setBackground( getBackground( ) );
@@ -217,8 +206,7 @@ public class InformationWindow extends javax.swing.JFrame
         pack( );
         setLocationRelativeTo( null );
         setVisible( true );
-        
-        return true;
+
     }
 
     /**
@@ -229,7 +217,7 @@ public class InformationWindow extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
-        pnlImage = new javax.swing.JPanel();
+        javax.swing.JPanel pnlImage = new javax.swing.JPanel();
         lblSplashImage = new javax.swing.JLabel();
         pnlScrollPane = new javax.swing.JScrollPane();
         pnlEditorPane = new javax.swing.JEditorPane();
@@ -257,13 +245,7 @@ public class InformationWindow extends javax.swing.JFrame
         btnClose.setMinimumSize(new java.awt.Dimension(95, 23));
         btnClose.setName(""); // NOI18N
         btnClose.setPreferredSize(new java.awt.Dimension(130, 26));
-        btnClose.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                btnCloseActionPerformed(evt);
-            }
-        });
+        btnClose.addActionListener(evt -> btnCloseActionPerformed(evt));
         pnlFooter.add(btnClose);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -301,7 +283,7 @@ public class InformationWindow extends javax.swing.JFrame
     /**
      * @param args the command line arguments
      */
-    public static void main( String args[] )
+    public static void main(String[] args)
     {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -319,31 +301,16 @@ public class InformationWindow extends javax.swing.JFrame
                 }
             }
         }
-        catch( ClassNotFoundException ex )
-        {
-            java.util.logging.Logger.getLogger( InformationWindow.class.getName() ).log( java.util.logging.Level.SEVERE, null, ex );
-        }
-        catch( InstantiationException ex )
-        {
-            java.util.logging.Logger.getLogger( InformationWindow.class.getName() ).log( java.util.logging.Level.SEVERE, null, ex );
-        }
-        catch( IllegalAccessException ex )
-        {
-            java.util.logging.Logger.getLogger( InformationWindow.class.getName() ).log( java.util.logging.Level.SEVERE, null, ex );
-        }
-        catch( javax.swing.UnsupportedLookAndFeelException ex )
+        catch(ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException |
+              InstantiationException ex )
         {
             java.util.logging.Logger.getLogger( InformationWindow.class.getName() ).log( java.util.logging.Level.SEVERE, null, ex );
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater( new Runnable()
-        {
-            public void run()
-            {
-            }
-        } );
+        java.awt.EventQueue.invokeLater(() -> {
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -351,7 +318,6 @@ public class InformationWindow extends javax.swing.JFrame
     private javax.swing.JLabel lblSplashImage;
     private javax.swing.JEditorPane pnlEditorPane;
     private javax.swing.JPanel pnlFooter;
-    private javax.swing.JPanel pnlImage;
     private javax.swing.JScrollPane pnlScrollPane;
     // End of variables declaration//GEN-END:variables
 }

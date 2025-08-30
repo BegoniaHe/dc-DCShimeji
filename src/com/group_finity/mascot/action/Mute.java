@@ -29,7 +29,7 @@ public class Mute extends InstantAction
         if( soundName != null )
         {
             ArrayList<Clip> clips = Sounds.getSoundsIgnoringVolume( "./sound" + soundName );
-            if( clips.size( ) > 0 )
+            if(!clips.isEmpty())
             {
                 for( Clip clip : clips )
                 { 
@@ -40,7 +40,7 @@ public class Mute extends InstantAction
             else
             {
                 clips = Sounds.getSoundsIgnoringVolume( "./sound/" + getMascot( ).getImageSet( ) + soundName );
-                if( clips.size( ) > 0 )
+                if(!clips.isEmpty())
                 {
                     for( Clip clip : clips )
                     { 
@@ -61,7 +61,7 @@ public class Mute extends InstantAction
         }
         else
         {
-            if( !Sounds.isMuted( ) )
+            if(Sounds.isMuted())
             {
                 Sounds.setMuted( true );
                 Sounds.setMuted( false );

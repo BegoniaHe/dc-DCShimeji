@@ -7,16 +7,16 @@ import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 
 public class Animation
 {
-    private Variable condition;
+    private final Variable condition;
     private final Pose[ ] poses;
     private final Hotspot[ ] hotspots;
-    private boolean turn;
+    private final boolean turn;
 
     public Animation( final Variable condition, final Pose[ ] poses, final Hotspot[ ] hotspots, final boolean turn )
     {

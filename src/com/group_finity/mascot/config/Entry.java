@@ -13,18 +13,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of Group Finity (<a href="http://www.group-finity.com/Shimeji/">...</a>)
  * Currently developed by Shimeji-ee Group.
  */
 public class Entry
 {
-    private Element element;
+    private final Element element;
 
     private Map<String, String> attributes;
 
     private List<Entry> children;
 
-    private Map<String, List<Entry>> selected = new HashMap<String, List<Entry>>( );
+    private final Map<String, List<Entry>> selected = new HashMap<>();
 
     public Entry( final Element element )
     {
@@ -48,7 +48,7 @@ public class Entry
             return attributes;
         }
 
-        attributes = new LinkedHashMap<String, String>( );
+        attributes = new LinkedHashMap<>();
         final NamedNodeMap attrs = element.getAttributes( );
         for( int i = 0; i < attrs.getLength( ); ++i )
         {
@@ -93,7 +93,7 @@ public class Entry
         {
             return children;
         }
-        children = new ArrayList<Entry>( );
+        children = new ArrayList<>();
         for( final Entry child : getChildren( ) )
         {
             if( child.getName( ).equals( tagName ) )
@@ -112,7 +112,7 @@ public class Entry
         if( children != null )
             return children;
 
-        children = new ArrayList<Entry>( );
+        children = new ArrayList<>();
         
         final NodeList childNodes = element.getChildNodes( );
         for( int i = 0; i < childNodes.getLength( ); ++i )
