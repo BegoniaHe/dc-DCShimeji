@@ -60,23 +60,20 @@ class WindowsNativeImage implements NativeImage {
 		int width = bmp.bmWidth;
 		int height = bmp.bmHeight;
 		final int destPitch = ((bmp.bmWidth * bmp.bmBitsPixel) + 31) / 32 * 4;
-		int destIndex = destPitch * (height - 1);
-		int srcColIndex = 0;
+		long destIndex = destPitch * (height - 1L);
 
-		for (int y = 0; y < height; ++y) {
-			for (int x = 0; x < width; ++x) {
-
-				// UpdateLayeredWindow and Photoshop are incompatible ?Irashii
-				// UpdateLayeredWindow FFFFFF RGB value has the bug that it ignores the value of
-				// a,
-				// Photoshop is where a is an RGB value of 0 have the property value to 0.
-
-				bmp.bmBits.setInt(destIndex + x * 4L,
-						(rgb[srcColIndex] & 0xFF000000) == 0 ? 0 : rgb[srcColIndex]);
-
-				++srcColIndex;
+		// 优化：预处理RGB数据，处理透明度问题
+		// UpdateLayeredWindow FFFFFF RGB value has the bug that it ignores the value of a,
+		// Photoshop is where a is an RGB value of 0 have the property value to 0.
+		for (int i = 0; i < rgb.length; i++) {
+			if ((rgb[i] & 0xFF000000) == 0) {
+				rgb[i] = 0;
 			}
+		}
 
+		for (int y = 0; y < height; y++) {
+			int srcRowIndex = y * width;
+			bmp.bmBits.write(destIndex, rgb, srcRowIndex, width);
 			destIndex -= destPitch;
 		}
 

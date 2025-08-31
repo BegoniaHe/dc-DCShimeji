@@ -4,8 +4,6 @@ import java.awt.AWTException;
 import java.awt.Point;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,12 +44,15 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightIJ
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatLightOwlIJTheme;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Rectangle;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
@@ -86,6 +87,9 @@ public class Main {
             // 获取 Java 版本信息
             String javaVersion = System.getProperty("java.version");
             System.out.println("当前 Java 版本: " + javaVersion);
+
+            // Force enable D3D hardware acceleration pipeline to improve 2D rendering performance on Windows
+            System.setProperty("sun.java2d.d3d", "true");
 
             // 核心 DPI 设置 - 强制使用 Java 8 行为
             System.setProperty("sun.java2d.dpiaware", "false");
@@ -182,12 +186,6 @@ public class Main {
         }
 
         // 处理DPI缩放设置
-        if (!properties.containsKey("MenuDPI")) {
-            properties.setProperty("MenuDPI",
-                    Math.max(java.awt.Toolkit.getDefaultToolkit().getScreenResolution(), 96) + "");
-            updateConfigFile();
-        }
-
         float menuScaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
 
         // 自定义FlatLaf主题颜色（保持与原有主题的兼容性）
@@ -311,6 +309,12 @@ public class Main {
         } catch (IOException ex) {
             log.log(Level.WARNING, "Failed to load settings.properties", ex);
         }
+
+        // 自动检测并配置 DPI
+        DPIManager.autoConfigureDPI(properties);
+        
+        // 保存更新后的配置
+        updateConfigFile();
 
         // load languages
         try {
@@ -1087,39 +1091,11 @@ public class Main {
                         form.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
                         form.setAlwaysOnTop(true);
 
-                        // set the form dimensions
-                        java.awt.FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
-                        int width = metrics.stringWidth(btnCallShimeji.getText());
-                        width = Math.max(metrics.stringWidth(btnFollowCursor.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnRestoreWindows.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnAllowedBehaviours.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnChooseShimeji.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnSettings.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnLanguage.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
-                        panel.setPreferredSize(new Dimension(width + 64,
-                                (int) (24 * scaling) + // 12 padding on top and bottom
-                                        (int) (75 * scaling) + // 13 insets of 5 height normally
-                                        10 * metrics.getHeight() + // 10 button faces
-                                        84));
-                        form.pack();
-
-                        // setting location of the form
-                        form.setLocation(event.getPoint().x - form.getWidth(), event.getPoint().y - form.getHeight());
-
-                        // make sure that it is on the screen if people are using exotic taskbar
-                        // locations
-                        Rectangle screen = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
-                                .getMaximumWindowBounds();
-                        if (form.getX() < screen.getX()) {
-                            form.setLocation(event.getPoint().x, form.getY());
-                        }
-                        if (form.getY() < screen.getY()) {
-                            form.setLocation(form.getX(), event.getPoint().y);
-                        }
-                        form.setVisible(true);
+                        // 自动调整窗口大小和位置
+                        setupTrayMenuAutoSizing(form, panel, scaling, icon, event,
+                            btnCallShimeji, btnFollowCursor, btnReduceToOne, btnRestoreWindows,
+                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnLanguage,
+                            btnPauseAll, btnDismissAll);
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
                         createMascot();
@@ -1435,5 +1411,100 @@ public class Main {
         this.getManager().disposeAll();
         this.getManager().stop();
         System.exit(0);
+    }
+
+    /**
+     * 自动调整托盘菜单窗口大小和位置
+     * 根据当前 DPI 设置和屏幕分辨率自动计算最佳窗口大小
+     */
+    private void setupTrayMenuAutoSizing(JDialog form, JPanel panel, float scaling, TrayIcon icon, MouseEvent event,
+            JButton... buttons) {
+        try {
+            // 获取显示器信息
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gd = ge.getDefaultScreenDevice();
+            DisplayMode dm = gd.getDisplayMode();
+            
+            // 计算字体度量
+            Font baseFont = buttons[0].getFont();
+            FontMetrics metrics = buttons[0].getFontMetrics(baseFont);
+            
+            // 计算所有按钮文本的最大宽度
+            int maxWidth = 0;
+            for (JButton button : buttons) {
+                int textWidth = metrics.stringWidth(button.getText());
+                maxWidth = Math.max(maxWidth, textWidth);
+            }
+            
+            // 基于 DPI 调整窗口尺寸
+            int basePadding = (int) (32 * scaling); // 基础内边距
+            int buttonPadding = (int) (16 * scaling); // 按钮额外内边距
+            int separatorHeight = (int) (2 * scaling); // 分隔线高度
+            int insetHeight = (int) (5 * scaling); // 按钮间距
+            
+            // 计算窗口宽度（文本宽度 + 内边距）
+            int windowWidth = maxWidth + basePadding + buttonPadding;
+            
+            // 确保最小宽度（适应不同 DPI）
+            int minWidth = (int) (200 * scaling);
+            windowWidth = Math.max(windowWidth, minWidth);
+            
+            // 计算窗口高度（按钮数量 + 分隔线 + 内边距）
+            int buttonCount = buttons.length;
+            int separatorCount = 2; // 当前有2个分隔线
+            int buttonHeight = metrics.getHeight() + (int) (8 * scaling); // 按钮高度包含文本高度和内边距
+            
+            int windowHeight = buttonCount * buttonHeight + 
+                              separatorCount * separatorHeight +
+                              (buttonCount - 1) * insetHeight + // 按钮间距
+                              basePadding; // 顶部和底部内边距
+            
+            // 根据屏幕分辨率调整最大尺寸
+            Rectangle screenBounds = ge.getMaximumWindowBounds();
+            int maxWindowWidth = (int) (screenBounds.width * 0.3); // 最大不超过屏幕宽度的30%
+            int maxWindowHeight = (int) (screenBounds.height * 0.8); // 最大不超过屏幕高度的80%
+            
+            windowWidth = Math.min(windowWidth, maxWindowWidth);
+            windowHeight = Math.min(windowHeight, maxWindowHeight);
+            
+            // 设置面板首选大小
+            panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
+            form.pack();
+            
+            // 智能定位窗口位置
+            Point clickPoint = event.getPoint();
+            int formX = clickPoint.x - form.getWidth();
+            int formY = clickPoint.y - form.getHeight();
+            
+            // 确保窗口在屏幕边界内
+            if (formX < screenBounds.x) {
+                formX = clickPoint.x; // 如果左边超出，放在点击位置右边
+            }
+            if (formY < screenBounds.y) {
+                formY = clickPoint.y; // 如果上边超出，放在点击位置下边
+            }
+            if (formX + form.getWidth() > screenBounds.x + screenBounds.width) {
+                formX = screenBounds.x + screenBounds.width - form.getWidth(); // 右边超出时调整
+            }
+            if (formY + form.getHeight() > screenBounds.y + screenBounds.height) {
+                formY = screenBounds.y + screenBounds.height - form.getHeight(); // 下边超出时调整
+            }
+            
+            form.setLocation(formX, formY);
+            form.setVisible(true);
+            
+            // 记录调试信息
+            log.info(String.format("Tray menu auto adjustment: window size=%dx%d, position=(%d,%d), DPI scaling=%.2f, screen=%dx%d", 
+                    windowWidth, windowHeight, formX, formY, scaling, dm.getWidth(), dm.getHeight()));
+            
+        } catch (Exception e) {
+            log.warning("Tray menu auto adjustment failed, using default layout: " + e.getMessage());
+            
+            // 降级到简单布局
+            panel.setPreferredSize(new Dimension((int) (250 * scaling), (int) (400 * scaling)));
+            form.pack();
+            form.setLocation(event.getPoint().x - form.getWidth(), event.getPoint().y - form.getHeight());
+            form.setVisible(true);
+        }
     }
 }
