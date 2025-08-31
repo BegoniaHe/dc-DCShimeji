@@ -1494,11 +1494,11 @@ public class Main {
             form.setVisible(true);
             
             // 记录调试信息
-            log.info(String.format("托盘菜单自动调整: 窗口大小=%dx%d, 位置=(%d,%d), DPI缩放=%.2f, 屏幕=%dx%d", 
+            log.info(String.format("Tray menu auto adjustment: window size=%dx%d, position=(%d,%d), DPI scaling=%.2f, screen=%dx%d", 
                     windowWidth, windowHeight, formX, formY, scaling, dm.getWidth(), dm.getHeight()));
             
         } catch (Exception e) {
-            log.warning("托盘菜单自动调整失败，使用默认布局: " + e.getMessage());
+            log.warning("Tray menu auto adjustment failed, using default layout: " + e.getMessage());
             
             // 降级到简单布局
             panel.setPreferredSize(new Dimension((int) (250 * scaling), (int) (400 * scaling)));
