@@ -87,6 +87,9 @@ public class Main {
             String javaVersion = System.getProperty("java.version");
             System.out.println("当前 Java 版本: " + javaVersion);
 
+            // 强制启用D3D硬件加速管线，提升Windows下的2D渲染性能
+            System.setProperty("sun.java2d.d3d", "true");
+
             // 核心 DPI 设置 - 强制使用 Java 8 行为
             System.setProperty("sun.java2d.dpiaware", "false");
             System.setProperty("sun.java2d.uiScale", "1.0");
