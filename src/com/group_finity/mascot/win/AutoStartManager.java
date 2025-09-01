@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Windows 开机自启动管理器 - 使用快捷方式方式
+ * Windows auto-start manager - uses shortcut method.
  */
 public class AutoStartManager {
     private static final Logger log = Logger.getLogger(AutoStartManager.class.getName());
