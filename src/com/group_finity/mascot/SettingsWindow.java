@@ -82,7 +82,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 grpFilter.add(radFilterBicubic);
                 grpFilter.add(radFilterHqx);
                 java.util.Hashtable<Integer, JLabel> labelTable = new java.util.Hashtable<>();
-                for (int index = 0; index < 9; index++)
+                for (int index = 0; index < 5; index++)
                         labelTable.put(index * 10, new JLabel(index + "x"));
                 sldScaling.setLabelTable(labelTable);
                 sldScaling.setPaintLabels(true);
@@ -259,6 +259,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 lblShimejiEE.setText(language.getString("ShimejiEE"));
                 lblDevelopedBy.setText(language.getString("DevelopedBy"));
                 btnWebsite.setText(language.getString("Website"));
+                btnFilterHelp.setToolTipText(language.getString("FilterHelpTooltip"));
                 btnDone.setText(language.getString("Done"));
                 btnCancel.setText(language.getString("Cancel"));
 
@@ -602,6 +603,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 radFilterNearest = new javax.swing.JRadioButton();
                 radFilterBicubic = new javax.swing.JRadioButton();
                 radFilterHqx = new javax.swing.JRadioButton();
+                btnFilterHelp = new javax.swing.JButton();
                 sldOpacity = new javax.swing.JSlider();
                 lblOpacity = new javax.swing.JLabel();
                 chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
@@ -766,7 +768,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 lblScaling.setText("Scaling");
 
                 sldScaling.setMajorTickSpacing(10);
-                sldScaling.setMaximum(80);
+                sldScaling.setMaximum(40);
                 sldScaling.setMinorTickSpacing(5);
                 sldScaling.setPaintLabels(true);
                 sldScaling.setPaintTicks(true);
@@ -785,6 +787,13 @@ public class SettingsWindow extends javax.swing.JDialog {
 
                 radFilterHqx.setText("hqx");
                 radFilterHqx.addItemListener(evt -> radFilterItemStateChanged(evt));
+
+                btnFilterHelp.setText("?");
+                btnFilterHelp.setFont(lblFilter.getFont().deriveFont(java.awt.Font.BOLD, lblFilter.getFont().getSize()));
+                btnFilterHelp.setPreferredSize(new java.awt.Dimension(32, 32));
+                btnFilterHelp.setMinimumSize(new java.awt.Dimension(32, 32));
+                btnFilterHelp.setMaximumSize(new java.awt.Dimension(32, 32));
+                btnFilterHelp.addActionListener(evt -> btnFilterHelpActionPerformed(evt));
 
                 sldOpacity.setMajorTickSpacing(10);
                 sldOpacity.setMinorTickSpacing(5);
@@ -810,7 +819,10 @@ public class SettingsWindow extends javax.swing.JDialog {
                                                                                 .createParallelGroup(
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING)
                                                                                 .addComponent(chkAlwaysShowShimejiChooser)
-                                                                                .addComponent(lblFilter)
+                                                                                .addGroup(pnlGeneralLayout.createSequentialGroup()
+                                                                                        .addComponent(lblFilter)
+                                                                                        .addGap(8, 8, 8)
+                                                                                        .addComponent(btnFilterHelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                                 .addComponent(lblScaling)
                                                                                 .addGroup(pnlGeneralLayout
                                                                                                 .createSequentialGroup()
@@ -862,7 +874,9 @@ public class SettingsWindow extends javax.swing.JDialog {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(lblFilter)
+                                                                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(lblFilter)
+                                                                        .addComponent(btnFilterHelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(radFilterNearest)
@@ -2152,7 +2166,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                                 sldScaling.setValue(5);
                         else {
                                 scaling = sldScaling.getValue() / 10.0;
-                                if (scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8) {
+                                if (scaling == 2 || scaling == 3 || scaling == 4) {
                                         radFilterHqx.setEnabled(true);
                                 } else {
                                         radFilterHqx.setEnabled(false);
@@ -2163,6 +2177,40 @@ public class SettingsWindow extends javax.swing.JDialog {
                         }
                 }
         }// GEN-LAST:event_sldScalingStateChanged
+
+        private void btnFilterHelpActionPerformed(java.awt.event.ActionEvent evt) {
+                String title = Main.getInstance().getLanguageBundle().getString("FilterHelpTitle");
+                String content = Main.getInstance().getLanguageBundle().getString("FilterHelpContent");
+                
+                // 获取DPI缩放因子
+                float menuScaling = Float.parseFloat(Main.getInstance().getProperties().getProperty("MenuDPI", "96")) / 96;
+                
+                // 使用 FlatLaf 样式的对话框
+                javax.swing.JDialog dialog = new javax.swing.JDialog(this, title, true);
+                dialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
+                
+                // 只创建内容标签，不再重复标题
+                javax.swing.JLabel contentLabel = new javax.swing.JLabel(content);
+                contentLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                
+                // 关闭按钮根据DPI缩放
+                javax.swing.JButton closeButton = new javax.swing.JButton(Main.getInstance().getLanguageBundle().getString("Close"));
+                int buttonWidth = (int)(80 * menuScaling);
+                int buttonHeight = (int)(32 * menuScaling);
+                closeButton.setPreferredSize(new java.awt.Dimension(buttonWidth, buttonHeight));
+                closeButton.addActionListener(e -> dialog.dispose());
+                
+                javax.swing.JPanel buttonPanel = new javax.swing.JPanel(new java.awt.FlowLayout());
+                buttonPanel.add(closeButton);
+                
+                dialog.setLayout(new java.awt.BorderLayout());
+                dialog.add(contentLabel, java.awt.BorderLayout.CENTER);
+                dialog.add(buttonPanel, java.awt.BorderLayout.SOUTH);
+                
+                dialog.pack();
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+        }
 
         private void btnWebsiteActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnWebsiteActionPerformed
         {// GEN-HEADEREND:event_btnWebsiteActionPerformed
@@ -2452,6 +2500,7 @@ public class SettingsWindow extends javax.swing.JDialog {
         private javax.swing.JButton btnChangeFont;
         private javax.swing.JButton btnDiscord;
         private javax.swing.JButton btnDone;
+        private javax.swing.JButton btnFilterHelp;
         private javax.swing.JButton btnPatreon;
         private javax.swing.JButton btnPrimaryColour1Change;
         private javax.swing.JButton btnPrimaryColour2Change;
