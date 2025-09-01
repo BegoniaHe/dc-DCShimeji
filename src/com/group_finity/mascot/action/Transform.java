@@ -39,7 +39,7 @@ public class Transform extends Animate
     {
         super.tick( );
 
-        if( getTime( ) == getAnimation( ).getDuration( ) - 1 && Boolean.parseBoolean( Main.getInstance( ).getProperties( ).getProperty( "Transformation", "true" ) ) )
+        if( ( getTime( ) == getAnimation( ).getDuration( ) - 1 || getAnimation( ).getDuration( ) == 1 ) && Boolean.parseBoolean( Main.getInstance( ).getProperties( ).getProperty( "Transformation", "true" ) ) )
         {
             transform( );
         }

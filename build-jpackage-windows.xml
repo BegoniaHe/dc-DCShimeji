@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Shimeji-ee-Windows" basedir="." default="jpackage-windows-all">
 
-	<property name="version" value="1.0.9" />
+	<property name="version" value="2.0.0" />
 
 	<!-- 创建所有 Windows 包（portable 和 MSI） -->
 	<target name="jpackage-windows-all" depends="jpackage-windows-portable,jpackage-windows-msi">
@@ -40,6 +40,18 @@
 			<arg value="app-image" />
 			<arg value="--dest" />
 			<arg value="." />
+			<arg value="--java-options" />
+			<arg value="-Xmx512M" />
+			<arg value="--java-options" />
+			<arg value="-Xms128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:ReservedCodeCacheSize=128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseG1GC" />
+			<arg value="--java-options" />
+			<arg value="-XX:MaxGCPauseMillis=50" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseStringDeduplication" />
 			<arg value="--java-options" />
 			<arg value="--enable-native-access=ALL-UNNAMED" />
 			<arg value="--java-options" />
@@ -101,6 +113,18 @@
 			<arg value="app-image" />
 			<arg value="--dest" />
 			<arg value="." />
+			<arg value="--java-options" />
+			<arg value="-Xmx512M" />
+			<arg value="--java-options" />
+			<arg value="-Xms128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:ReservedCodeCacheSize=128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseG1GC" />
+			<arg value="--java-options" />
+			<arg value="-XX:MaxGCPauseMillis=50" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseStringDeduplication" />
 			<arg value="--java-options" />
 			<arg value="--enable-native-access=ALL-UNNAMED" />
 			<arg value="--java-options" />

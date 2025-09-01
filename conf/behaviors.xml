@@ -36,9 +36,15 @@
 		
 		<Behavior Name="PullUp" Frequency="0" Hidden="true" />
 		<Behavior Name="Divided" Frequency="0" Hidden="true" />
+		
+		<!-- 抱抱相关行为 -->
+		<Behavior Name="IHugYou" Frequency="0" Hidden="true" />
+		<Behavior Name="IAmHugged" Frequency="0" Hidden="true" />
 
 		<!-- On the Floor -->
 		<Condition Condition="#{mascot.environment.floor.isOn(mascot.anchor) || mascot.environment.activeIE.topBorder.isOn(mascot.anchor)}">
+			<Behavior Name="FindHugBehavior" Frequency="100" />
+			<Behavior Name="BroadcastHugBehavior" Frequency="120" />
 			<Behavior Name="StandUp" Frequency="200" Hidden="true" />
 			<Behavior Name="SitDown" Frequency="200">
 				<NextBehavior Add="true">

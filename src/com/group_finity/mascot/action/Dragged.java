@@ -29,6 +29,10 @@ public class Dragged extends ActionBase
 
     private static final int DEFAULT_OFFSETY = 120;
 
+    public static final String PARAMETER_OFFSETTYPE = "OffsetType";
+
+    private static final String DEFAULT_OFFSETTYPE = "ImageAnchor";
+
     private double footX;
 
     private double footDx;
@@ -54,12 +58,9 @@ public class Dragged extends ActionBase
     }
 
     @Override
-    public boolean hasNext() throws VariableException
+    public boolean hasNext( ) throws VariableException
     {
-        final boolean intime = getTime( ) < getTimeToRegist( );
-        final boolean lukewarm = Math.random( ) >= 0.1;
-
-        return super.hasNext( ) && ( intime || lukewarm );
+        return super.hasNext( ) && getTime( ) < getTimeToRegist( );
     }
 
     @Override
@@ -70,8 +71,16 @@ public class Dragged extends ActionBase
         getEnvironment( ).refreshWorkArea( );
 
         final Location cursor = getEnvironment( ).getCursor( );
+        
+        int offsetX = (int)Math.round( getOffsetX( ) * scaling );
+        int offsetY = (int)Math.round( getOffsetY( ) * scaling );
+        if( getOffsetType( ).equals( getSchema( ).getString( "Origin" ) ) )
+        {
+            offsetX = 0 - offsetX + getMascot( ).getImage( ).size( ).width / 2;
+            offsetY = 0 - offsetY + getMascot( ).getImage( ).size( ).height / 2;
+        }
 
-        if( Math.abs( cursor.getX( ) - getMascot( ).getAnchor( ).x + (int)Math.round( getOffsetX( ) * scaling ) ) >= 5 )
+        if( Math.abs( ( cursor.getX( ) - offsetX ) - getMascot( ).getAnchor( ).x ) >= 5 )
         {
             this.setTime( 0 );
         }
@@ -86,7 +95,7 @@ public class Dragged extends ActionBase
 
         getAnimation( ).next( getMascot( ), getTime( ) );
 
-        getMascot( ).setAnchor( new Point( cursor.getX( ) + (int)Math.round( getOffsetX( ) * scaling ), cursor.getY( ) + (int)Math.round( getOffsetY( ) * scaling ) ) );
+        getMascot( ).setAnchor( new Point( cursor.getX( ) + offsetX, cursor.getY( ) + offsetY ) );
     }
 
     @Override
@@ -134,5 +143,10 @@ public class Dragged extends ActionBase
     private int getOffsetY( ) throws VariableException
     {
         return eval( getSchema( ).getString( PARAMETER_OFFSETY ), Number.class, DEFAULT_OFFSETY ).intValue( );
+    }
+
+    private String getOffsetType( ) throws VariableException
+    {
+        return eval( getSchema( ).getString( PARAMETER_OFFSETTYPE ), String.class, DEFAULT_OFFSETTYPE );
     }
 }

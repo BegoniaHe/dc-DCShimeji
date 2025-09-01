@@ -1,5 +1,7 @@
 package com.group_finity.mascot.action;
 
+import com.group_finity.mascot.Main;
+import com.group_finity.mascot.Mascot;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,20 @@ import com.group_finity.mascot.script.VariableMap;
  */
 public class Regist extends ActionBase {
 
+    public static final String PARAMETER_OFFSETX = "OffsetX";
+
+    private static final int DEFAULT_OFFSETX = 0;
+
+    public static final String PARAMETER_OFFSETY = "OffsetY";
+
+    private static final int DEFAULT_OFFSETY = 0;
+
+    public static final String PARAMETER_OFFSETTYPE = "OffsetType";
+
+    private static final String DEFAULT_OFFSETTYPE = "ImageAnchor";
+
+    private double scaling;
+
 	private static final Logger log = Logger.getLogger(Regist.class.getName());
 
 	public Regist( java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context )
@@ -23,9 +39,22 @@ public class Regist extends ActionBase {
 	}
 
 	@Override
-	public boolean hasNext() throws VariableException {
+	public void init( final Mascot mascot ) throws VariableException
+	{
+		super.init( mascot );
 
-		final boolean notMoved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x) < 5;
+		scaling = Double.parseDouble( Main.getInstance( ).getProperties( ).getProperty( "Scaling", "1.0" ) );
+	}
+
+	@Override
+	public boolean hasNext() throws VariableException {
+		int offsetX = (int)Math.round( getOffsetX( ) * scaling );
+		if( getOffsetType( ).equals( getSchema( ).getString( "Origin" ) ) )
+		{
+			offsetX = 0 - offsetX + getMascot( ).getImage( ).size( ).width / 2;
+		}
+		
+		final boolean notMoved = Math.abs((getEnvironment().getCursor().getX() - offsetX) - getMascot().getAnchor().x) < 5;
 
 		return super.hasNext() && notMoved;
 	}
@@ -52,6 +81,21 @@ public class Regist extends ActionBase {
     {
         // action does not support hotspots
         getMascot( ).getHotspots( ).clear( );
+    }
+
+    private int getOffsetX( ) throws VariableException
+    {
+        return eval( getSchema( ).getString( PARAMETER_OFFSETX ), Number.class, DEFAULT_OFFSETX ).intValue( );
+    }
+
+    private int getOffsetY( ) throws VariableException
+    {
+        return eval( getSchema( ).getString( PARAMETER_OFFSETY ), Number.class, DEFAULT_OFFSETY ).intValue( );
+    }
+
+    private String getOffsetType( ) throws VariableException
+    {
+        return eval( getSchema( ).getString( PARAMETER_OFFSETTYPE ), String.class, DEFAULT_OFFSETTYPE );
     }
 
 }

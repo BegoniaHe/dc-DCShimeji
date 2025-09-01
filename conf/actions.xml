@@ -793,6 +793,64 @@
 				InitialVY="-5" />
 			<ActionReference Name="Bouncing" />
 		</Action>
+
+		<!-- ========== 抱抱互动系统 ========== -->
+		
+		<!-- 广播抱抱需求 -->
+		<Action Name="BroadcastHug" Type="Embedded" Class="com.group_finity.mascot.action.Broadcast" Affordance="Hug" BorderType="Floor">
+			<Animation>
+				<Pose Image="/Sit.png" ImageAnchor="64,128" Velocity="0,0" Duration="250" />
+			</Animation>
+		</Action>
+
+		<!-- 寻找抱抱对象并移动过去 -->
+		<Action Name="FindAndHug" Type="Embedded" Class="com.group_finity.mascot.action.ScanMove" Affordance="Hug" Behavior="IHugYou" TargetBehavior="IAmHugged" BorderType="Floor">
+			<Animation>
+				<Pose Image="/Stand.png" ImageAnchor="64,128" Velocity="-4,0" Duration="2" />
+				<Pose Image="/WalkLeft.png" ImageAnchor="64,128" Velocity="-4,0" Duration="2" />
+				<Pose Image="/Stand.png" ImageAnchor="64,128" Velocity="-4,0" Duration="2" />
+				<Pose Image="/WalkRight.png" ImageAnchor="64,128" Velocity="-4,0" Duration="2" />
+			</Animation>
+		</Action>
+		
+		<!-- 主动抱抱动画 -->
+		<Action Name="HugAction" Type="Embedded" Class="com.group_finity.mascot.action.Interact" BorderType="Floor">
+			<Animation>
+				<Pose Image="/hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="50" />
+				<Pose Image="/hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+			</Animation>
+		</Action>
+		
+		<!-- 被抱抱动画 -->
+		<Action Name="HuggedAction" Type="Embedded" Class="com.group_finity.mascot.action.Interact" BorderType="Floor">
+			<Animation>
+				<Pose Image="/hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="98" />
+			</Animation>
+		</Action>
+		
+		<!-- 抱抱行为序列 -->
+		<Action Name="BroadcastHugBehavior" Type="Sequence">
+			<ActionReference Name="BroadcastHug" />
+		</Action>
+		
+		<Action Name="FindHugBehavior" Type="Sequence">
+			<ActionReference Name="Stand" Duration="${20+Math.random()*20}" />
+			<ActionReference Name="FindAndHug" />
+		</Action>
+		
+		<Action Name="IHugYou" Type="Sequence">
+			<ActionReference Name="HugAction" />
+		</Action>
+		
+		<Action Name="IAmHugged" Type="Sequence">
+			<ActionReference Name="HuggedAction" />
+		</Action>
+
 	</ActionList>
 
 </Mascot>

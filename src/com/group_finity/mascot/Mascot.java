@@ -33,6 +33,7 @@ import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.JLongMenu;
+import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 
 /**
@@ -121,6 +122,8 @@ public class Mascot {
     private final ArrayList<String> affordances = new ArrayList<>(5);
 
     private final ArrayList<Hotspot> hotspots = new ArrayList<>(5);
+
+    private VariableMap variables = null;
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this shimeji,
@@ -553,6 +556,33 @@ public class Mascot {
         return affordances;
     }
 
+    /**
+     * 设置桌宠的affordance（用于交互系统）
+     * @param affordance 要添加的affordance字符串
+     */
+    public void setAffordance(String affordance) {
+        if (affordance != null && !affordance.isEmpty()) {
+            if (!affordances.contains(affordance)) {
+                affordances.add(affordance);
+            }
+        }
+    }
+
+    /**
+     * 清除指定的affordance
+     * @param affordance 要移除的affordance字符串
+     */
+    public void removeAffordance(String affordance) {
+        affordances.remove(affordance);
+    }
+
+    /**
+     * 清除所有affordances
+     */
+    public void clearAffordances() {
+        affordances.clear();
+    }
+
     public ArrayList<Hotspot> getHotspots() {
         return hotspots;
     }
@@ -604,5 +634,11 @@ public class Mascot {
             refreshCursor(false);
         else
             refreshCursor(point);
+    }
+
+    public VariableMap getVariables() {
+        if (variables == null)
+            variables = new VariableMap();
+        return variables;
     }
 }

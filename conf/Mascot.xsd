@@ -57,7 +57,7 @@
 		    				<enumeration value="Move"></enumeration>
 		    				<enumeration value="Pause"></enumeration>
 		    				<enumeration value="Fixed"></enumeration>
-		    				<enumeration value="Composite"></enumeration>
+		    				<enumeration value="Sequence"></enumeration>
 		    				<enumeration value="Select"></enumeration>
 		    			</restriction>
 		    		</simpleType>
@@ -78,6 +78,9 @@
 		    			</restriction>
 		    		</simpleType>
 		    	</attribute>
+		    	<attribute name="Affordance" type="string" />
+		    	<attribute name="Behavior" type="string" />
+		    	<attribute name="TargetBehavior" type="string" />
 		    	<attribute name="Loop" type="tns:Parameter" />
 	    	</extension>
 	    </complexContent>
