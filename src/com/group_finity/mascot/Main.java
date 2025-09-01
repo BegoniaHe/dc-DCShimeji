@@ -1284,6 +1284,13 @@ public class Main {
     }
 
     /**
+     * 公开方法，用于保存配置文件
+     */
+    public void saveConfigFile() {
+        updateConfigFile();
+    }
+
+    /**
      * Replaces the current set of active imageSets without modifying
      * valid imageSets that are already active. Does nothing if newImageSets
      * are null

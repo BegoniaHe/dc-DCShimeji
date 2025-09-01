@@ -1,5 +1,6 @@
 package com.group_finity.mascot.imagesetchooser;
 
+import com.group_finity.mascot.DPIManager;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.Entry;
@@ -26,6 +27,10 @@ public class ImageSetChooser extends javax.swing.JDialog
     public ImageSetChooser( javax.swing.JFrame parent, boolean modal )
     {
         super( parent, modal );
+        
+        // 自动配置 DPI 以适应当前显示器设置
+        DPIManager.autoConfigureDPI(Main.getInstance().getProperties());
+        
         initComponents();
         setLocationRelativeTo( null );
 
@@ -214,6 +219,9 @@ public class ImageSetChooser extends javax.swing.JDialog
         cancelButton.setText( Main.getInstance( ).getLanguageBundle( ).getString( "Cancel" ) );
         clearAllLabel.setText( Main.getInstance( ).getLanguageBundle( ).getString( "ClearAll" ) );
         selectAllLabel.setText( Main.getInstance( ).getLanguageBundle( ).getString( "SelectAll" ) );
+        
+        Main.getInstance().saveConfigFile();
+        
         setVisible( true );
         if( closeProgram )
         {
@@ -261,7 +269,7 @@ public class ImageSetChooser extends javax.swing.JDialog
         jList1 = new ShimejiList();
         jList2 = new ShimejiList();
         jLabel1 = new javax.swing.JLabel();
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
         useAllButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -372,7 +380,58 @@ public class ImageSetChooser extends javax.swing.JDialog
                 .addGap( 11, 11, 11 ) ) );
 
         pack();
+        
+        // 应用 DPI 感知的按钮尺寸
+        applyDPIAwareButtonSizes();
     }// </editor-fold>
+    
+    /**
+     * 根据当前 DPI 设置调整按钮尺寸
+     */
+    private void applyDPIAwareButtonSizes() {
+        try {
+            // 获取 DPI 缩放比例
+            float scaling = Float.parseFloat(Main.getInstance().getProperties().getProperty("MenuDPI", "96")) / 96f;
+            
+            // 基础按钮尺寸
+            int baseWidth = 130;
+            int baseHeight = 26;
+            
+            // 计算缩放后的尺寸
+            int scaledWidth = (int) (baseWidth * scaling);
+            int scaledHeight = (int) (baseHeight * scaling);
+            
+            java.awt.Dimension buttonSize = new java.awt.Dimension(scaledWidth, scaledHeight);
+            
+            // 应用到所有按钮
+            useSelectedButton.setPreferredSize(buttonSize);
+            useSelectedButton.setMaximumSize(buttonSize);
+            useSelectedButton.setMinimumSize(new java.awt.Dimension(scaledWidth, scaledHeight));
+            
+            useAllButton.setPreferredSize(buttonSize);
+            useAllButton.setMaximumSize(buttonSize);
+            useAllButton.setMinimumSize(new java.awt.Dimension(scaledWidth, scaledHeight));
+            
+            cancelButton.setPreferredSize(buttonSize);
+            cancelButton.setMaximumSize(buttonSize);
+            cancelButton.setMinimumSize(new java.awt.Dimension(scaledWidth, scaledHeight));
+            
+            // 更新布局管理器的间距
+            if (jPanel1.getLayout() instanceof java.awt.FlowLayout) {
+                java.awt.FlowLayout layout = (java.awt.FlowLayout) jPanel1.getLayout();
+                layout.setHgap((int) (10 * scaling));
+                layout.setVgap((int) (5 * scaling));
+            }
+            
+            // 重新验证和重绘
+            jPanel1.revalidate();
+            jPanel1.repaint();
+            
+        } catch (Exception e) {
+            // 如果出错，继续使用默认尺寸
+            System.err.println("Failed to apply DPI-aware button sizes: " + e.getMessage());
+        }
+    }
 
     private void clearAllLabelMouseClicked( java.awt.event.MouseEvent evt )
     {
@@ -480,6 +539,7 @@ public class ImageSetChooser extends javax.swing.JDialog
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<ImageSetChooserPanel> jList1;
     private javax.swing.JList<ImageSetChooserPanel> jList2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel selectAllLabel;
     private javax.swing.JButton useAllButton;
     private javax.swing.JButton useSelectedButton;
