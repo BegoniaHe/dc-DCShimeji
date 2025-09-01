@@ -1827,7 +1827,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlAbout.add(rigid2);
 
                 lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
-                lblVersion.setText("1.0.21.3");
+                lblVersion.setText("2.0.0");
                 lblVersion.setAlignmentX(0.5F);
                 pnlAbout.add(lblVersion);
                 pnlAbout.add(rigid3);
@@ -1836,7 +1836,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 lblDevelopedBy.setAlignmentX(0.5F);
                 pnlAbout.add(lblDevelopedBy);
 
-                lblKilkakon.setText("Kilkakon");
+                lblKilkakon.setText("Kilkakon & Zero & Begonia");
                 lblKilkakon.setAlignmentX(0.5F);
                 pnlAbout.add(lblKilkakon);
                 pnlAbout.add(rigid4);
@@ -2083,7 +2083,7 @@ public class SettingsWindow extends javax.swing.JDialog {
 
         private void btnWebsiteActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnWebsiteActionPerformed
         {// GEN-HEADEREND:event_btnWebsiteActionPerformed
-                browseToUrl("http://kilkakon.com/");
+                browseToUrl("https://github.com/DCRepairCenter/DCShimeji");
         }// GEN-LAST:event_btnWebsiteActionPerformed
 
         private void btnDiscordActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnDiscordActionPerformed
