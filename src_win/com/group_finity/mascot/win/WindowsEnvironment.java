@@ -31,6 +31,7 @@ class WindowsEnvironment extends Environment {
     private static Pointer activeIEobject = null;
 
     private static String[] windowTitles = null;
+    private static String[] windowTitlesBlacklist = null;
 
     private enum IEResult {
         INVALID, NOT_IE, IE_OUT_OF_BOUNDS, IE
@@ -54,23 +55,48 @@ class WindowsEnvironment extends Environment {
             return false;
         }
 
+        // blacklist takes precedence over whitelist
+        boolean blacklistInUse = false;
+        if (windowTitlesBlacklist == null) {
+            windowTitlesBlacklist = Main.getInstance().getProperties().getProperty("InteractiveWindowsBlacklist", "").split("/");
+        }
+        for (String windowTitle : windowTitlesBlacklist) {
+            if (!windowTitle.trim().isEmpty()) {
+                blacklistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    ieCache.put(ie, false);
+                    return false;
+                }
+            }
+        }
+
+        // whitelist
+        boolean whitelistInUse = false;
         if (windowTitles == null) {
             windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
         }
 
         for (String windowTitle : windowTitles) {
-            if (!windowTitle.trim().isEmpty() && ieTitle.contains(windowTitle)) {
-                // log.log( Level.INFO, String.format( "value %s is ie", new String( title, 0,
-                // titleLength ) ) );
-                ieCache.put(ie, true);
-                return true;
+            if (!windowTitle.trim().isEmpty()) {
+                whitelistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    // log.log( Level.INFO, String.format( "value %s is ie", new String( title, 0,
+                    // titleLength ) ) );
+                    ieCache.put(ie, true);
+                    return true;
+                }
             }
         }
 
-        // log.log( Level.INFO, String.format( "value %s is not ie", new String( title,
-        // 0, titleLength ) ) );
-        ieCache.put(ie, false);
-        return false;
+        if (whitelistInUse || !blacklistInUse) {
+            // log.log( Level.INFO, String.format( "value %s is not ie", new String( title,
+            // 0, titleLength ) ) );
+            ieCache.put(ie, false);
+            return false;
+        } else {
+            ieCache.put(ie, true);
+            return true;
+        }
     }
 
     private static IEResult isViableIE(Pointer ie) {

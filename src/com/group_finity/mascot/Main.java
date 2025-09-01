@@ -584,7 +584,10 @@ public class Main {
 
         try {
             // Create the tray icon
-            final TrayIcon icon = new TrayIcon(image, languageBundle.getString("ShimejiEE"));
+            String caption = properties.getProperty("ShimejiEENameOverride", "").trim();
+            if (caption.isEmpty())
+                caption = languageBundle.getString("ShimejiEE");
+            final TrayIcon icon = new TrayIcon(image, caption);
 
             // attach menu
             icon.addMouseListener(new MouseListener() {

@@ -41,7 +41,7 @@ public class Interact extends Animate
     {
         super.tick( );
 
-        if( getTime( ) == getAnimation( ).getDuration( ) - 1 && !getBehavior( ).trim( ).isEmpty( ) )
+        if( ( getTime( ) == getAnimation( ).getDuration( ) - 1 || getAnimation( ).getDuration( ) == 1 ) && !getBehavior( ).trim( ).isEmpty( ) )
         {
             try
             {

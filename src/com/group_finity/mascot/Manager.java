@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
@@ -273,21 +272,35 @@ public class Manager {
 	}
 
 	public void togglePauseAll() {
+		boolean isPaused = true;
+		
 		synchronized (this.getMascots()) {
-			boolean isPaused = false;
-			if (!getMascots().isEmpty())
-				isPaused = getMascots().getFirst().isPaused();
-
-			// Use forEach with lambda for cleaner code
-			final boolean newPausedState = !isPaused;
-			getMascots().forEach(mascot -> mascot.setPaused(newPausedState));
+			for (final Mascot mascot : this.getMascots()) {
+				if (!mascot.isPaused()) {
+					isPaused = false;
+					break;
+				}
+			}
+			
+			for (final Mascot mascot : this.getMascots()) {
+				mascot.setPaused(!isPaused);
+			}
 		}
 	}
 
 	public boolean isPaused() {
+		boolean isPaused = true;
+		
 		synchronized (this.getMascots()) {
-			return !getMascots().isEmpty() && getMascots().getFirst().isPaused();
+			for (final Mascot mascot : this.getMascots()) {
+				if (!mascot.isPaused()) {
+					isPaused = false;
+					break;
+				}
+			}
 		}
+		
+		return isPaused;
 	}
 
 	public int getCount() {

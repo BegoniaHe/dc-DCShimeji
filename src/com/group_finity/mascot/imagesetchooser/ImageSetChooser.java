@@ -4,6 +4,8 @@ import com.group_finity.mascot.DPIManager;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.Entry;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.ImageIcon;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
@@ -32,6 +35,24 @@ public class ImageSetChooser extends javax.swing.JDialog
         DPIManager.autoConfigureDPI(Main.getInstance().getProperties());
         
         initComponents();
+        
+        // load icon
+        Image icon = null;
+        try
+        {
+            icon = new ImageIcon("./img/icon.png").getImage();
+        }
+        catch (final Exception e)
+        {
+            // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
+        }
+        finally
+        {
+            if (icon == null)
+                icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+        }
+        setIconImage(icon);
+        
         setLocationRelativeTo( null );
 
         ArrayList<String> activeImageSets = readConfigFile();
@@ -49,6 +70,7 @@ public class ImageSetChooser extends javax.swing.JDialog
             }
             return new File( dir + "/" + name ).isDirectory();
         };
+        
         // Top Level Directory
         String topDir = "./img";
         File dir = new File(topDir);

@@ -40,6 +40,7 @@ public class SettingsWindow extends javax.swing.JDialog {
         private final Properties oldThemeProperties = new Properties();
         private LookAndFeel lookAndFeel;
         private final ArrayList<String> listData = new ArrayList<>();
+        private final ArrayList<String> blacklistData = new ArrayList<>();
         private Boolean alwaysShowShimejiChooser = false;
         private Boolean alwaysShowInformationScreen = false;
         private String filter = "nearest";
@@ -123,6 +124,13 @@ public class SettingsWindow extends javax.swing.JDialog {
 
                 listData.addAll(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
                 lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                
+                for (String item : properties.getProperty("InteractiveWindowsBlacklist", "").split("/")) {
+                        if (!item.trim().isEmpty()) {
+                                blacklistData.add(item);
+                        }
+                }
+                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
 
                 Properties themeProperties = new Properties();
                 FileInputStream input;
@@ -223,6 +231,8 @@ public class SettingsWindow extends javax.swing.JDialog {
                 radFilterNearest.setText(language.getString("NearestNeighbour"));
                 radFilterHqx.setText(language.getString("Filter"));
                 radFilterBicubic.setText(language.getString("BicubicFilter"));
+                pnlInteractiveTabs.setTitleAt(0, language.getString("Whitelist"));
+                pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
                 btnAddInteractiveWindow.setText(language.getString("Add"));
                 btnRemoveInteractiveWindow.setText(language.getString("Remove"));
                 lblPrimaryColour1.setText(language.getString("PrimaryColour1"));
@@ -596,11 +606,16 @@ public class SettingsWindow extends javax.swing.JDialog {
                 lblOpacity = new javax.swing.JLabel();
                 chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
             JPanel pnlInteractiveWindows = new JPanel();
+                pnlInteractiveTabs = new javax.swing.JTabbedPane();
+                pnlWhitelistTab = new javax.swing.JPanel();
+                pnlBlacklistTab = new javax.swing.JPanel();
                 pnlInteractiveButtons = new javax.swing.JPanel();
                 btnAddInteractiveWindow = new javax.swing.JButton();
                 btnRemoveInteractiveWindow = new javax.swing.JButton();
             javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
                 lstInteractiveWindows = new javax.swing.JList<>();
+            javax.swing.JScrollPane jScrollPane3 = new javax.swing.JScrollPane();
+                lstInteractiveWindowsBlacklist = new javax.swing.JList<>();
             JPanel pnlTheme = new JPanel();
                 pnlThemeButtons = new javax.swing.JPanel();
                 btnChangeFont = new javax.swing.JButton();
@@ -892,6 +907,59 @@ public class SettingsWindow extends javax.swing.JDialog {
                 });
                 jScrollPane1.setViewportView(lstInteractiveWindows);
 
+                lstInteractiveWindowsBlacklist.setModel(new javax.swing.AbstractListModel<>() {
+                    final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+                    public int getSize() {
+                        return strings.length;
+                    }
+
+                    public String getElementAt(int i) {
+                        return strings[i];
+                    }
+                });
+                jScrollPane3.setViewportView(lstInteractiveWindowsBlacklist);
+
+                // Setup whitelist tab
+                javax.swing.GroupLayout pnlWhitelistTabLayout = new javax.swing.GroupLayout(pnlWhitelistTab);
+                pnlWhitelistTab.setLayout(pnlWhitelistTabLayout);
+                pnlWhitelistTabLayout.setHorizontalGroup(
+                    pnlWhitelistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                        .addContainerGap())
+                );
+                pnlWhitelistTabLayout.setVerticalGroup(
+                    pnlWhitelistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                        .addContainerGap())
+                );
+
+                pnlInteractiveTabs.addTab("Whitelist", pnlWhitelistTab);
+
+                // Setup blacklist tab
+                javax.swing.GroupLayout pnlBlacklistTabLayout = new javax.swing.GroupLayout(pnlBlacklistTab);
+                pnlBlacklistTab.setLayout(pnlBlacklistTabLayout);
+                pnlBlacklistTabLayout.setHorizontalGroup(
+                    pnlBlacklistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                        .addContainerGap())
+                );
+                pnlBlacklistTabLayout.setVerticalGroup(
+                    pnlBlacklistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                        .addContainerGap())
+                );
+
+                pnlInteractiveTabs.addTab("Blacklist", pnlBlacklistTab);
+
                 javax.swing.GroupLayout pnlInteractiveWindowsLayout = new javax.swing.GroupLayout(
                         pnlInteractiveWindows);
                 pnlInteractiveWindows.setLayout(pnlInteractiveWindowsLayout);
@@ -905,7 +973,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                                                                                 .addGroup(pnlInteractiveWindowsLayout
                                                                                                 .createParallelGroup(
                                                                                                                 javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                                                .addComponent(jScrollPane1)
+                                                                                                .addComponent(pnlInteractiveTabs)
                                                                                                 .addComponent(pnlInteractiveButtons,
                                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -918,7 +986,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                                                                 pnlInteractiveWindowsLayout
                                                                                 .createSequentialGroup()
                                                                                 .addContainerGap()
-                                                                                .addComponent(jScrollPane1)
+                                                                                .addComponent(pnlInteractiveTabs)
                                                                                 .addPreferredGap(
                                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                                 .addComponent(pnlInteractiveButtons,
@@ -1925,6 +1993,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                         Properties properties = Main.getInstance().getProperties();
                         String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ",
                                         "/");
+                        String interactiveWindowsBlacklist = blacklistData.toString().replace("[", "").replace("]", "").replace(", ", "/");
                         String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
                         Dimension window = new Dimension(Integer.parseInt(windowArray[0]),
                                         Integer.parseInt(windowArray[1]));
@@ -1943,7 +2012,9 @@ public class SettingsWindow extends javax.swing.JDialog {
                                         Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
                                         Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
                         interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "")
-                                        .equals(interactiveWindows);
+                                        .equals(interactiveWindows) ||
+                                        !properties.getProperty("InteractiveWindowsBlacklist", "")
+                                        .equals(interactiveWindowsBlacklist);
                     // Config file name
                     String configFile = "./conf/settings.properties";
 
@@ -1955,6 +2026,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                         properties.setProperty("Scaling", Double.toString(scaling));
                         properties.setProperty("Filter", filter);
                         properties.setProperty("InteractiveWindows", interactiveWindows);
+                        properties.setProperty("InteractiveWindowsBlacklist", interactiveWindowsBlacklist);
                         properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
                         if (windowedMode) {
                             properties.setProperty("WindowSize",
@@ -2025,21 +2097,32 @@ public class SettingsWindow extends javax.swing.JDialog {
          // add button
                 String inputValue = JOptionPane.showInputDialog(rootPane,
                                 Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"),
-                                Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"),
-                                JOptionPane.QUESTION_MESSAGE)
-                                .trim();
-                if (!inputValue.isEmpty() && !inputValue.contains("/")) {
-                        listData.add(inputValue);
-                        lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                                Main.getInstance().getLanguageBundle().getString(pnlInteractiveTabs.getSelectedIndex() == 0 ? "AddInteractiveWindow" : "BlacklistInteractiveWindow"),
+                                JOptionPane.QUESTION_MESSAGE);
+                if (inputValue != null && !inputValue.trim().isEmpty() && !inputValue.contains("/")) {
+                        if (pnlInteractiveTabs.getSelectedIndex() == 0) {
+                                listData.add(inputValue.trim());
+                                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                        } else {
+                                blacklistData.add(inputValue.trim());
+                                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+                        }
                 }
         }// GEN-LAST:event_btnAddInteractiveWindowActionPerformed
 
         private void btnRemoveInteractiveWindowActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnRemoveInteractiveWindowActionPerformed
         {// GEN-HEADEREND:event_btnRemoveInteractiveWindowActionPerformed
          // delete button
-                if (lstInteractiveWindows.getSelectedIndex() != -1) {
-                        listData.remove(lstInteractiveWindows.getSelectedIndex());
-                        lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                if (pnlInteractiveTabs.getSelectedIndex() == 0) {
+                        if (lstInteractiveWindows.getSelectedIndex() != -1) {
+                                listData.remove(lstInteractiveWindows.getSelectedIndex());
+                                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                        }
+                } else {
+                        if (lstInteractiveWindowsBlacklist.getSelectedIndex() != -1) {
+                                blacklistData.remove(lstInteractiveWindowsBlacklist.getSelectedIndex());
+                                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+                        }
                 }
         }// GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
 
@@ -2404,6 +2487,10 @@ public class SettingsWindow extends javax.swing.JDialog {
         private javax.swing.JLabel lblShimejiEE;
     private javax.swing.JLabel lblWhiteColour;
         private javax.swing.JList<String> lstInteractiveWindows;
+        private javax.swing.JList<String> lstInteractiveWindowsBlacklist;
+        private javax.swing.JTabbedPane pnlInteractiveTabs;
+        private javax.swing.JPanel pnlWhitelistTab;
+        private javax.swing.JPanel pnlBlacklistTab;
     private javax.swing.JPanel pnlAboutButtons;
         private javax.swing.JPanel pnlBackgroundImage;
         private javax.swing.JPanel pnlBackgroundPreview;

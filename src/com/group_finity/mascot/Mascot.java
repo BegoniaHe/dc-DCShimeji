@@ -33,6 +33,7 @@ import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.JLongMenu;
+import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 
 /**
@@ -121,6 +122,8 @@ public class Mascot {
     private final ArrayList<String> affordances = new ArrayList<>(5);
 
     private final ArrayList<Hotspot> hotspots = new ArrayList<>(5);
+
+    private VariableMap variables = null;
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this shimeji,
@@ -631,5 +634,11 @@ public class Mascot {
             refreshCursor(false);
         else
             refreshCursor(point);
+    }
+
+    public VariableMap getVariables() {
+        if (variables == null)
+            variables = new VariableMap();
+        return variables;
     }
 }
