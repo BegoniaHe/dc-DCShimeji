@@ -41,6 +41,18 @@
 			<arg value="--dest" />
 			<arg value="." />
 			<arg value="--java-options" />
+			<arg value="-Xmx512M" />
+			<arg value="--java-options" />
+			<arg value="-Xms128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:ReservedCodeCacheSize=128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseG1GC" />
+			<arg value="--java-options" />
+			<arg value="-XX:MaxGCPauseMillis=50" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseStringDeduplication" />
+			<arg value="--java-options" />
 			<arg value="--enable-native-access=ALL-UNNAMED" />
 			<arg value="--java-options" />
 			<arg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
@@ -101,6 +113,18 @@
 			<arg value="app-image" />
 			<arg value="--dest" />
 			<arg value="." />
+			<arg value="--java-options" />
+			<arg value="-Xmx512M" />
+			<arg value="--java-options" />
+			<arg value="-Xms128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:ReservedCodeCacheSize=128M" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseG1GC" />
+			<arg value="--java-options" />
+			<arg value="-XX:MaxGCPauseMillis=50" />
+			<arg value="--java-options" />
+			<arg value="-XX:+UseStringDeduplication" />
 			<arg value="--java-options" />
 			<arg value="--enable-native-access=ALL-UNNAMED" />
 			<arg value="--java-options" />

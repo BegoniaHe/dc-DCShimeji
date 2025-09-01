@@ -553,6 +553,33 @@ public class Mascot {
         return affordances;
     }
 
+    /**
+     * 设置桌宠的affordance（用于交互系统）
+     * @param affordance 要添加的affordance字符串
+     */
+    public void setAffordance(String affordance) {
+        if (affordance != null && !affordance.isEmpty()) {
+            if (!affordances.contains(affordance)) {
+                affordances.add(affordance);
+            }
+        }
+    }
+
+    /**
+     * 清除指定的affordance
+     * @param affordance 要移除的affordance字符串
+     */
+    public void removeAffordance(String affordance) {
+        affordances.remove(affordance);
+    }
+
+    /**
+     * 清除所有affordances
+     */
+    public void clearAffordances() {
+        affordances.clear();
+    }
+
     public ArrayList<Hotspot> getHotspots() {
         return hotspots;
     }
