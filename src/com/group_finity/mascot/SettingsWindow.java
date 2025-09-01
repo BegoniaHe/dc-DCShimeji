@@ -2214,7 +2214,8 @@ public class SettingsWindow extends javax.swing.JDialog {
 
         private void btnWebsiteActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnWebsiteActionPerformed
         {// GEN-HEADEREND:event_btnWebsiteActionPerformed
-                browseToUrl("https://github.com/DCRepairCenter/DCShimeji");
+                String websiteUrl = Main.getInstance().getProperties().getProperty("WebsiteURL", "https://github.com/DCRepairCenter/DCShimeji");
+                browseToUrl(websiteUrl);
         }// GEN-LAST:event_btnWebsiteActionPerformed
 
         private void btnDiscordActionPerformed(java.awt.event.ActionEvent evt)// GEN-FIRST:event_btnDiscordActionPerformed
