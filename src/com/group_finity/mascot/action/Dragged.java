@@ -80,7 +80,7 @@ public class Dragged extends ActionBase
             offsetY = 0 - offsetY + getMascot( ).getImage( ).size( ).height / 2;
         }
 
-        if( Math.abs( cursor.getX( ) - getMascot( ).getAnchor( ).x + offsetX ) >= 5 )
+        if( Math.abs( ( cursor.getX( ) - offsetX ) - getMascot( ).getAnchor( ).x ) >= 5 )
         {
             this.setTime( 0 );
         }
