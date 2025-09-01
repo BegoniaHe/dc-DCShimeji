@@ -34,6 +34,7 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
+import com.group_finity.mascot.win.AutoStartManager;
 import com.joconner.i18n.Utf8ResourceBundleControl;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -141,6 +142,7 @@ public class Main {
     private ResourceBundle languageBundle;
 
     private JDialog form;
+    private TrayIcon trayIcon;
 
     /**
      * 设置FlatLaf主题
@@ -1043,6 +1045,24 @@ public class Main {
                             btnLanguage.requestFocusInWindow();
                         });
 
+                        final JButton btnAutoStart = new JButton();
+                        Main.this.updateAutoStartButtonText(btnAutoStart);
+                        btnAutoStart.addActionListener(e -> {
+                            boolean currentStatus = AutoStartManager.isAutoStartEnabled();
+                            boolean success = AutoStartManager.setAutoStart(!currentStatus);
+                            
+                            if (success) {
+                                Main.this.updateAutoStartButtonText(btnAutoStart);
+                                // 显示成功消息
+                                String message = currentStatus ? 
+                                    languageBundle.getString("AutoStartDisabled") :
+                                    languageBundle.getString("AutoStartEnabled");
+                                Main.this.showInfo(message);
+                            } else {
+                                Main.showError(languageBundle.getString("AutoStartError"));
+                            }
+                        });
+
                         JButton btnPauseAll = new JButton(
                                 getManager().isPaused() ? languageBundle.getString("ResumeAnimations")
                                         : languageBundle.getString("PauseAnimations"));
@@ -1080,6 +1100,8 @@ public class Main {
                         gridBag.gridy++;
                         panel.add(btnLanguage, gridBag);
                         gridBag.gridy++;
+                        panel.add(btnAutoStart, gridBag);
+                        gridBag.gridy++;
                         panel.add(new JSeparator(), gridBag);
                         gridBag.gridy++;
                         panel.add(btnPauseAll, gridBag);
@@ -1095,7 +1117,7 @@ public class Main {
                         setupTrayMenuAutoSizing(form, panel, scaling, icon, event,
                             btnCallShimeji, btnFollowCursor, btnReduceToOne, btnRestoreWindows,
                             btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnLanguage,
-                            btnPauseAll, btnDismissAll);
+                            btnAutoStart, btnPauseAll, btnDismissAll);
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
                         createMascot();
@@ -1123,6 +1145,7 @@ public class Main {
 
             // Show tray icon
             SystemTray.getSystemTray().add(icon);
+            this.trayIcon = icon;
         } catch (final AWTException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
             Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n"
@@ -1505,6 +1528,26 @@ public class Main {
             form.pack();
             form.setLocation(event.getPoint().x - form.getWidth(), event.getPoint().y - form.getHeight());
             form.setVisible(true);
+        }
+    }
+
+    /**
+     * 更新自启动按钮的文本
+     */
+    private void updateAutoStartButtonText(JButton btnAutoStart) {
+        boolean isEnabled = AutoStartManager.isAutoStartEnabled();
+        String text = isEnabled ? 
+            languageBundle.getString("DisableAutoStart") : 
+            languageBundle.getString("EnableAutoStart");
+        btnAutoStart.setText(text);
+    }
+    
+    /**
+     * 显示信息消息
+     */
+    private void showInfo(String message) {
+        if (this.trayIcon != null) {
+            this.trayIcon.displayMessage("Shimeji-ee", message, TrayIcon.MessageType.INFO);
         }
     }
 }
