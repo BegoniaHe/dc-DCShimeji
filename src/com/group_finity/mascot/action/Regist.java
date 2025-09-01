@@ -54,7 +54,7 @@ public class Regist extends ActionBase {
 			offsetX = 0 - offsetX + getMascot( ).getImage( ).size( ).width / 2;
 		}
 		
-		final boolean notMoved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x + offsetX) < 5;
+		final boolean notMoved = Math.abs((getEnvironment().getCursor().getX() - offsetX) - getMascot().getAnchor().x) < 5;
 
 		return super.hasNext() && notMoved;
 	}
